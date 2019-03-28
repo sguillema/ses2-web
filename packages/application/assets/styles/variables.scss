@@ -1,0 +1,50 @@
+// @import url('https://fonts.googleapis.com/css?family=Aleo:400,700|Montserrat:400,600|Roboto');
+
+/*********************
+* COLOURS/VARIABLES  *
+*********************/
+$black: #000;
+$white: #fff;
+
+// $font-small: 10px;
+// $font-regular: 12px;
+// $font-medium: 15px;
+// $font-heading: 50px;
+
+/***********
+* FONTS    *
+***********/
+// For local loading. It's better to use CDN
+
+// @font-face{
+//   font-family: 'Sniglet';
+//   src: url("~assets/fonts/Sniglet-ExtraBold.ttf");
+//   font-weight: bold;
+// }
+
+/***********
+* MIXINS   *
+***********/
+// max-width-1
+@mixin max-width-1() {
+  max-width: 1920px;
+}
+
+// max-width-2
+@mixin max-width-2() {
+  max-width: 1360px;
+}
+
+// col-12: Used to define column size in a 12 column layout
+@mixin col-12($prop) {
+  width: 100% / 12 * $prop;
+}
+
+// col-4: Used to define column size in a 4 column layout
+@mixin col-4($prop) {
+  width: 100% / 4 * $prop;
+}
+
+@mixin shadow() {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+}
