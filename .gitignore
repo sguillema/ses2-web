@@ -3,6 +3,3 @@ node_modules/
 
 # Logs
 npm-debug.log
-
-# Workspace settings
-.vscode
