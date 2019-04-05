@@ -1,0 +1,58 @@
+/***********
+* GLOBAL   *
+***********/
+
+@import './variables.scss';
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  font-family: 'Helvetica Neue', 'Segoe UI', 'Source Sans Pro', -apple-system,
+    BlinkMacSystemFont, Roboto, Arial, sans-serif;
+  font-size: 16px;
+  word-spacing: 1px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.reee {
+  font-size: $font-reee;
+  font-weight: $fontweight-bold;
+}
+
+h1 {
+  font-size: $font-heading;
+  font-weight: $fontweight-bold;
+}
+
+h2 {
+  font-size: $font-subheading;
+  font-weight: $fontweight-bold;
+}
+
+p {
+  font-size: $font-regular;
+  font-weight: $fontweight-regular;
+}
+
+.v-btn__content {
+  text-transform: capitalize;
+}
+
+#__layout {
+  .theme--light.application {
+    background: $color-gray;
+  }
+}

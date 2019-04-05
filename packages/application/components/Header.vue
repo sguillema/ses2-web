@@ -1,5 +1,5 @@
 <template>
-  <header id="header"></header>
+  <v-toolbar id="header" app />
 </template>
 
 <script>
@@ -16,5 +16,7 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 #header {
+  height: 70px;
+  background-color: $color-primary;
 }
 </style>
