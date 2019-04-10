@@ -51,6 +51,23 @@ p {
   text-transform: capitalize;
 }
 
+.v-text-field,
+.v-text-field .v-label {
+  &.primary--text {
+    color: $color-black !important;
+    caret-color: $color-black !important;
+  }
+}
+
+.v-text-field--outline {
+  .v-input__control {
+    .v-input__slot {
+      border-width: 1px !important;
+      border-radius: 1px !important;
+    }
+  }
+}
+
 #__layout {
   .theme--light.application {
     background: $color-gray;
