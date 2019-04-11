@@ -29,7 +29,7 @@ body {
 
 .reee {
   font-size: $font-reee;
-  font-weight: $fontweight-bold;
+  font-weight: $fontweight-ultrabold;
 }
 
 h1 {
@@ -47,9 +47,16 @@ p {
   font-weight: $fontweight-regular;
 }
 
-.v-btn__content {
-  text-transform: capitalize;
+button.v-btn {
+  margin: 0;
+  border-radius: 0;
+  font-size: $font-button;
+  .v-btn__content {
+    text-transform: capitalize;
+  }
 }
+
+
 
 .v-text-field,
 .v-text-field .v-label,
