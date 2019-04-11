@@ -1,5 +1,5 @@
 <template>
-  <div id="page-index">
+  <div id="page-styleguide">
     <section class="section-container">
       <div class="container">
         <div class="reee">{{ reee }}</div>
