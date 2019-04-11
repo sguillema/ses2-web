@@ -19,6 +19,10 @@ module.exports = {
       {
         rel: 'stylesheet',
         href: 'https://use.fontawesome.com/releases/v5.7.0/css/all.css'
+      },
+      {
+        rel: 'stylesheet',
+        href: `https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons`
       }
     ]
   },
@@ -36,7 +40,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/resources/strings.js'],
+  plugins: ['~/resources/strings.js', '~/plugins/vuetify.js'],
 
   /*
    ** Nuxt.js modules
