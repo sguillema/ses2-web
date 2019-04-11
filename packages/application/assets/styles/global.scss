@@ -52,11 +52,16 @@ p {
 }
 
 .v-text-field,
-.v-text-field .v-label {
+.v-text-field .v-label,
+.v-text-field .v-icon {
   &.primary--text {
     color: $color-black !important;
     caret-color: $color-black !important;
   }
+}
+
+.v-text-field .v-input__prepend-inner {
+  padding-right: 20px !important;
 }
 
 .v-text-field--outline {
