@@ -26,7 +26,18 @@ module.exports = {
         }
       }
     ],
-    'no-console': 'warn'
+    'no-console': 'warn',
+    'vue/html-self-closing': [
+      'error',
+      {
+        html: {
+          void: 'always',
+          normal: 'never'
+        },
+        svg: 'always',
+        math: 'always'
+      }
+    ]
   },
   globals: {}
 }
