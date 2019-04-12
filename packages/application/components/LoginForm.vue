@@ -3,9 +3,9 @@
     <LoginHeading />
     <form>
       <v-text-field
-        v-model="login.username"
+        v-model="login.id"
         outline
-        label="Username"
+        label="Student/Staff Number"
         prepend-inner-icon="account_box"
       />
       <v-text-field
@@ -25,7 +25,7 @@
           :label="$messages.RememberLoginLabel"
         />
       </div>
-      <v-btn depressed color="primary" @click="handleSubmit">
+      <v-btn type="submit" depressed color="primary" @click="handleSubmit">
         {{ $messages.SubmitLabel }}
       </v-btn>
     </form>
@@ -33,7 +33,10 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
+import moment from 'moment'
 import { requiredRule } from '../utils/helpers.js'
+import AuthApi from '../api/Api/AuthApi.js'
 import LoginHeading from './LoginHeading'
 
 export default {
@@ -41,8 +44,8 @@ export default {
   data() {
     return {
       login: {
-        username: '',
-        password: '',
+        id: '12345678',
+        password: 'password',
         rememberLogin: false
       },
       showPasswordMask: true
@@ -55,8 +58,18 @@ export default {
       this.showPasswordMask = !this.showPasswordMask
     },
 
-    handleSubmit() {
-      console.log(this.login)
+    async handleSubmit(e) {
+      e.preventDefault()
+      const response = await AuthApi.authenticateUser(this.login)
+      const { user, token } = response.data
+      const oneHour = moment()
+        .add(1, 'hours')
+        .toDate()
+      this.$store.commit('updateToken', token)
+      this.$store.commit('updateUserId', user.id)
+      Cookies.set('token', token, { expires: oneHour })
+      Cookies.set('user', user, { expires: oneHour })
+      this.$router.push({ path: '/dashboard' })
     }
   }
 }

@@ -41,7 +41,7 @@ ul {
 }
 
 li {
-  margin: 5px 0;
+  margin: 0 3px;
 }
 
 a {

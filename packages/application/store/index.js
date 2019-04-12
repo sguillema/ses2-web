@@ -2,21 +2,18 @@
 import cookieparser from 'cookieparser'
 
 export const state = () => ({
-  auth: null,
+  token: null,
   userId: null,
   userType: null,
   userPreferredName: null
 })
 
 export const mutations = {
-  updateAuth(state, data) {
-    state.auth = data
+  updateToken(state, data) {
+    state.token = data
   },
   updateUserId(state, data) {
     state.userId = data
-  },
-  updateProfileId(state, data) {
-    state.profileId = data
   },
   updateUserType(state, data) {
     state.userType = data
@@ -24,12 +21,11 @@ export const mutations = {
   updateUserPreferredName(state, data) {
     state.userPreferredName = data
   },
-  clearAuth(state) {
-    state.auth = null
+  clearToken(state) {
+    state.token = null
   },
   clearUser(state) {
     state.userId = null
-    state.profileId = null
     state.userType = null
     state.userPreferredName = null
   },
@@ -42,22 +38,21 @@ export const mutations = {
 
 export const actions = {
   nuxtServerInit({ commit }, { req }) {
+    console.log('test')
     let token = null
     let userId = null
-    let profileId = null
     let userType = null
     if (req.headers.cookie) {
+      console.log(parsed)
       let parsed = cookieparser.parse(req.headers.cookie)
-      token = parsed.auth
+      token = parsed.token
 
       let user = JSON.parse(parsed.user)
-      userId = user.uid
+      userId = user.id
       userType = user.type
-      profileId = user.profileId
     }
-    commit('updateAuth', token)
+    commit('updateToken', token)
     commit('updateUserId', userId)
-    commit('updateProfileId', profileId)
     commit('updateUserType', userType)
   }
 }
