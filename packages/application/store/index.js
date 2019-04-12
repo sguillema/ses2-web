@@ -43,8 +43,8 @@ export const actions = {
     let userId = null
     let userType = null
     if (req.headers.cookie) {
-      console.log(parsed)
       let parsed = cookieparser.parse(req.headers.cookie)
+      console.log(parsed)
       token = parsed.token
 
       let user = JSON.parse(parsed.user)

@@ -2,13 +2,12 @@ import axios from 'axios'
 
 // useful: https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
 
+let endpoint = 'http://localhost:4001'
 export default class AuthApi {
-  static endpoint = 'http://localhost:4001'
-
   static async authenticateUser(loginData) {
     return await axios({
       method: 'post',
-      url: this.endpoint + '/users/auth',
+      url: endpoint + '/users/auth',
       data: loginData
     })
   }

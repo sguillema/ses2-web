@@ -35,8 +35,8 @@
 <script>
 import Cookies from 'js-cookie'
 import moment from 'moment'
-import { requiredRule } from '../utils/helpers.js'
-import AuthApi from '../api/Api/AuthApi.js'
+import { requiredRule } from '../utils/helpers'
+import AuthApi from '../api/Api/AuthApi'
 import LoginHeading from './LoginHeading'
 
 export default {
