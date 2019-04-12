@@ -57,9 +57,12 @@
 </template>
 
 <script>
+import unauthenticated from '../middleware/unauthenticated'
+
 export default {
   data() {
     return {
+      middleware: unauthenticated,
       selectItems: ['helooo', 'world', 'this is', 'me'],
       reee: '48px reeeeeee bold',
       heading: '24px heading 1 medium',
