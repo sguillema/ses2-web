@@ -43,12 +43,9 @@ export const actions = {
     let userType = null
     if (req.headers.cookie) {
       let parsed = cookieparser.parse(req.headers.cookie)
-      console.log(parsed)
       token = parsed.token
-
-      let user = JSON.parse(parsed.user)
-      userId = user.id
-      userType = user.type
+      userId = parsed.user ? parsed.user.id : null
+      userType = parsed.type
     }
     commit('updateToken', token)
     commit('updateUserId', userId)
