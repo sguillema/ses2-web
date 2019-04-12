@@ -38,7 +38,6 @@ export const mutations = {
 
 export const actions = {
   nuxtServerInit({ commit }, { req }) {
-    console.log('test')
     let token = null
     let userId = null
     let userType = null
