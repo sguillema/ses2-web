@@ -40,6 +40,10 @@ ul {
   padding: 0;
 }
 
+li {
+  margin: 5px 0;
+}
+
 a {
   color: $color-white;
   &:hover {
