@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import AuthService from '../core/AuthService'
+import { AUTH_LOGOUT } from '../store/auth'
 
 export default {
   props: {
@@ -14,7 +14,8 @@ export default {
 
   methods: {
     logOut() {
-      AuthService.endSession(this.$store)
+      this.$store.dispatch(AUTH_LOGOUT)
+      this.$router.push({ path: '/' })
     }
   }
 }

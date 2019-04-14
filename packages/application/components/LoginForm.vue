@@ -20,7 +20,7 @@
       />
       <div class="loginOptions">
         <v-checkbox
-          v-model="login.rememberLogin"
+          v-model="login.shouldRemember"
           :label="$messages.RememberLoginLabel"
         />
       </div>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import AuthService from '../core/AuthService'
+import { AUTH_REQUEST } from '../store/auth'
 import LoginHeading from './LoginHeading'
 
 export default {
@@ -61,10 +61,10 @@ export default {
       e.preventDefault()
       try {
         this.errorMessage = ''
-        await AuthService.authenticateUser(this.$store, this.login)
+        await this.$store.dispatch(AUTH_REQUEST, this.login)
         this.$router.push({ path: '/dashboard' })
       } catch (e) {
-        this.errorMessage = 'Error: Invalid credentials'
+        this.errorMessage = this.$messages.IncorrectLogin
       }
     }
   }

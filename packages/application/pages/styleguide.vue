@@ -57,12 +57,14 @@
 </template>
 
 <script>
-import unauthenticated from '../middleware/unauthenticated'
+import { unauthenticated } from '../middleware/authenticatedRoutes'
 
 export default {
+  layout: 'blank',
+  middleware: unauthenticated,
+
   data() {
     return {
-      middleware: unauthenticated,
       selectItems: ['helooo', 'world', 'this is', 'me'],
       reee: '48px reeeeeee bold',
       heading: '24px heading 1 medium',

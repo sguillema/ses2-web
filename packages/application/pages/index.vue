@@ -10,7 +10,7 @@
 
 <script>
 import LoginForm from '../components/LoginForm'
-import unauthenticated from '../middleware/unauthenticated'
+import { unauthenticated } from '../middleware/authenticatedRoutes'
 
 export default {
   middleware: unauthenticated,

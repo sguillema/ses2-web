@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import authenticated from '../middleware/authenticated'
+import { authenticated } from '../middleware/authenticatedRoutes'
 
 export default {
   middleware: authenticated

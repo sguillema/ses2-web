@@ -1,20 +1,20 @@
 import Cookies from 'js-cookie'
 // TODO: Need to find a better cookie parser method
 import cookieparser from 'cookieparser'
-import moment from 'moment'
+import { getExpiryOptions } from './helpers'
 
-const oneHour = moment()
-  .add(1, 'hours')
-  .toDate()
+const TOKEN = 'token'
+const USER = 'user'
 
 export default class CookieService {
   static getParsedCookie(cookie) {
     return cookieparser.parse(cookie)
   }
 
-  static updateAuthCookies({ user, token }) {
-    this.setTokenCookie(token)
-    this.setUserCookie(user)
+  static updateAuthCookies({ user, token, shouldRemember }) {
+    let options = getExpiryOptions(shouldRemember)
+    this.setTokenCookie(token, options)
+    this.setUserCookie(user, options)
   }
 
   static removeAuthCookies() {
@@ -23,26 +23,26 @@ export default class CookieService {
   }
 
   static getTokenCookie() {
-    Cookies.get('token')
+    Cookies.get(TOKEN)
   }
 
   static removeTokenCookie() {
-    Cookies.remove('token')
+    Cookies.remove(TOKEN)
   }
 
-  static setTokenCookie(token) {
-    Cookies.set('token', token, { expires: oneHour })
+  static setTokenCookie(token, options) {
+    Cookies.set(TOKEN, token, options)
   }
 
   static getUserCookie() {
-    Cookies.get('user')
+    Cookies.get(USER)
   }
 
   static removeUserCookie() {
-    Cookies.remove('user')
+    Cookies.remove(USER)
   }
 
-  static setUserCookie(user) {
-    Cookies.set('user', user, { expires: oneHour })
+  static setUserCookie(user, options) {
+    Cookies.set(USER, user, options)
   }
 }
