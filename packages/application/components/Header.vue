@@ -8,14 +8,17 @@
     <v-toolbar-title>
       <Logo light />
     </v-toolbar-title>
+    <v-spacer />
+    <HeaderActions :is-dashboard="!landingPage" />
   </v-toolbar>
 </template>
 
 <script>
 import Logo from './Logo'
+import HeaderActions from './HeaderActions'
 
 export default {
-  components: { Logo },
+  components: { Logo, HeaderActions },
   props: {
     landingPage: Boolean
   }

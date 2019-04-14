@@ -15,7 +15,6 @@
         prepend-innerss-icon="lock"
         :append-icon="showPasswordMask ? 'visibility_off' : 'visibility'"
         :type="showPasswordMask ? 'password' : 'text'"
-        :rules="[requiredRule()]"
         prepend-inner-icon="lock"
         @click:append="changePasswordMask()"
       />
@@ -28,15 +27,15 @@
       <v-btn type="submit" depressed color="primary" @click="handleSubmit">
         {{ $messages.SubmitLabel }}
       </v-btn>
+      <v-alert :value="!!errorMessage" outline type="error">
+        {{ errorMessage }}
+      </v-alert>
     </form>
   </section>
 </template>
 
 <script>
-import Cookies from 'js-cookie'
-import moment from 'moment'
-import { requiredRule } from '../utils/helpers'
-import AuthApi from '../api/Api/AuthApi'
+import AuthService from '../core/AuthService'
 import LoginHeading from './LoginHeading'
 
 export default {
@@ -48,28 +47,25 @@ export default {
         password: 'password',
         rememberLogin: false
       },
-      showPasswordMask: true
+      showPasswordMask: true,
+      errorMessage: ''
     }
   },
 
   methods: {
-    requiredRule,
     changePasswordMask() {
       this.showPasswordMask = !this.showPasswordMask
     },
 
     async handleSubmit(e) {
       e.preventDefault()
-      const response = await AuthApi.authenticateUser(this.login)
-      const { user, token } = response.data
-      const oneHour = moment()
-        .add(1, 'hours')
-        .toDate()
-      this.$store.commit('updateToken', token)
-      this.$store.commit('updateUserId', user.id)
-      Cookies.set('token', token, { expires: oneHour })
-      Cookies.set('user', user, { expires: oneHour })
-      this.$router.push({ path: '/dashboard' })
+      try {
+        this.errorMessage = ''
+        await AuthService.authenticateUser(this.$store, this.login)
+        this.$router.push({ path: '/dashboard' })
+      } catch (e) {
+        this.errorMessage = 'Error: Invalid credentials'
+      }
     }
   }
 }

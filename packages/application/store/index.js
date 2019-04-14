@@ -1,5 +1,5 @@
-// Need to find a better cookie parser method
-import cookieparser from 'cookieparser'
+import CookieService from '../core/CookieService'
+import AuthService from '../core/AuthService'
 
 export const state = () => ({
   token: null,
@@ -38,17 +38,12 @@ export const mutations = {
 
 export const actions = {
   nuxtServerInit({ commit }, { req }) {
-    let token = null
-    let userId = null
-    let userType = null
-    if (req.headers.cookie) {
-      let parsed = cookieparser.parse(req.headers.cookie)
-      token = parsed.token
-      userId = parsed.user ? parsed.user.id : null
-      userType = parsed.type
+    const cookie = req.headers.cookie
+    if (cookie) {
+      const parsed = CookieService.getParsedCookie(cookie)
+      AuthService.updateAuthState(commit, parsed)
     }
-    commit('updateToken', token)
-    commit('updateUserId', userId)
-    commit('updateUserType', userType)
   }
 }
+
+export const getters = {}
