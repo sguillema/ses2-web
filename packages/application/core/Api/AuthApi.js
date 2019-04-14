@@ -8,7 +8,7 @@ const ENDPOINT = 'http://localhost:4001'
 
 export default class AuthApi {
   static setAuthorizationHeader(token) {
-    axios.defaults.headers.common[AUTHORIZATION] = token
+    axios.defaults.headers.common[AUTHORIZATION] = `Bearer ${token}`
   }
 
   static removeAuthorizationHeader() {
