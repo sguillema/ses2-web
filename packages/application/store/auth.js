@@ -10,13 +10,15 @@ const VALIDATE_COOKIE = 'validateCookie'
 const IS_VALIDATED = 'isValidated'
 const AUTH_STATUS = 'authStatus'
 
-export const AUTH_REQUEST = `${AUTH}/${REQUEST}`
-export const AUTH_SUCCESS = `${AUTH}/${SUCCESS}`
-export const AUTH_ERROR = `${AUTH}/${ERROR}`
-export const AUTH_LOGOUT = `${AUTH}/${LOGOUT}`
-export const AUTH_VALIDATE_COOKIE = `${AUTH}/${VALIDATE_COOKIE}`
-export const AUTH_IS_VALIDATED = `${AUTH}/${IS_VALIDATED}`
-export const AUTH_AUTH_STATUS = `${AUTH}/${AUTH_STATUS}`
+const prependAuth = (methodName) => `${AUTH}/${methodName}`
+
+export const AUTH_REQUEST = prependAuth(REQUEST)
+export const AUTH_SUCCESS = prependAuth(SUCCESS)
+export const AUTH_ERROR = prependAuth(ERROR)
+export const AUTH_LOGOUT = prependAuth(LOGOUT)
+export const AUTH_VALIDATE_COOKIE = prependAuth(VALIDATE_COOKIE)
+export const AUTH_IS_VALIDATED = prependAuth(IS_VALIDATED)
+export const AUTH_AUTH_STATUS = prependAuth(AUTH_STATUS)
 
 export const state = () => ({
   token: null,
