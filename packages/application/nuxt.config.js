@@ -40,7 +40,12 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/resources/strings.js', '~/plugins/vuetify.js'],
+  plugins: [
+    '~/resources/helpers.js',
+    '~/resources/strings.js',
+    '~/resources/storeStrings.js',
+    '~/plugins/vuetify.js'
+  ],
 
   /*
    ** Nuxt.js modules
