@@ -65,12 +65,9 @@ export default {
 
     async handleSubmit(e) {
       e.preventDefault()
-      console.log('hello')
       try {
         this.errorMessage = ''
-        console.log(storeModule(AUTH, REQUEST))
         await this.$store.dispatch(storeModule(AUTH, REQUEST), this.login)
-        console.log('I did it')
         this.$router.push({ path: '/dashboard' })
       } catch (e) {
         this.errorMessage = this.$messages.IncorrectLogin
