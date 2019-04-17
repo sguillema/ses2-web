@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import { AUTH_REQUEST } from '../store/auth'
 import LoginHeading from './LoginHeading'
+let storeModule, AUTH, REQUEST
 
 export default {
   components: { LoginHeading },
@@ -52,6 +52,12 @@ export default {
     }
   },
 
+  created() {
+    storeModule = this.$helpers.storeModule
+    AUTH = this.$storeStrings.AUTH
+    REQUEST = this.$storeStrings.REQUEST
+  },
+
   methods: {
     changePasswordMask() {
       this.showPasswordMask = !this.showPasswordMask
@@ -59,9 +65,12 @@ export default {
 
     async handleSubmit(e) {
       e.preventDefault()
+      console.log('hello')
       try {
         this.errorMessage = ''
-        await this.$store.dispatch(AUTH_REQUEST, this.login)
+        console.log(storeModule(AUTH, REQUEST))
+        await this.$store.dispatch(storeModule(AUTH, REQUEST), this.login)
+        console.log('I did it')
         this.$router.push({ path: '/dashboard' })
       } catch (e) {
         this.errorMessage = this.$messages.IncorrectLogin

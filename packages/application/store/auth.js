@@ -1,24 +1,14 @@
 import CookieService from '../core/CookieService'
 import AuthApi from '../core/api/AuthApi'
-
-const AUTH = 'auth'
-const REQUEST = 'request'
-const SUCCESS = 'success'
-const ERROR = 'error'
-const LOGOUT = 'logout'
-const VALIDATE_COOKIE = 'validateCookie'
-const IS_VALIDATED = 'isValidated'
-const AUTH_STATUS = 'authStatus'
-
-const prependAuth = (methodName) => `${AUTH}/${methodName}`
-
-export const AUTH_REQUEST = prependAuth(REQUEST)
-export const AUTH_SUCCESS = prependAuth(SUCCESS)
-export const AUTH_ERROR = prependAuth(ERROR)
-export const AUTH_LOGOUT = prependAuth(LOGOUT)
-export const AUTH_VALIDATE_COOKIE = prependAuth(VALIDATE_COOKIE)
-export const AUTH_IS_VALIDATED = prependAuth(IS_VALIDATED)
-export const AUTH_AUTH_STATUS = prependAuth(AUTH_STATUS)
+const {
+  REQUEST,
+  SUCCESS,
+  ERROR,
+  LOGOUT,
+  VALIDATE_COOKIE,
+  IS_VALIDATED,
+  AUTH_STATUS
+} = require('~/plugins/resources/storeStrings')
 
 export const state = () => ({
   token: null,
@@ -93,7 +83,13 @@ export const actions = {
       commit(REQUEST)
       const parsed = CookieService.getParsedCookie(cookie)
       const token = parsed.token
-      const user = JSON.parse(parsed.user)
+      let user
+      // Try catch block because JSON.parse throws an error if non-json type is passed -- this is pretty much the same as an 'if' statement checking if parsed.user is not null
+      try {
+        user = JSON.parse(parsed.user)
+      } catch {
+        user = null
+      }
       if (token && user) {
         commit(SUCCESS, { token, user })
       } else {

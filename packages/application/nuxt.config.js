@@ -41,9 +41,9 @@ module.exports = {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    '~/resources/helpers.js',
-    '~/resources/strings.js',
-    '~/resources/storeStrings.js',
+    '~/plugins/helpers.js',
+    '~/plugins/strings.js',
+    '~/plugins/storeStrings.js',
     '~/plugins/vuetify.js'
   ],
 

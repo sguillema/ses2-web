@@ -1,6 +1,4 @@
-import Vue from 'vue'
-
-Vue.prototype.$messages = {
+module.exports = {
   HomeWelcome: 'Welcome to UTS HELPS!',
   LoginHeading: 'UTS: HELPS',
   LoginSubheading: 'Booking System',

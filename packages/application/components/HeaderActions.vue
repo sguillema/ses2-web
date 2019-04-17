@@ -5,16 +5,22 @@
 </template>
 
 <script>
-import { AUTH_LOGOUT } from '../store/auth'
+let storeModule, AUTH, LOGOUT
 
 export default {
   props: {
     isDashboard: Boolean
   },
 
+  created() {
+    storeModule = this.$helpers.storeModule
+    AUTH = this.$storeStrings.AUTH
+    LOGOUT = this.$storeStrings.LOGOUT
+  },
+
   methods: {
     logOut() {
-      this.$store.dispatch(AUTH_LOGOUT)
+      this.$store.dispatch(storeModule(AUTH, LOGOUT))
       this.$router.push({ path: '/' })
     }
   }
