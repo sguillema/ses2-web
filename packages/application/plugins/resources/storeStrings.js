@@ -6,5 +6,6 @@ module.exports = {
   LOGOUT: `logout`,
   VALIDATE_COOKIE: `validateCookie`,
   IS_VALIDATED: `isValidated`,
-  AUTH_STATUS: `authStatus`
+  AUTH_STATUS: `authStatus`,
+  TYPE: 'userType'
 }

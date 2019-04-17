@@ -7,7 +7,8 @@ const {
   LOGOUT,
   VALIDATE_COOKIE,
   IS_VALIDATED,
-  AUTH_STATUS
+  AUTH_STATUS,
+  TYPE
 } = require('~/plugins/resources/storeStrings')
 
 export const state = () => ({
@@ -18,7 +19,8 @@ export const state = () => ({
 
 export const getters = {
   [IS_VALIDATED]: state => !!state.token,
-  [AUTH_STATUS]: state => state.status
+  [AUTH_STATUS]: state => state.status,
+  [TYPE]: state => state.user.type
 }
 
 export const mutations = {

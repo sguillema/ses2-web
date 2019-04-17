@@ -1,21 +1,24 @@
 <template>
   <v-app>
-    <Header />
+    <Header landing-page />
     <v-content>
-      <v-container fluid>
+      <v-container fluid class="app-container">
         <nuxt />
       </v-container>
     </v-content>
-    <Footer />
+    <Footer>
+      <FooterLinks />
+    </Footer>
   </v-app>
 </template>
 
 <script>
 import Header from '~/components/Header/Header'
 import Footer from '~/components/Footer/Footer'
+import FooterLinks from '~/components/Footer/FooterLinks'
 
 export default {
-  components: { Header, Footer },
+  components: { Footer, FooterLinks, Header },
   mounted() {
     if (process.browser) {
       screen.orientation.lock('portrait')
@@ -24,6 +27,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~/assets/styles/global.scss';
+
+.app-container {
+  padding: 0;
+  height: 100%;
+}
 </style>
