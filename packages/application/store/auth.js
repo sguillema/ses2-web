@@ -91,7 +91,7 @@ export const actions = {
         user = null
       }
       if (token && user) {
-        commit(SUCCESS, { token, user })
+        dispatch(SUCCESS, { token, user })
       } else {
         // auth cookies are invalid, logout immediately
         dispatch(LOGOUT)
