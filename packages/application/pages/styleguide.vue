@@ -1,5 +1,5 @@
 <template>
-  <div id="page-index">
+  <div id="page-styleguide">
     <section class="section-container">
       <div class="container">
         <div class="reee">{{ reee }}</div>
@@ -57,7 +57,12 @@
 </template>
 
 <script>
+import { unauthenticated } from '../middleware/authenticatedRoutes'
+
 export default {
+  layout: 'blank',
+  middleware: unauthenticated,
+
   data() {
     return {
       selectItems: ['helooo', 'world', 'this is', 'me'],

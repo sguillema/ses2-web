@@ -1,30 +1,25 @@
 <template>
-  <v-footer id="footer" app>
-    <div class="footerMessage">
+  <v-footer id="footer" style="height: unset;">
+    <slot></slot>
+    <div class="footer-message">
       {{ $messages.FooterText }}
     </div>
   </v-footer>
 </template>
 
-<script>
-export default {
-  components: {},
-  data() {
-    return {}
-  }
-}
-</script>
-
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 #footer {
-  height: 40px;
+  padding: 13px;
   background-color: $color-black;
   color: $color-white;
-
-  .footerMessage {
+  &.v-footer {
+    display: block;
+  }
+  .footer-message {
     width: 100%;
     text-align: center;
+    font-size: $font-footer;
   }
 }
 </style>

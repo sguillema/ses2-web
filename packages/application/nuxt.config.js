@@ -2,7 +2,7 @@ const pkg = require('./package')
 require('dotenv').config()
 
 module.exports = {
-  mode: 'spa',
+  mode: 'universal',
 
   /*
    ** Headers of the page
@@ -40,7 +40,12 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/resources/strings.js', '~/plugins/vuetify.js'],
+  plugins: [
+    '~/plugins/helpers.js',
+    '~/plugins/strings.js',
+    '~/plugins/storeStrings.js',
+    '~/plugins/vuetify.js'
+  ],
 
   /*
    ** Nuxt.js modules
@@ -67,6 +72,7 @@ module.exports = {
     extend(config, ctx) {
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
+        config.devtool = '#source-map'
         config.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
