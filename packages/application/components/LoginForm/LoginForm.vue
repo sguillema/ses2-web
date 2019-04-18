@@ -35,9 +35,7 @@
 </template>
 
 <script>
-import userTypes from '../../core/userTypes'
 import LoginHeading from './LoginHeading'
-
 import { authModule, REQUEST } from '~/store/auth/methods'
 
 export default {

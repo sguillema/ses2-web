@@ -51,7 +51,6 @@ export default {
   },
 
   data() {
-    console.log(this.$store.getters[authModule(IS_ADMIN)])
     return {
       isAdmin: this.$store.getters[authModule(IS_ADMIN)]
     }
