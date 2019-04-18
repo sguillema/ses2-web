@@ -38,7 +38,7 @@
 import userTypes from '../../core/userTypes'
 import LoginHeading from './LoginHeading'
 
-import { authModule, REQUEST, TYPE } from '~/store/auth/methods'
+import { authModule, REQUEST } from '~/store/auth/methods'
 
 export default {
   components: { LoginHeading },
@@ -64,9 +64,7 @@ export default {
       try {
         this.errorMessage = ''
         await this.$store.dispatch(authModule(REQUEST), this.login)
-        if (this.$store.getters[authModule(TYPE)] === userTypes.ADMIN)
-          this.$router.push({ path: '/students' })
-        else this.$router.push({ path: '/dashboard' })
+        this.$router.push({ path: '/dashboard' })
       } catch (e) {
         if (e.response && e.response.status === 401)
           this.errorMessage = this.$messages.IncorrectLogin

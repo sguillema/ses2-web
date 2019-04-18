@@ -11,5 +11,6 @@ export const AUTH_STATUS = `authStatus`
 export const TYPE = 'userType'
 export const IS_ADMIN = 'isAdmin'
 export const IS_STUDENT = 'isStudent'
+export const USER = 'user'
 
 export const authModule = method => storeModule(MODULE, method)

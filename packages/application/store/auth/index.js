@@ -11,7 +11,8 @@ import {
   AUTH_STATUS,
   TYPE,
   IS_ADMIN,
-  IS_STUDENT
+  IS_STUDENT,
+  USER
 } from './methods'
 
 export const state = () => ({
@@ -25,7 +26,8 @@ export const getters = {
   [AUTH_STATUS]: state => state.status,
   [TYPE]: state => state.user.type,
   [IS_ADMIN]: state => state.user.type === userTypes.ADMIN,
-  [IS_STUDENT]: state => state.user.type === userTypes.STUDENT
+  [IS_STUDENT]: state => state.user.type === userTypes.STUDENT,
+  [USER]: state => state.user
 }
 
 export const mutations = {
@@ -82,6 +84,7 @@ export const actions = {
       commit(LOGOUT)
       AuthApi.removeAuthorizationHeader()
       CookieService.removeAuthCookies()
+
       resolve()
     }),
 
