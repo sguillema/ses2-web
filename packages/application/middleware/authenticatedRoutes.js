@@ -1,6 +1,5 @@
 import userTypes from '../core/userTypes'
-const { storeModule } = require('~/plugins/resources/helpers')
-const { AUTH, IS_VALIDATED } = require('~/plugins/resources/storeStrings')
+import { authModule, TYPE, IS_VALIDATED } from '~/store/auth/methods'
 
 const ROOT_PATH = '/'
 const DASHBOARD = '/dashboard'
@@ -10,7 +9,7 @@ export const adminAuthenticated = ({ store, redirect }) => {
   const baseAuthResult = authenticated({ store, redirect })
   if (baseAuthResult) return baseAuthResult
 
-  if (store.getters[storeModule(AUTH, IS_VALIDATED)] !== userTypes.ADMIN) {
+  if (store.getters[authModule(TYPE)] !== userTypes.ADMIN) {
     return redirect(NOT_FOUND)
   }
 
@@ -19,7 +18,7 @@ export const adminAuthenticated = ({ store, redirect }) => {
 
 export const authenticated = ({ store, redirect }) => {
   // if not authenticated, redirect to root
-  if (!store.getters[storeModule(AUTH, IS_VALIDATED)]) {
+  if (!store.getters[authModule(IS_VALIDATED)]) {
     return redirect(ROOT_PATH)
   }
 
@@ -28,10 +27,9 @@ export const authenticated = ({ store, redirect }) => {
 
 export const unauthenticated = ({ store, redirect, route }) => {
   // if authenticated, redirect to root
-  if (
-    store.getters[storeModule(AUTH, IS_VALIDATED)] &&
-    route.path === ROOT_PATH
-  ) {
+  if (store.getters[authModule(IS_VALIDATED)] && route.path === ROOT_PATH) {
     return redirect(DASHBOARD)
   }
+
+  return null
 }

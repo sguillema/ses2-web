@@ -43,7 +43,6 @@ module.exports = {
   plugins: [
     '~/plugins/helpers.js',
     '~/plugins/strings.js',
-    '~/plugins/storeStrings.js',
     '~/plugins/vuetify.js'
   ],
 

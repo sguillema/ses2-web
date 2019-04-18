@@ -1,4 +1,7 @@
+const STUDENT = 'student'
+const ADMIN = 'admin'
+
 export default {
-  ADMIN: 'admin',
-  STUDENT: 'student'
+  ADMIN,
+  STUDENT
 }

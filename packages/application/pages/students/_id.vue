@@ -13,10 +13,7 @@ import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 
 export default {
   middleware: adminAuthenticated,
-
-  created() {
-    console.log(this.$route)
-  }
+  layout: 'application'
 }
 </script>
 

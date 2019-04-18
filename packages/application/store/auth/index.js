@@ -1,6 +1,7 @@
-import CookieService from '../core/CookieService'
-import AuthApi from '../core/api/AuthApi'
-const {
+import CookieService from '../../core/CookieService'
+import AuthApi from '../../core/api/AuthApi'
+import userTypes from '../../core/userTypes'
+import {
   REQUEST,
   SUCCESS,
   ERROR,
@@ -8,8 +9,10 @@ const {
   VALIDATE_COOKIE,
   IS_VALIDATED,
   AUTH_STATUS,
-  TYPE
-} = require('~/plugins/resources/storeStrings')
+  TYPE,
+  IS_ADMIN,
+  IS_STUDENT
+} from './methods'
 
 export const state = () => ({
   token: null,
@@ -20,7 +23,9 @@ export const state = () => ({
 export const getters = {
   [IS_VALIDATED]: state => !!state.token,
   [AUTH_STATUS]: state => state.status,
-  [TYPE]: state => state.user.type
+  [TYPE]: state => state.user.type,
+  [IS_ADMIN]: state => state.user.type === userTypes.ADMIN,
+  [IS_STUDENT]: state => state.user.type === userTypes.STUDENT
 }
 
 export const mutations = {

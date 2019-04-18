@@ -6,22 +6,16 @@
 </template>
 
 <script>
-let storeModule, AUTH, LOGOUT
+import { authModule, LOGOUT } from '~/store/auth/methods'
 
 export default {
   props: {
     isDashboard: Boolean
   },
 
-  created() {
-    storeModule = this.$helpers.storeModule
-    AUTH = this.$storeStrings.AUTH
-    LOGOUT = this.$storeStrings.LOGOUT
-  },
-
   methods: {
     logOut() {
-      this.$store.dispatch(storeModule(AUTH, LOGOUT))
+      this.$store.dispatch(authModule(LOGOUT))
       this.$router.push({ path: '/' })
     }
   }

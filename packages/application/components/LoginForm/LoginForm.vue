@@ -37,7 +37,8 @@
 <script>
 import userTypes from '../../core/userTypes'
 import LoginHeading from './LoginHeading'
-let storeModule, AUTH, REQUEST, TYPE
+
+import { authModule, REQUEST, TYPE } from '~/store/auth/methods'
 
 export default {
   components: { LoginHeading },
@@ -53,13 +54,6 @@ export default {
     }
   },
 
-  created() {
-    storeModule = this.$helpers.storeModule
-    AUTH = this.$storeStrings.AUTH
-    REQUEST = this.$storeStrings.REQUEST
-    TYPE = this.$storeStrings.TYPE
-  },
-
   methods: {
     changePasswordMask() {
       this.showPasswordMask = !this.showPasswordMask
@@ -69,8 +63,8 @@ export default {
       e.preventDefault()
       try {
         this.errorMessage = ''
-        await this.$store.dispatch(storeModule(AUTH, REQUEST), this.login)
-        if (this.$store.getters[storeModule(AUTH, TYPE)] === userTypes.ADMIN)
+        await this.$store.dispatch(authModule(REQUEST), this.login)
+        if (this.$store.getters[authModule(TYPE)] === userTypes.ADMIN)
           this.$router.push({ path: '/students' })
         else this.$router.push({ path: '/dashboard' })
       } catch (e) {

@@ -14,8 +14,7 @@ import { unauthenticated } from '../middleware/authenticatedRoutes'
 
 export default {
   middleware: unauthenticated,
-  components: { LoginForm },
-  layout: 'splash'
+  components: { LoginForm }
 }
 </script>
 

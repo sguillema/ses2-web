@@ -10,7 +10,8 @@
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 
 export default {
-  middleware: adminAuthenticated
+  middleware: adminAuthenticated,
+  layout: 'application'
 }
 </script>
 

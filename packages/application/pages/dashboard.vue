@@ -10,7 +10,8 @@
 import { authenticated } from '../middleware/authenticatedRoutes'
 
 export default {
-  middleware: authenticated
+  middleware: authenticated,
+  layout: 'application'
 }
 </script>
 

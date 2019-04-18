@@ -3,15 +3,5 @@
  */
 
 // Methods
-/**
- * storeModule
- * @param {*} module
- * @param {*} method
- */
-function storeModule(module, method) {
-  return `${module}/${method}`
-}
 
-module.exports = {
-  storeModule: storeModule
-}
+module.exports = {}
