@@ -1,14 +1,17 @@
 <template>
   <v-toolbar-items v-if="isDashboard">
     <v-btn flat to="/styleguide">Styleguide</v-btn>
-    <v-btn flat @click="logOut">Log Out</v-btn>
+    <ProfileMenu />
   </v-toolbar-items>
 </template>
 
 <script>
 import { authModule, LOGOUT } from '~/store/auth/methods'
+import ProfileMenu from './ProfileMenu'
 
 export default {
+  components: { ProfileMenu },
+
   props: {
     isDashboard: Boolean
   },
