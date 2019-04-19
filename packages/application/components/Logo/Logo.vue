@@ -1,5 +1,5 @@
 <template>
-  <div class="logo">
+  <div class="logo" @click="handleClick">
     <svg
       :class="light ? 'logo-light' : ''"
       width="70"
@@ -54,6 +54,12 @@ export default {
     return {
       isAdmin: this.$store.getters[authModule(IS_ADMIN)]
     }
+  },
+
+  methods: {
+    handleClick() {
+      this.$router.push({ path: '/' })
+    }
   }
 }
 </script>
@@ -62,6 +68,7 @@ export default {
 @import '~assets/styles/variables';
 
 .logo {
+  cursor: pointer;
   height: 100%;
   width: auto;
   display: flex;
