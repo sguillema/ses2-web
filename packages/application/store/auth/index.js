@@ -1,14 +1,19 @@
-import CookieService from '../core/CookieService'
-import AuthApi from '../core/api/AuthApi'
-const {
+import CookieService from '../../core/CookieService'
+import AuthApi from '../../core/api/AuthApi'
+import userTypes from '../../core/userTypes'
+import {
   REQUEST,
   SUCCESS,
   ERROR,
   LOGOUT,
   VALIDATE_COOKIE,
   IS_VALIDATED,
-  AUTH_STATUS
-} = require('~/plugins/resources/storeStrings')
+  AUTH_STATUS,
+  TYPE,
+  IS_ADMIN,
+  IS_STUDENT,
+  USER
+} from './methods'
 
 export const state = () => ({
   token: null,
@@ -18,7 +23,11 @@ export const state = () => ({
 
 export const getters = {
   [IS_VALIDATED]: state => !!state.token,
-  [AUTH_STATUS]: state => state.status
+  [AUTH_STATUS]: state => state.status,
+  [TYPE]: state => state.user.type,
+  [IS_ADMIN]: state => state.user.type === userTypes.ADMIN,
+  [IS_STUDENT]: state => state.user.type === userTypes.STUDENT,
+  [USER]: state => state.user
 }
 
 export const mutations = {
@@ -75,6 +84,7 @@ export const actions = {
       commit(LOGOUT)
       AuthApi.removeAuthorizationHeader()
       CookieService.removeAuthCookies()
+
       resolve()
     }),
 
@@ -91,7 +101,7 @@ export const actions = {
         user = null
       }
       if (token && user) {
-        commit(SUCCESS, { token, user })
+        dispatch(SUCCESS, { token, user })
       } else {
         // auth cookies are invalid, logout immediately
         dispatch(LOGOUT)

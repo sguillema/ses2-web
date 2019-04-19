@@ -36,7 +36,7 @@
 
 <script>
 import LoginHeading from './LoginHeading'
-let storeModule, AUTH, REQUEST
+import { authModule, REQUEST } from '~/store/auth/methods'
 
 export default {
   components: { LoginHeading },
@@ -52,12 +52,6 @@ export default {
     }
   },
 
-  created() {
-    storeModule = this.$helpers.storeModule
-    AUTH = this.$storeStrings.AUTH
-    REQUEST = this.$storeStrings.REQUEST
-  },
-
   methods: {
     changePasswordMask() {
       this.showPasswordMask = !this.showPasswordMask
@@ -67,10 +61,12 @@ export default {
       e.preventDefault()
       try {
         this.errorMessage = ''
-        await this.$store.dispatch(storeModule(AUTH, REQUEST), this.login)
+        await this.$store.dispatch(authModule(REQUEST), this.login)
         this.$router.push({ path: '/dashboard' })
       } catch (e) {
-        this.errorMessage = this.$messages.IncorrectLogin
+        if (e.response && e.response.status === 401)
+          this.errorMessage = this.$messages.IncorrectLogin
+        else this.errorMessage = e.toString()
       }
     }
   }

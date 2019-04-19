@@ -60,7 +60,6 @@
 import { unauthenticated } from '../middleware/authenticatedRoutes'
 
 export default {
-  layout: 'blank',
   middleware: unauthenticated,
 
   data() {

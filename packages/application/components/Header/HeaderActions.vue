@@ -1,26 +1,24 @@
 <template>
   <v-toolbar-items v-if="isDashboard">
-    <v-btn flat @click="logOut">Log Out</v-btn>
+    <v-btn flat to="/styleguide">Styleguide</v-btn>
+    <ProfileMenu />
   </v-toolbar-items>
 </template>
 
 <script>
-let storeModule, AUTH, LOGOUT
+import { authModule, LOGOUT } from '~/store/auth/methods'
+import ProfileMenu from './ProfileMenu'
 
 export default {
+  components: { ProfileMenu },
+
   props: {
     isDashboard: Boolean
   },
 
-  created() {
-    storeModule = this.$helpers.storeModule
-    AUTH = this.$storeStrings.AUTH
-    LOGOUT = this.$storeStrings.LOGOUT
-  },
-
   methods: {
     logOut() {
-      this.$store.dispatch(storeModule(AUTH, LOGOUT))
+      this.$store.dispatch(authModule(LOGOUT))
       this.$router.push({ path: '/' })
     }
   }
@@ -30,7 +28,8 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 
-button.v-btn {
+.theme--light.v-btn,
+.v-btn {
   color: $color-white;
 }
 </style>

@@ -1,5 +1,4 @@
-import { storeModule } from '~/plugins/resources/helpers'
-const { AUTH, VALIDATE_COOKIE } = require('~/plugins/resources/storeStrings')
+import { authModule, VALIDATE_COOKIE } from './auth/methods'
 
 export const state = () => ({})
 
@@ -9,7 +8,8 @@ export const actions = {
   nuxtServerInit({ dispatch }, { req }) {
     const cookie = req.headers.cookie
     if (cookie) {
-      dispatch(storeModule(AUTH, VALIDATE_COOKIE), { cookie })
+      authModule
+      dispatch(authModule(VALIDATE_COOKIE), { cookie })
     }
   }
 }

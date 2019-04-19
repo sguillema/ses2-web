@@ -1,29 +1,25 @@
 <template>
-  <div id="page-index">
+  <div id="page-unauthorised">
     <section class="section-container">
-      <div class="login-wrapper">
-        <LoginForm />
-      </div>
+      <div>Sorry, the requested page cannot be found</div>
+      <a @click="$router.back()">Back to Previous Page</a>
     </section>
   </div>
 </template>
 
 <script>
-import LoginForm from '../components/LoginForm/LoginForm'
 import { unauthenticated } from '../middleware/authenticatedRoutes'
 
 export default {
-  middleware: unauthenticated,
-  components: { LoginForm }
+  middleware: unauthenticated
 }
 </script>
 
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 
-#page-index {
+#page-unauthorised {
   height: 100%;
-  background-color: $color-white;
 }
 
 .section-container {
@@ -31,11 +27,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.login-wrapper {
-  width: 100%;
-  max-width: 350px;
-  padding: 40px 0;
+  flex-direction: column;
 }
 </style>

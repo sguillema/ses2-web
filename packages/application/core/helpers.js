@@ -15,3 +15,12 @@ export const getExpiryOptions = shouldRemember => {
   }
   return options
 }
+
+/**
+ * storeModule
+ * @param {*} module
+ * @param {*} method
+ */
+export const storeModule = (moduleName, method) => {
+  return `${moduleName}/${method}`
+}
