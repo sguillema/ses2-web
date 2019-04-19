@@ -16,6 +16,17 @@ export const adminAuthenticated = ({ store, redirect }) => {
   return null
 }
 
+export const studentAuthenticated = ({ store, redirect }) => {
+  const baseAuthResult = authenticated({ store, redirect })
+  if (baseAuthResult) return baseAuthResult
+
+  if (store.getters[authModule(TYPE)] !== userTypes.STUDENT) {
+    return redirect(NOT_FOUND)
+  }
+
+  return null
+}
+
 export const authenticated = ({ store, redirect }) => {
   // if not authenticated, redirect to root
   if (!store.getters[authModule(IS_VALIDATED)]) {
