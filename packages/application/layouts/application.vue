@@ -2,9 +2,7 @@
   <v-app>
     <Header />
     <v-content>
-      <v-container fluid>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-content>
     <Footer />
   </v-app>

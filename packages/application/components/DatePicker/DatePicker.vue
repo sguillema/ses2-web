@@ -13,7 +13,6 @@
       <v-text-field
         :value="date"
         :label="label"
-        persistent-hint
         :outline="outline"
         @input="change($event)"
         @blur="textFieldBlur(date)"
