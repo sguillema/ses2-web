@@ -57,11 +57,7 @@
 </template>
 
 <script>
-import { unauthenticated } from '../middleware/authenticatedRoutes'
-
 export default {
-  middleware: unauthenticated,
-
   data() {
     return {
       selectItems: ['helooo', 'world', 'this is', 'me'],

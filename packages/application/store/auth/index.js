@@ -12,7 +12,8 @@ import {
   TYPE,
   IS_ADMIN,
   IS_STUDENT,
-  USER
+  USER,
+  IS_REGISTERED
 } from './methods'
 
 export const state = () => ({
@@ -27,6 +28,7 @@ export const getters = {
   [TYPE]: state => state.user.type,
   [IS_ADMIN]: state => state.user.type === userTypes.ADMIN,
   [IS_STUDENT]: state => state.user.type === userTypes.STUDENT,
+  [IS_REGISTERED]: state => !!state.user.registered,
   [USER]: state => state.user
 }
 

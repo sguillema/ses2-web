@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const AUTHORIZATION = 'Authorization'
 
-const ENDPOINT = 'http://localhost:4001'
+const ENDPOINT = 'http://localhost:4000'
 
 export default class AuthApi {
   static setAuthorizationHeader(token) {

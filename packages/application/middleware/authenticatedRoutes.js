@@ -36,9 +36,9 @@ export const authenticated = ({ store, redirect }) => {
   return null
 }
 
-export const unauthenticated = ({ store, redirect, route }) => {
+export const unauthenticated = ({ store, redirect }) => {
   // if authenticated, redirect to root
-  if (store.getters[authModule(IS_VALIDATED)] && route.path === ROOT_PATH) {
+  if (store.getters[authModule(IS_VALIDATED)]) {
     return redirect(DASHBOARD)
   }
 
