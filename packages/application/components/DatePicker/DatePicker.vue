@@ -16,7 +16,7 @@
         persistent-hint
         :outline="outline"
         @input="change($event)"
-        @blur="datePickerDate = parseDate(date)"
+        @blur="textFieldBlur(date)"
         v-on="on"
       />
     </template>
@@ -29,6 +29,12 @@
 </template>
 
 <script>
+import moment from 'moment'
+
+const DATE_PICKER_FORMAT = 'YYYY-MM-DD'
+const INPUT_DISPLAY_FORMAT = 'DD/MM/YYYY'
+const INPUT_PARSE_FORMAT = 'DD-MM-YYYY'
+
 export default {
   props: {
     date: { type: String, default: '' },
@@ -39,29 +45,47 @@ export default {
 
   data() {
     return {
-      datePickerDate: new Date().toISOString().substr(0, 10),
+      datePickerDate: moment().format(DATE_PICKER_FORMAT),
       dateMenu: false
     }
   },
 
   watch: {
     datePickerDate() {
-      this.change(this.formatDate(this.datePickerDate))
+      this.updatePropValue(this.datePickerDate)
     }
   },
 
   methods: {
-    formatDate(date) {
-      if (!date) return null
+    updatePropValue(val) {
+      this.change(this.formatDate(val))
+    },
 
-      const [year, month, day] = date.split('-')
-      return `${day}/${month}/${year}`
+    textFieldBlur(val) {
+      const parsedDate = this.parseDate(val)
+      this.datePickerDate = parsedDate
+      this.updatePropValue(parsedDate)
+    },
+
+    formatDate(date) {
+      return this.convertDateFormat(
+        date,
+        DATE_PICKER_FORMAT,
+        INPUT_DISPLAY_FORMAT
+      )
     },
     parseDate(date) {
-      if (!date) return null
+      return this.convertDateFormat(
+        date,
+        INPUT_PARSE_FORMAT,
+        DATE_PICKER_FORMAT
+      )
+    },
 
-      const [day, month, year] = date.split('/')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    convertDateFormat(date, formatFrom, formatTo) {
+      const parsedDate = moment(date, formatFrom)
+      if (!parsedDate.isValid()) return null
+      return parsedDate.format(formatTo)
     }
   }
 }
