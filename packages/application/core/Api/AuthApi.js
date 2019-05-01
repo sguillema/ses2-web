@@ -3,7 +3,6 @@ import axios from 'axios'
 // useful: https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
 
 const AUTHORIZATION = 'Authorization'
-
 const ENDPOINT = 'http://localhost:4000'
 
 export default class AuthApi {
