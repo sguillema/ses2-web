@@ -9,14 +9,14 @@
       </v-card-title>
       <v-card-text class="body">
         <v-select
-          v-model="background.type"
+          v-model="background.education"
           :items="educationBackgrounds"
           label="Type"
           outline
         />
         <v-text-field
-          v-if="background.type === 'Other'"
-          v-model="background.otherType"
+          v-if="background.education === 'Other'"
+          v-model="background.other"
           label="Other Type"
           outline
         />
@@ -40,8 +40,8 @@
 import educationBackgrounds from '../../core/data/educationBackgrounds'
 
 const initialBackground = {
-  type: '',
-  otherType: '',
+  education: '',
+  other: '',
   mark: ''
 }
 
@@ -60,9 +60,9 @@ export default {
 
   methods: {
     addClick() {
-      let { type, otherType, mark } = this.background
-      if (type === 'Other') type = otherType
-      this.add({ type, mark })
+      let { education, other, mark } = this.background
+      if (education === 'Other') education = other
+      this.add({ education, mark })
       this.background = this.resetBackgroundData()
       this.closeDialog()
     },

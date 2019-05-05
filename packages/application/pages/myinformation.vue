@@ -9,21 +9,17 @@
             <v-layout row wrap>
               <v-flex sm12 md4>
                 <v-text-field
-                  v-model="data.preferredName"
+                  v-model="preferredName"
                   label="Preferred Name"
                   outline
                 />
               </v-flex>
               <v-flex sm12 md4>
-                <v-text-field
-                  v-model="data.studentName"
-                  label="Student Name"
-                  outline
-                />
+                <v-text-field v-model="name" label="Student Name" outline />
               </v-flex>
               <v-flex sm12 md4>
                 <v-text-field
-                  v-model="data.email"
+                  v-model="email"
                   type="email"
                   label="Email"
                   outline
@@ -33,7 +29,7 @@
             <v-layout row wrap>
               <v-flex sm12 md4>
                 <v-text-field
-                  v-model="data.preferredContactNum"
+                  v-model="bestContactNo"
                   label="Preferred Contact Number"
                   type="number"
                   outline
@@ -41,7 +37,7 @@
               </v-flex>
               <v-flex sm12 md4>
                 <v-text-field
-                  v-model="data.homeContactNum"
+                  v-model="homePhone"
                   label="Home Contact Number"
                   type="number"
                   outline
@@ -49,7 +45,7 @@
               </v-flex>
               <v-flex sm12 md4>
                 <v-text-field
-                  v-model="data.mobileContactNum"
+                  v-model="mobileNumber"
                   label="Mobile Contact Number"
                   type="number"
                   outline
@@ -59,7 +55,7 @@
             <v-layout row wrap>
               <v-flex sm12 md4>
                 <v-select
-                  v-model="data.gender"
+                  v-model="gender"
                   :items="genders"
                   label="Gender"
                   outline
@@ -67,9 +63,9 @@
               </v-flex>
               <v-flex sm12 md4>
                 <DatePicker
-                  :date="data.dateOfBirth"
+                  :date="DOB"
                   label="Date of Birth"
-                  :change="val => (data.dateOfBirth = val)"
+                  :change="val => (data.DOB = val)"
                   outline
                 />
               </v-flex>
@@ -77,7 +73,7 @@
             <v-layout row wrap>
               <v-flex sm12 md4>
                 <v-autocomplete
-                  v-model="data.countryOfOrigin"
+                  v-model="countryOfOrigin"
                   :items="countries"
                   label="Country of Origin"
                   outline
@@ -85,7 +81,7 @@
               </v-flex>
               <v-flex sm12 md4>
                 <v-autocomplete
-                  v-model="data.firstLanguage"
+                  v-model="firstLanguage"
                   :items="languages"
                   label="First Language"
                   outline
@@ -100,27 +96,23 @@
             <v-layout row wrap>
               <v-flex sm12 md4>
                 <v-select
-                  v-model="data.degreeType"
+                  v-model="degreeType"
                   :items="degreeTypes"
                   label="Degree Type"
                   outline
                 />
               </v-flex>
               <v-flex sm12 md4>
-                <v-text-field
-                  v-model="data.courseCode"
-                  label="Course"
-                  outline
-                />
+                <v-text-field v-model="course" label="Course" outline />
               </v-flex>
               <v-flex sm12 md4>
-                <v-text-field v-model="data.faculty" label="Faculty" outline />
+                <v-text-field v-model="faculty" label="Faculty" outline />
               </v-flex>
             </v-layout>
             <v-layout row wrap>
               <v-flex sm12 md4>
                 <v-text-field
-                  v-model="data.enrolmentYear"
+                  v-model="enrolmentYear"
                   label="Year of Study"
                   type="number"
                   outline
@@ -128,7 +120,7 @@
               </v-flex>
               <v-flex sm12 md4>
                 <v-select
-                  v-model="data.residencyStatus"
+                  v-model="status"
                   :items="residencyStatuses"
                   label="Status"
                   outline
@@ -145,17 +137,17 @@
           </h2>
           <div class="non-fields">
             <div class="chips">
-              <p v-if="data.educationBackgrounds.length === 0">
+              <p v-if="educationalBackground.length === 0">
                 No educational background has been added
               </p>
               <span
-                v-for="(item, index) in data.educationBackgrounds"
+                v-for="(item, index) in educationalBackground"
                 :key="index"
                 row
                 wrap
               >
                 <v-chip close @input="removeEducation(item)">
-                  <strong>{{ item.type }}</strong>
+                  <strong>{{ item.education }}</strong>
                   &nbsp;
                   <span>({{ item.mark }})</span>
                 </v-chip>
@@ -172,7 +164,7 @@
               purposes.
             </p>
             <p>Is this okay with you?</p>
-            <v-radio-group v-model="data.allowSubmissions" row>
+            <v-radio-group v-model="allowSubmissions" row>
               <v-radio label="Yes" value="true" />
               <v-radio label="No" value="false" />
             </v-radio-group>
@@ -192,6 +184,7 @@
 </template>
 
 <script>
+import { createHelpers } from 'vuex-map-fields'
 import { studentAuthenticated } from '../middleware/authenticatedRoutes'
 import EdBackgroundDialog from '../components/EdBackgroundDialog/EdBackgroundDialog'
 import DatePicker from '~/components/DatePicker/DatePicker'
@@ -201,31 +194,43 @@ import genders from '../core/data/genders'
 import degreeTypes from '../core/data/degreeTypes'
 import residencyStatuses from '../core/data/residencyStatuses'
 
+import {
+  studentModule,
+  PREFERRED_NAME,
+  NAME,
+  GENDER,
+  DOB,
+  COUNTRY_OF_ORIGIN,
+  FIRST_LANGUAGE,
+  EMAIL,
+  HOME_PHONE,
+  MOBILE_NUMBER,
+  BEST_CONTACT_NO,
+  CAF_COMPLETED,
+  SPECIAL_NEEDS,
+  DEGREE_TYPE,
+  COURSE,
+  FACULTY,
+  ENROLMENT_YEAR,
+  STATUS,
+  EDUCATIONAL_BACKGROUND,
+  ALLOW_SUBMISSIONS,
+  REQUEST,
+  ADD_BACKGROUND,
+  REMOVE_BACKGROUND
+} from '../store/student/methods'
+
+const { mapFields } = createHelpers({
+  getterType: studentModule('getField'),
+  mutationType: studentModule('updateField')
+})
+
 export default {
   components: { DatePicker, EdBackgroundDialog },
   middleware: studentAuthenticated,
   layout: 'application',
   data() {
     return {
-      data: {
-        preferredName: '',
-        studentName: '',
-        email: '',
-        preferredContactNum: '',
-        homeContactNum: '',
-        mobileContactNum: '',
-        gender: '',
-        dateOfBirth: '',
-        countryOfOrigin: '',
-        firstLanguage: '',
-        degreeType: '',
-        courseCode: '',
-        faculty: '',
-        enrolmentYear: '',
-        residencyStatus: '',
-        educationBackgrounds: [],
-        allowSubmissions: ''
-      },
       genders: genders,
       countries: countries,
       languages: languages,
@@ -234,21 +239,41 @@ export default {
     }
   },
 
+  computed: {
+    ...mapFields([
+      NAME,
+      PREFERRED_NAME,
+      GENDER,
+      DOB,
+      COUNTRY_OF_ORIGIN,
+      FIRST_LANGUAGE,
+      EMAIL,
+      HOME_PHONE,
+      MOBILE_NUMBER,
+      BEST_CONTACT_NO,
+      CAF_COMPLETED,
+      SPECIAL_NEEDS,
+      DEGREE_TYPE,
+      COURSE,
+      FACULTY,
+      ENROLMENT_YEAR,
+      STATUS,
+      EDUCATIONAL_BACKGROUND,
+      ALLOW_SUBMISSIONS
+    ])
+  },
+
+  async mounted() {
+    await this.$store.dispatch(studentModule(REQUEST), { id: 12345678 })
+  },
+
   methods: {
     addEducation(education) {
-      this.data.educationBackgrounds.push(education)
+      this.$store.dispatch(studentModule(ADD_BACKGROUND), { education })
     },
 
     removeEducation(education) {
-      this.data.educationBackgrounds = this.removeItemFromArray(
-        this.data.educationBackgrounds,
-        education
-      )
-    },
-
-    removeItemFromArray(arr, item) {
-      arr.splice(arr.indexOf(item), 1)
-      return [...arr]
+      this.$store.dispatch(studentModule(REMOVE_BACKGROUND), { education })
     }
   }
 }
