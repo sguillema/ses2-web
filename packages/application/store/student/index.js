@@ -84,7 +84,7 @@ export const actions = {
       commit(SUBMIT)
       try {
         const response = await StudentApi.updateStudent(state.student)
-        commit(SUCCESS)
+        commit(SUCCESS, state.student)
         resolve(response)
       } catch (e) {
         commit(ERROR)

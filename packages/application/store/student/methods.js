@@ -25,11 +25,13 @@ export const STATUS = 'student.status'
 export const ENROLMENT_YEAR = 'student.enrolmentYear'
 export const ALLOW_SUBMISSIONS = 'student.allowSubmissions'
 
+// fetching states
 export const REQUEST = 'request'
 export const SUBMIT = 'submit'
 export const SUCCESS = 'success'
 export const ERROR = 'error'
 
+// methods
 export const ADD_BACKGROUND = 'addBackground'
 export const REMOVE_BACKGROUND = 'removeBackground'
 
