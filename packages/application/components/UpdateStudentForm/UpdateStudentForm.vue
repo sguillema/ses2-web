@@ -1,6 +1,6 @@
 <template>
   <form>
-    <v-sheet class="sheet" elevation="3">
+    <Sheet class="sheet">
       <h2>Personal Details</h2>
       <div class="fields">
         <v-layout row wrap>
@@ -81,8 +81,8 @@
           </v-flex>
         </v-layout>
       </div>
-    </v-sheet>
-    <v-sheet class="sheet" elevation="3">
+    </Sheet>
+    <Sheet class="sheet">
       <h2>Enrolment Details</h2>
       <div class="fields">
         <v-layout row wrap>
@@ -146,8 +146,8 @@
           </span>
         </div>
       </div>
-    </v-sheet>
-    <v-sheet class="sheet" elevation="3">
+    </Sheet>
+    <Sheet class="sheet">
       <h2>Disclaimer</h2>
       <div class="non-fields">
         <p>
@@ -168,7 +168,7 @@
           .
         </p>
       </div>
-    </v-sheet>
+    </Sheet>
     <v-btn color="primary" depressed @click="handleSubmit">Save</v-btn>
     <v-alert :value="!!message" outline type="success">
       {{ message }}
@@ -183,6 +183,7 @@
 import { createHelpers } from 'vuex-map-fields'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import EdBackgroundDialog from '../../components/EdBackgroundDialog/EdBackgroundDialog'
+import Sheet from '../Sheet/Sheet'
 import DatePicker from '~/components/DatePicker/DatePicker'
 import countries from '../../core/data/countries'
 import languages from '../../core/data/languages'
@@ -223,7 +224,7 @@ const { mapFields } = createHelpers({
 })
 
 export default {
-  components: { DatePicker, EdBackgroundDialog },
+  components: { DatePicker, EdBackgroundDialog, Sheet },
   middleware: studentAuthenticated,
   layout: 'application',
   props: {
