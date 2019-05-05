@@ -1,5 +1,5 @@
 import CookieService from '../../core/CookieService'
-import AuthApi from '../../core/api/AuthApi'
+import { AuthApi } from '../../core/Api'
 import userTypes from '../../core/userTypes'
 import {
   REQUEST,
