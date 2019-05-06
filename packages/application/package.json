@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
+    "test": "cucumber-js",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
     "babel-eslint": "^8.2.6",
+    "cucumber": "^5.1.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^3.6.0",
     "eslint-config-standard": ">=12.0.0",
