@@ -4,11 +4,16 @@
       <Sheet header="Registered Students">
         <v-text-field
           v-model="search"
-          class="searchBar"
+          class="input-spacing"
           append-icon="search"
           placeholder="Search"
         />
-        <v-data-table :headers="headers" :items="students" :search="search">
+        <v-data-table
+          class="table-wrapper"
+          :headers="headers"
+          :items="students"
+          :search="search"
+        >
           <template v-slot:items="props">
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.name }}</td>
@@ -21,14 +26,36 @@
             </td>
           </template>
         </v-data-table>
-        <p>
-          To enter more students, please enter their details below and click
-          ‘Add’.
-          <br />
-          <strong>Please note:</strong>
-          All the fields are compulsory, otherwise that student will not be
-          added.
-        </p>
+        <section class="add-student-section">
+          <p>
+            To enter more students, please enter their details below and click
+            ‘Add’.
+            <br />
+            <strong>Please note:</strong>
+            All the fields are compulsory, otherwise that student will not be
+            added.
+          </p>
+          <div class="inputs">
+            <v-text-field
+              v-model="addNew.id"
+              label="Student ID"
+              class="input-spacing"
+            />
+            <v-text-field
+              v-model="addNew.name"
+              label="Name"
+              class="input-spacing"
+            />
+            <v-text-field
+              v-model="addNew.email"
+              label="Email"
+              class="input-spacing"
+            />
+          </div>
+          <v-btn depressed color="primary">
+            Add
+          </v-btn>
+        </section>
       </Sheet>
     </section>
   </div>
@@ -51,7 +78,12 @@ export default {
         { text: 'Name', value: 'name' },
         { text: 'Email', value: 'email' },
         { text: '', value: '' }
-      ]
+      ],
+      addNew: {
+        id: '',
+        name: '',
+        email: ''
+      }
     }
   },
   computed: {
@@ -71,13 +103,35 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 
-.searchBar {
+.input-spacing {
   margin-left: 30px;
   width: 300px;
 }
 
-strong {
-  font-weight: 600;
+.table-wrapper {
+  border-bottom: 2px solid $color-divider;
+  margin-bottom: 12px;
+
+  thead {
+    background: black;
+    tr {
+      &:first-child {
+        border-bottom: 2px solid $color-divider;
+      }
+    }
+  }
+}
+
+.add-student-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .inputs {
+    display: flex;
+  }
+  p {
+    width: 100%;
+  }
 }
 
 a {
@@ -85,16 +139,6 @@ a {
   padding-right: 25px;
   &:hover {
     text-decoration: underline;
-  }
-}
-
-.theme--light.v-table tbody tr:not(:last-child) {
-  border: none;
-}
-
-tbody {
-  tr {
-    border: none;
   }
 }
 </style>
