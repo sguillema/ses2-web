@@ -21,6 +21,14 @@
             </td>
           </template>
         </v-data-table>
+        <p>
+          To enter more students, please enter their details below and click
+          ‘Add’.
+          <br />
+          <strong>Please note:</strong>
+          All the fields are compulsory, otherwise that student will not be
+          added.
+        </p>
       </Sheet>
     </section>
   </div>
@@ -68,9 +76,16 @@ export default {
   width: 300px;
 }
 
+strong {
+  font-weight: 600;
+}
+
 a {
   color: #0f4beb;
   padding-right: 25px;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .theme--light.v-table tbody tr:not(:last-child) {

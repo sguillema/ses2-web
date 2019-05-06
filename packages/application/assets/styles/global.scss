@@ -51,9 +51,7 @@ p {
 
 a {
   color: $color-primary;
-  &:hover {
-    text-decoration: underline;
-  }
+  text-decoration: none;
 }
 
 .v-btn {
