@@ -52,7 +52,7 @@
               class="input-spacing"
             />
           </div>
-          <v-btn depressed color="primary">
+          <v-btn depressed color="primary" @click="addStudent">
             Add
           </v-btn>
         </section>
@@ -96,6 +96,12 @@ export default {
 
   async mounted() {
     await this.$store.dispatch(studentsModule(REQUEST))
+  },
+
+  methods: {
+    async addStudent() {
+      console.log(this.addNew)
+    }
   }
 }
 </script>
