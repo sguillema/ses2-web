@@ -7,13 +7,7 @@
   </div>
 </template>
 
-<script>
-import { unauthenticated } from '../middleware/authenticatedRoutes'
-
-export default {
-  middleware: unauthenticated
-}
-</script>
+<script></script>
 
 <style lang="scss" scoped>
 @import '~assets/styles/variables';

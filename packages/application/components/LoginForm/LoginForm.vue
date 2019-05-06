@@ -36,7 +36,7 @@
 
 <script>
 import LoginHeading from './LoginHeading'
-import { authModule, REQUEST } from '~/store/auth/methods'
+import { authModule, REQUEST, IS_REGISTERED } from '~/store/auth/methods'
 
 export default {
   components: { LoginHeading },
@@ -62,7 +62,9 @@ export default {
       try {
         this.errorMessage = ''
         await this.$store.dispatch(authModule(REQUEST), this.login)
-        this.$router.push({ path: '/dashboard' })
+        if (!this.$store.getters[authModule(IS_REGISTERED)])
+          this.$router.push({ path: '/myinformation' })
+        else this.$router.push({ path: '/dashboard' })
       } catch (e) {
         if (e.response && e.response.status === 401)
           this.errorMessage = this.$messages.IncorrectLogin

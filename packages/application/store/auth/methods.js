@@ -12,5 +12,6 @@ export const TYPE = 'userType'
 export const IS_ADMIN = 'isAdmin'
 export const IS_STUDENT = 'isStudent'
 export const USER = 'user'
+export const IS_REGISTERED = 'isRegistered'
 
 export const authModule = method => storeModule(MODULE, method)

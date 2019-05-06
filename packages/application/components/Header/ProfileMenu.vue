@@ -40,7 +40,7 @@ export default {
         {
           title: 'My Information',
           icon: 'account_circle',
-          onClick: () => this.$router.push({ path: '/profile' })
+          onClick: () => this.$router.push({ path: '/myinformation' })
         },
         {
           title: 'Sign Out',
@@ -51,13 +51,6 @@ export default {
           }
         }
       ]
-    }
-  },
-
-  methods: {
-    logOut() {
-      this.$store.dispatch(authModule(LOGOUT))
-      this.$router.push({ path: '/' })
     }
   }
 }

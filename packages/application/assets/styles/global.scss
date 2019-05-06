@@ -21,6 +21,8 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  // vuetify made me do this
+  overflow: auto!important;
 }
 
 body {
@@ -45,6 +47,10 @@ h2 {
 p {
   font-size: $font-regular;
   font-weight: $fontweight-regular;
+}
+
+a {
+  color: $color-primary;
 }
 
 .v-btn {
