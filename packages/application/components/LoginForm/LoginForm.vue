@@ -18,15 +18,28 @@
         prepend-inner-icon="lock"
         @click:append="changePasswordMask()"
       />
-      <div class="loginOptions">
+      <v-btn
+        class="btn-login"
+        type="submit"
+        depressed
+        color="primary"
+        @click="handleSubmit"
+      >
+        {{ $messages.SubmitLabel }}
+      </v-btn>
+      <div class="options">
         <v-checkbox
           v-model="login.shouldRemember"
           :label="$messages.RememberLoginLabel"
         />
       </div>
-      <v-btn type="submit" depressed color="primary" @click="handleSubmit">
-        {{ $messages.SubmitLabel }}
-      </v-btn>
+      <div class="terms-and-conditions">
+        By signing in, you are agreeing to the
+        <router-link :to="`/terms-and-conditions`">
+          terms and conditions
+        </router-link>
+        .
+      </div>
       <v-alert :value="!!errorMessage" outline type="error">
         {{ errorMessage }}
       </v-alert>
@@ -35,12 +48,7 @@
 </template>
 
 <script>
-import {
-  authModule,
-  REQUEST,
-  IS_ADMIN,
-  IS_REGISTERED
-} from '../../store/auth/methods'
+import { authModule, REQUEST, IS_REGISTERED } from '../../store/auth/methods'
 import LoginHeading from './LoginHeading'
 
 export default {
@@ -91,5 +99,22 @@ export default {
       margin-top: 0;
     }
   }
+}
+
+.btn-login {
+  margin: 0;
+  display: block;
+  width: 100%;
+  height: 56px;
+  font-size: $font-cardtitle;
+  font-weight: $fontweight-regular;
+}
+
+.options {
+  margin-top: 20px;
+}
+
+.terms-and-conditions {
+  font-size: $font-footer;
 }
 </style>

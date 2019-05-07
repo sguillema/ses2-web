@@ -1,7 +1,9 @@
 <template>
   <div id="page-index">
     <section class="section-container">
-      <div class="login-wrapper">
+      <div
+        :class="`login-wrapper${$vuetify.breakpoint.xsOnly ? ' mobile' : ''}`"
+      >
         <LoginForm />
       </div>
     </section>
@@ -23,7 +25,8 @@ export default {
 
 #page-index {
   height: 100%;
-  background-color: $color-white;
+  background-image: url('../static/login-background.png');
+  background-size: cover;
 }
 
 .section-container {
@@ -35,7 +38,13 @@ export default {
 
 .login-wrapper {
   width: 100%;
-  max-width: 350px;
-  margin: 40px 20px;
+  max-width: 450px;
+  padding: 20px 60px;
+  background-color: $color-white;
+  &.mobile {
+    max-width: unset;
+    padding: 20px 20px;
+    height: 100%;
+  }
 }
 </style>

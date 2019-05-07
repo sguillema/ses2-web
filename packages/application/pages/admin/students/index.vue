@@ -62,9 +62,13 @@
 </template>
 
 <script>
-import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
-import { studentsModule, REQUEST, STUDENTS } from '../../store/students/methods'
-import Sheet from '../../components/Sheet/Sheet'
+import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
+import {
+  studentsModule,
+  REQUEST,
+  STUDENTS
+} from '../../../store/students/methods'
+import Sheet from '../../../components/Sheet/Sheet'
 
 export default {
   components: { Sheet },

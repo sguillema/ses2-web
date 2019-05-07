@@ -10,6 +10,7 @@
 
 .login-heading {
   text-align: center;
+  margin: 30px 0;
   .reee {
     margin: 0;
     line-height: 100%;
