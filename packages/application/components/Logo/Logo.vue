@@ -38,22 +38,13 @@
         />
       </g>
     </svg>
-    <div v-if="isAdmin" class="admin">Admin</div>
   </div>
 </template>
 
 <script>
-import { authModule, IS_ADMIN } from '~/store/auth/methods'
-
 export default {
   props: {
     light: Boolean
-  },
-
-  data() {
-    return {
-      isAdmin: this.$store.getters[authModule(IS_ADMIN)]
-    }
   },
 
   methods: {

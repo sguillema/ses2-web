@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar-items v-if="isDashboard">
+  <v-toolbar-items>
     <v-btn flat to="/styleguide">Styleguide</v-btn>
     <ProfileMenu />
   </v-toolbar-items>
@@ -11,11 +11,6 @@ import ProfileMenu from './ProfileMenu'
 
 export default {
   components: { ProfileMenu },
-
-  props: {
-    isDashboard: Boolean
-  },
-
   methods: {
     logOut() {
       this.$store.dispatch(authModule(LOGOUT))

@@ -1,9 +1,7 @@
 <template>
   <div id="page-index">
     <section class="section-container">
-      <div
-        :class="`login-wrapper${$vuetify.breakpoint.xsOnly ? ' mobile' : ''}`"
-      >
+      <div class="login-wrapper">
         <LoginForm />
       </div>
     </section>
@@ -41,7 +39,10 @@ export default {
   max-width: 450px;
   padding: 20px 60px;
   background-color: $color-white;
-  &.mobile {
+}
+
+@media screen and (max-width: $bp-xs) {
+  .login-wrapper {
     max-width: unset;
     padding: 20px 20px;
     height: 100%;
