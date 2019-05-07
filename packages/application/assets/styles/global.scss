@@ -51,6 +51,11 @@ p {
 
 a {
   color: $color-primary;
+  text-decoration: none;
+}
+
+strong {
+  font-weight: $fontweight-bold;
 }
 
 .v-btn {
