@@ -86,7 +86,7 @@ export const actions = {
       commit(LOGOUT)
       AuthApi.removeAuthorizationHeader()
       CookieService.removeAuthCookies()
-
+      window.location.reload(true)
       resolve()
     }),
 

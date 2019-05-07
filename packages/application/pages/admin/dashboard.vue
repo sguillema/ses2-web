@@ -1,17 +1,19 @@
 <template>
   <div id="page-authenticated">
-    <section class="section-container">
-      <div>Hello this is an authenticated route :) with type {{ type }}</div>
+    <section class="container">
+      <div class="section-container">
+        <div>Hello this is an authenticated route :) with type {{ type }}</div>
+      </div>
     </section>
   </div>
 </template>
 
 <script>
 import { authModule, TYPE } from '~/store/auth/methods'
-import { authenticated } from '../middleware/authenticatedRoutes'
+import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 
 export default {
-  middleware: authenticated,
+  middleware: adminAuthenticated,
   layout: 'application',
   data() {
     return {

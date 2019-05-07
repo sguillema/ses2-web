@@ -1,30 +1,24 @@
-import userTypes from '../core/userTypes'
-import { authModule, TYPE, IS_VALIDATED } from '~/store/auth/methods'
+import {
+  authModule,
+  IS_ADMIN,
+  IS_STUDENT,
+  IS_VALIDATED
+} from '~/store/auth/methods'
 
 const ROOT_PATH = '/'
-const DASHBOARD = '/dashboard'
-const NOT_FOUND = '/notfound'
+const ADMIN_DASHBOARD = '/admin/dashboard'
+const STUDENT_DASHBOARD = '/student/dashboard'
 
 export const adminAuthenticated = ({ store, redirect }) => {
-  const baseAuthResult = authenticated({ store, redirect })
-  if (baseAuthResult) return baseAuthResult
-
-  if (store.getters[authModule(TYPE)] !== userTypes.ADMIN) {
-    return redirect(NOT_FOUND)
+  if (!store.getters[authModule(IS_ADMIN)]) {
+    return redirectToDashboard({ store, redirect })
   }
-
-  return null
 }
 
 export const studentAuthenticated = ({ store, redirect }) => {
-  const baseAuthResult = authenticated({ store, redirect })
-  if (baseAuthResult) return baseAuthResult
-
-  if (store.getters[authModule(TYPE)] !== userTypes.STUDENT) {
-    return redirect(NOT_FOUND)
+  if (!store.getters[authModule(IS_STUDENT)]) {
+    return redirectToDashboard({ store, redirect })
   }
-
-  return null
 }
 
 export const authenticated = ({ store, redirect }) => {
@@ -32,15 +26,18 @@ export const authenticated = ({ store, redirect }) => {
   if (!store.getters[authModule(IS_VALIDATED)]) {
     return redirect(ROOT_PATH)
   }
-
-  return null
 }
 
 export const unauthenticated = ({ store, redirect }) => {
-  // if authenticated, redirect to root
+  // if authenticated, redirect to dashboard
   if (store.getters[authModule(IS_VALIDATED)]) {
-    return redirect(DASHBOARD)
+    return redirectToDashboard({ store, redirect })
   }
+}
 
-  return null
+export const redirectToDashboard = ({ store, redirect }) => {
+  // redirect to dashboard of specific type, else just redirect to root
+  if (store.getters[authModule(IS_STUDENT)]) return redirect(STUDENT_DASHBOARD)
+  if (store.getters[authModule(IS_ADMIN)]) return redirect(ADMIN_DASHBOARD)
+  else return redirect(ROOT_PATH)
 }

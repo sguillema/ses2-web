@@ -19,7 +19,6 @@ export default {
   methods: {
     logOut() {
       this.$store.dispatch(authModule(LOGOUT))
-      this.$router.push({ path: '/' })
     }
   }
 }

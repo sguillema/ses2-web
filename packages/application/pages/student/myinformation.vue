@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import UpdateStudentForm from '../components/UpdateStudentForm/UpdateStudentForm'
-import { studentAuthenticated } from '../middleware/authenticatedRoutes'
-import { authModule, USER } from '../store/auth/methods'
+import UpdateStudentForm from '../../components/UpdateStudentForm/UpdateStudentForm'
+import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
+import { authModule, USER } from '../../store/auth/methods'
 
 export default {
   components: { UpdateStudentForm },
