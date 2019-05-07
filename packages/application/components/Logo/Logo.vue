@@ -1,7 +1,7 @@
 <template>
   <div class="logo" @click="handleClick">
     <svg
-      :class="light ? 'logo-light' : ''"
+      :class="{ 'logo-light': light }"
       width="70"
       height="31"
       viewBox="0 0 70 31"

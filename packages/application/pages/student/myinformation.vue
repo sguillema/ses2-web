@@ -15,7 +15,7 @@ import { authModule, USER } from '../../store/auth/methods'
 export default {
   components: { UpdateStudentForm },
   middleware: studentAuthenticated,
-  layout: 'application',
+  layout: 'student',
   data() {
     return {
       user: this.$store.getters[authModule(USER)]

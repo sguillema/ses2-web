@@ -3,7 +3,6 @@
     <v-toolbar-title>
       <Logo light />
     </v-toolbar-title>
-    <v-spacer />
     <HeaderActions />
   </v-toolbar>
 </template>

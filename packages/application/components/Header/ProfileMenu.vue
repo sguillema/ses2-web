@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <v-btn flat dark v-on="on">
         <v-icon class="account-icon">account_circle</v-icon>
-        {{ user.id }}
+        <div class="text">{{ user.id }}</div>
         <v-icon>arrow_drop_down</v-icon>
       </v-btn>
     </template>
@@ -40,15 +40,12 @@ export default {
         {
           title: 'My Information',
           icon: 'account_circle',
-          onClick: () => this.$router.push({ path: '/myinformation' })
+          onClick: () => this.$router.push({ path: '/student/myinformation' })
         },
         {
           title: 'Sign Out',
           icon: 'exit_to_app',
-          onClick: () => {
-            this.$store.dispatch(authModule(LOGOUT))
-            this.$router.push({ path: '/' })
-          }
+          onClick: () => this.$store.dispatch(authModule(LOGOUT))
         }
       ]
     }
@@ -60,6 +57,10 @@ export default {
 @import '~assets/styles/variables';
 
 .account-icon {
-  margin-right: 5px;
+  margin-right: 16px;
+  font-size: 30px;
+}
+.text {
+  font-size: $font-subtitle;
 }
 </style>

@@ -225,8 +225,6 @@ const { mapFields } = createHelpers({
 
 export default {
   components: { DatePicker, EdBackgroundDialog, Sheet },
-  middleware: studentAuthenticated,
-  layout: 'application',
   props: {
     id: { type: String, required: true }
   },

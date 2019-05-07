@@ -73,7 +73,7 @@ import Sheet from '../../../components/Sheet/Sheet'
 export default {
   components: { Sheet },
   middleware: adminAuthenticated,
-  layout: 'application',
+  layout: 'admin',
   data() {
     return {
       search: '',

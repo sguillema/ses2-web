@@ -14,7 +14,7 @@ import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 export default {
   components: { UpdateStudentForm },
   middleware: adminAuthenticated,
-  layout: 'application'
+  layout: 'admin'
 }
 </script>
 
