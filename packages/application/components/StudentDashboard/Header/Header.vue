@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Logo from '../Logo/Logo'
+import Logo from '../../Logo/Logo'
 import HeaderActions from './HeaderActions'
 import { authModule, TYPE } from '~/store/auth/methods'
 

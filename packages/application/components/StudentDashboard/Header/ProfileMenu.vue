@@ -10,15 +10,15 @@
     <v-list dense>
       <v-subheader>Settings</v-subheader>
       <v-list-tile
-        v-for="(item, index) in items"
+        v-for="(link, index) in links"
         :key="index"
-        @click="item.onClick"
+        @click="link.onClick"
       >
         <v-list-tile-action>
-          <v-icon>{{ item.icon }}</v-icon>
+          <v-icon>{{ link.icon }}</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
-          <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          <v-list-tile-title>{{ link.title }}</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       user: this.$store.getters[authModule(USER)],
-      items: [
+      links: [
         {
           title: 'My Information',
           icon: 'account_circle',
