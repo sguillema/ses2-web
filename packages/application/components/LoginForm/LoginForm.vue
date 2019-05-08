@@ -3,12 +3,14 @@
     <LoginHeading />
     <form>
       <v-text-field
+        id="username"
         v-model="login.id"
         outline
         label="Student/Staff Number"
         prepend-inner-icon="account_box"
       />
       <v-text-field
+        id="password"
         v-model="login.password"
         outline
         label="Password"
@@ -24,7 +26,13 @@
           :label="$messages.RememberLoginLabel"
         />
       </div>
-      <v-btn type="submit" depressed color="primary" @click="handleSubmit">
+      <v-btn
+        id="submitBtn"
+        type="submit"
+        depressed
+        color="primary"
+        @click="handleSubmit"
+      >
         {{ $messages.SubmitLabel }}
       </v-btn>
       <v-alert :value="!!errorMessage" outline type="error">
