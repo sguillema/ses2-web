@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import Footer from '~/components/Footer/Footer'
-import FooterLinks from '~/components/Footer/FooterLinks'
+import Footer from '~/components/Layout/Footer/Footer'
+import FooterLinks from '~/components/Layout/Footer/FooterLinks'
 
 export default {
   components: { Footer, FooterLinks },

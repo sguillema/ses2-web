@@ -1,8 +1,8 @@
 <template>
-  <v-app class="app">
-    <AppSidebar class="column left-column" />
-    <div class="column right-column">
-      <v-toolbar flat />
+  <v-app id="admin-layout">
+    <AppSidebar class="admin-layout-column left-column" />
+    <div class="admin-layout-column right-column main">
+      <Header />
       <div class="content">
         <div class="sidebar"></div>
         <v-content>
@@ -14,10 +14,11 @@
 </template>
 
 <script>
-import AppSidebar from '../components/AdminDashboard/AppSidebar'
+import AppSidebar from '../components/Layout/Admin/AppSidebar'
+import Header from '../components/Layout/Admin/Header'
 
 export default {
-  components: { AppSidebar },
+  components: { AppSidebar, Header },
   data() {
     return {
       drawer: true,
@@ -35,52 +36,26 @@ export default {
 <style lang="scss">
 @import '~/assets/styles/global.scss';
 
-.column {
-  display: flex;
-  flex-direction: column;
+#admin-layout {
   height: 100vh;
-}
-
-.left-column {
-  background-color: aqua;
-}
-
-.right-column {
-  background-color: aquamarine;
-  flex: 1 1 auto;
-}
-
-.app {
   .application--wrap {
     flex-direction: unset;
   }
+
+  .admin-layout-column {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+
+    &.left-column {
+    }
+    &.right-column {
+      flex: 1 1 auto;
+    }
+    > .content {
+      overflow: scroll;
+    }
+  }
 }
-
-// .sidebar {
-//   background-color: black;
-//   height: 100vh;
-//   min-width: 55px;
-// }
-
-// .header-and-content {
-//   background: green;
-//   width: 100%;
-// }
-
-// .header {
-//   background-color: red;
-//   height: 100px;
-// }
-
-// .content {
-//   background: orange;
-//   display: flex;
-//   flex-direction: row;
-// }
-
-// .collapsible-sidebar {
-//   height: 100%;
-//   background-color: gray;
-//   width: 240px;
-// }
 </style>

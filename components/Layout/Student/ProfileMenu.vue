@@ -8,7 +8,7 @@
       </v-btn>
     </template>
     <v-list dense>
-      <v-subheader>Settings</v-subheader>
+      <v-subheader>Profile</v-subheader>
       <v-list-tile
         v-for="(link, index) in links"
         :key="index"
@@ -30,7 +30,7 @@ import { authModule, LOGOUT, USER } from '~/store/auth/methods'
 
 export default {
   props: {
-    isDashboard: Boolean
+    dark: Boolean
   },
 
   data() {

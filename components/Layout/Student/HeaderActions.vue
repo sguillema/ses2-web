@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { authModule, LOGOUT } from '~/store/auth/methods'
 import ProfileMenu from './ProfileMenu'
 
 export default {
@@ -34,11 +33,6 @@ export default {
   watch: {
     $route(to, from) {
       this.routePath = to.path
-    }
-  },
-  methods: {
-    logOut() {
-      this.$store.dispatch(authModule(LOGOUT))
     }
   }
 }
