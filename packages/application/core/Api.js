@@ -6,6 +6,7 @@ const ENDPOINT = 'http://localhost:4000'
 const AUTHORIZATION = 'Authorization'
 const AUTH_ENDPOINT = `${ENDPOINT}/users/auth`
 const STUDENT_ENDPOINT = `${ENDPOINT}/students`
+const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -45,6 +46,15 @@ export class StudentApi {
       method: 'patch',
       url: `${STUDENT_ENDPOINT}/${student.id}`,
       data: student
+    })
+  }
+}
+
+export class BookingApi {
+  static async getBookings(studentId) {
+    return await axios({
+      method: 'get',
+      url: `${BOOKINGS_ENDPOINT}?studentId=${studentId}`
     })
   }
 }
