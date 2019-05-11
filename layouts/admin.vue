@@ -49,27 +49,24 @@ export default {
     display: flex;
     flex-direction: row;
     height: 100vh;
+    width: 100vw;
     overflow: hidden;
 
-    .left-column {
-    }
     .right-column {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
-      overflow: scroll;
+    }
+
+    .main {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+      .content {
+        overflow: auto;
+      }
     }
   }
 }
-
-// .main {
-//   display: flex;
-//   flex-direction: row;
-// }
-// .content {
-//   flex: 1 1 auto;
-// }
-// .scrollable {
-//   overflow: scroll;
-// }
 </style>

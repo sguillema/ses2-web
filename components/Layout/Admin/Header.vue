@@ -52,10 +52,4 @@ export default {
   padding: 0;
   font-size: 13px;
 }
-
-.reee {
-  text-transform: uppercase;
-  font-family: 'HelveticaNeue-CondensedBold';
-  line-height: normal;
-}
 </style>

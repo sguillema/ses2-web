@@ -30,8 +30,11 @@ body {
 }
 
 .reee {
+  font-family: 'HelveticaNeue-CondensedBold', 'Roboto Condensed';
   font-size: $font-reee;
   font-weight: $fontweight-ultrabold;
+  line-height: normal;
+  text-transform: uppercase;
 }
 
 h1 {
