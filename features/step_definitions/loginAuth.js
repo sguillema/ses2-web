@@ -16,7 +16,7 @@ Given('the student is on the login page', async t => {
 
 Given('is not logged in', async t => {
   await t
-    .navigateTo('http://localhost:3000/dashboard')
+    .navigateTo('http://localhost:3000/student/dashboard')
     .expect(getLocation())
     .contains('http://localhost:3000')
 })
@@ -40,5 +40,7 @@ When(
 )
 
 Then('they are logged in and sent to the dashboard', async t => {
-  await t.expect(getLocation()).contains('http://localhost:3000/dashboard')
+  await t
+    .expect(getLocation())
+    .contains('http://localhost:3000/student/dashboard')
 })

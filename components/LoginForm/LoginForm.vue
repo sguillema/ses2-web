@@ -21,6 +21,7 @@
         @click:append="changePasswordMask()"
       />
       <v-btn
+        id="submitBtn"
         class="btn-login"
         type="submit"
         depressed
@@ -35,15 +36,6 @@
           :label="$messages.RememberLoginLabel"
         />
       </div>
-      <v-btn
-        id="submitBtn"
-        type="submit"
-        depressed
-        color="primary"
-        @click="handleSubmit"
-      >
-        {{ $messages.SubmitLabel }}
-      </v-btn>
       <div class="terms-and-conditions">
         By signing in, you are agreeing to the
         <router-link :to="`/terms-and-conditions`">
