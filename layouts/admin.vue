@@ -1,13 +1,15 @@
 <template>
   <v-app id="admin-layout">
-    <AppSidebar class="admin-layout-column left-column" />
-    <div class="admin-layout-column right-column main">
-      <Header />
-      <div class="content">
-        <div class="sidebar"></div>
-        <v-content>
-          <nuxt />
-        </v-content>
+    <div class="layout-wrapper">
+      <AppSidebar class="left-column" />
+      <div class="right-column">
+        <Header />
+        <div class="main">
+          <ContentSidebar />
+          <v-content class="content">
+            <nuxt />
+          </v-content>
+        </div>
       </div>
     </div>
   </v-app>
@@ -15,10 +17,11 @@
 
 <script>
 import AppSidebar from '../components/Layout/Admin/AppSidebar'
+import ContentSidebar from '../components/Layout/Admin/ContentSidebar'
 import Header from '../components/Layout/Admin/Header'
 
 export default {
-  components: { AppSidebar, Header },
+  components: { AppSidebar, Header, ContentSidebar },
   data() {
     return {
       drawer: true,
@@ -42,20 +45,31 @@ export default {
     flex-direction: unset;
   }
 
-  .admin-layout-column {
+  .layout-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: 100vh;
     overflow: hidden;
 
-    &.left-column {
+    .left-column {
     }
-    &.right-column {
+    .right-column {
       flex: 1 1 auto;
-    }
-    > .content {
+      display: flex;
+      flex-direction: column;
       overflow: scroll;
     }
   }
 }
+
+// .main {
+//   display: flex;
+//   flex-direction: row;
+// }
+// .content {
+//   flex: 1 1 auto;
+// }
+// .scrollable {
+//   overflow: scroll;
+// }
 </style>
