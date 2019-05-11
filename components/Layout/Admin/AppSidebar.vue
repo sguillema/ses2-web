@@ -12,6 +12,11 @@
       <v-list-tile class="logo-list-item">
         <LogoFlag class="logo-flag" />
       </v-list-tile>
+      <v-list-tile @click="toggleAdminSidebar()">
+        <v-list-tile-action>
+          <v-icon class="icon">{{ menuIcon }}</v-icon>
+        </v-list-tile-action>
+      </v-list-tile>
       <v-list-tile v-for="item in items" :key="item.title" @click="item.action">
         <v-list-tile-action>
           <v-icon class="icon">{{ item.icon }}</v-icon>
@@ -28,22 +33,38 @@
 <script>
 import LogoFlag from '~/components/Logos/LogoFlag'
 import ProfileMenu from './ProfileMenu'
+import { ADMIN_SIDEBAR_OPEN } from '../../../store/methods'
+
 export default {
   components: { LogoFlag, ProfileMenu },
   data() {
     return {
       items: [
-        { icon: 'menu', action: () => console.log('menu') },
+        { icon: 'search', action: () => console.log('search') },
         {
           icon: 'dashboard',
           action: () => this.$router.push({ path: '/admin/dashboard' })
-        },
-        { icon: 'search', action: () => console.log('search') }
+        }
       ],
       bottomItem: { icon: 'settings', action: () => console.log('settings') }
     }
+  },
+  computed: {
+    sidebarOpen() {
+      return this.$store.getters[ADMIN_SIDEBAR_OPEN]
+    },
+    menuIcon() {
+      return this.sidebarOpen ? 'keyboard_arrow_left' : 'menu'
+    }
+  },
+  methods: {
+    toggleAdminSidebar() {
+      this.$store.commit(ADMIN_SIDEBAR_OPEN, !this.sidebarOpen)
+    }
   }
 }
+
+// keyboard_arrow_left
 </script>
 
 <style lang="scss">

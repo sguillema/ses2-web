@@ -5,7 +5,7 @@
       <div class="right-column">
         <Header />
         <div class="main">
-          <ContentSidebar />
+          <ContentSidebar :class="{ 'hide-sidebar': !sidebarOpen }" />
           <v-content class="content">
             <nuxt />
           </v-content>
@@ -19,13 +19,13 @@
 import AppSidebar from '../components/Layout/Admin/AppSidebar'
 import ContentSidebar from '../components/Layout/Admin/ContentSidebar'
 import Header from '../components/Layout/Admin/Header'
+import { ADMIN_SIDEBAR_OPEN } from '../store/methods'
 
 export default {
   components: { AppSidebar, Header, ContentSidebar },
-  data() {
-    return {
-      drawer: true,
-      mini: true
+  computed: {
+    sidebarOpen() {
+      return this.$store.getters[ADMIN_SIDEBAR_OPEN]
     }
   },
   mounted() {
@@ -67,6 +67,9 @@ export default {
         overflow-y: auto;
       }
     }
+  }
+  .hide-sidebar {
+    display: none;
   }
 }
 </style>

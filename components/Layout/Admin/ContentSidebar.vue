@@ -81,10 +81,11 @@ export default {
 #content-sidebar {
   background: none;
   width: 240px;
+  min-width: 240px;
   .navigation-drawer {
     height: 100%;
     background: none;
-    overflow: visible;
+    overflow: auto;
     .list {
       height: inherit;
       background: none;
@@ -99,7 +100,7 @@ export default {
         width: 3px;
         background-color: $color-primary;
         position: absolute;
-        right: -3px;
+        right: 0;
         transition: height 0.2s ease-out;
       }
 

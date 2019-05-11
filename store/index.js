@@ -1,8 +1,19 @@
 import { authModule, VALIDATE_COOKIE } from './auth/methods'
+import { ADMIN_SIDEBAR_OPEN } from './methods'
 
-export const state = () => ({})
+export const state = () => ({
+  adminSidebarOpen: true
+})
 
-export const mutations = {}
+export const getters = {
+  [ADMIN_SIDEBAR_OPEN]: state => state.adminSidebarOpen
+}
+
+export const mutations = {
+  [ADMIN_SIDEBAR_OPEN]: (state, adminSidebarOpen) => {
+    state.adminSidebarOpen = adminSidebarOpen
+  }
+}
 
 export const actions = {
   nuxtServerInit({ dispatch }, { req }) {
@@ -13,5 +24,3 @@ export const actions = {
     }
   }
 }
-
-export const getters = {}
