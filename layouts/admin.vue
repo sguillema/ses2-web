@@ -64,7 +64,7 @@ export default {
       flex-direction: row;
       overflow: hidden;
       .content {
-        overflow: auto;
+        overflow-y: auto;
       }
     }
   }

@@ -58,7 +58,7 @@ export default {
   display: table;
   margin: 0 auto;
   height: 5px;
-  background-color: white;
+  background-color: $color-white;
   position: relative;
   bottom: 5px;
   width: 0;

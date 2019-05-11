@@ -1,7 +1,7 @@
 <template>
   <v-card id="content-sidebar" class="elevation-3">
     <v-navigation-drawer stateless value="true" class="navigation-drawer">
-      <v-list class="list">
+      <v-list class="list" dense>
         <div
           v-for="(section, sectionIndex) in listSections"
           :key="sectionIndex"
@@ -18,6 +18,7 @@
             <v-list-tile-content>
               <v-list-tile-title>{{ link.title }}</v-list-tile-title>
             </v-list-tile-content>
+            <div class="highlight-route"></div>
           </v-list-tile>
           <v-divider v-if="sectionIndex !== listSections.length - 1" />
         </div>
@@ -34,11 +35,11 @@ export default {
         {
           title: 'Bookings',
           links: [
-            { title: 'Workshops', icon: 'exit_to_app', to: '/admin/workshops' },
-            { title: 'Programs', icon: 'exit_to_app', to: '/admin/programs' },
+            { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
+            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
             {
               title: 'Consultations',
-              icon: 'exit_to_app',
+              icon: 'forum',
               to: '/admin/consultations'
             }
           ]
@@ -46,11 +47,15 @@ export default {
         {
           title: 'Advisor',
           links: [
-            { title: 'Advisors', icon: 'exit_to_app', to: '/admin/advisors' },
-            { title: 'Students', icon: 'exit_to_app', to: '/admin/students' },
+            {
+              title: 'Advisors',
+              icon: 'supervised_user_circle',
+              to: '/admin/advisors'
+            },
+            { title: 'Students', icon: 'recent_actors', to: '/admin/students' },
             {
               title: 'Waiting Lists',
-              icon: 'exit_to_app',
+              icon: 'list',
               to: '/admin/waitinglists'
             }
           ]
@@ -58,11 +63,11 @@ export default {
         {
           title: 'Miscellaneous',
           links: [
-            { title: 'Skill-set', icon: 'exit_to_app', to: '/admin/skillset' },
-            { title: 'Email', icon: 'exit_to_app', to: '/admin/email' },
-            { title: 'Reports', icon: 'exit_to_app', to: '/admin/reports' },
-            { title: 'Room', icon: 'exit_to_app', to: '/admin/room' },
-            { title: 'Messages', icon: 'exit_to_app', to: '/admin/messages' }
+            { title: 'Skill Set', icon: 'receipt', to: '/admin/skillset' },
+            { title: 'Email', icon: 'email', to: '/admin/email' },
+            { title: 'Reports', icon: 'book', to: '/admin/reports' },
+            { title: 'Room', icon: 'home', to: '/admin/room' },
+            { title: 'Messages', icon: 'chat', to: '/admin/messages' }
           ]
         }
       ]
@@ -79,12 +84,48 @@ export default {
   .navigation-drawer {
     height: 100%;
     background: none;
+    overflow: visible;
     .list {
       height: inherit;
       background: none;
     }
+    .v-subheader,
+    .v-list__tile {
+      padding: 0 30px;
+    }
+    .v-list__tile {
+      .highlight-route {
+        height: 0;
+        width: 3px;
+        background-color: $color-primary;
+        position: absolute;
+        right: -3px;
+        transition: height 0.2s ease-out;
+      }
+
+      &.v-list__tile--active {
+        background-color: $color-graydarker;
+        .v-icon {
+          color: rgba(0, 0, 0, 0.54);
+        }
+        .highlight-route {
+          height: 100%;
+        }
+      }
+    }
+    .v-list__tile__title {
+      color: $color-black;
+      font-weight: $fontweight-regular;
+    }
+    .v-subheader {
+      text-transform: uppercase;
+      font-weight: $fontweight-ultrabold;
+    }
     .v-navigation-drawer__border {
       display: none;
+    }
+    .v-divider {
+      margin: 5px 0;
     }
   }
 }

@@ -24,15 +24,15 @@ export default {
       {
         text: 'Dashboard',
         disabled: false,
-        href: 'admin/dashboard'
+        href: '/admin/dashboard'
       },
       {
-        text: 'Link 1',
+        text: 'Placeholder 1',
         disabled: false,
         href: 'breadcrumbs_link_1'
       },
       {
-        text: 'Link 2',
+        text: 'Placeholder 2',
         disabled: true,
         href: 'breadcrumbs_link_2'
       }
