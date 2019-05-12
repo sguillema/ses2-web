@@ -4,14 +4,17 @@ const { Selector: NativeSelector, ClientFunction } = require('testcafe')
 const Selector = (input, t) => {
   return NativeSelector(input).with({ boundTestRun: t })
 }
+const DOMAIN = 'http://localhost:3000'
+const STUDENT_DASHBOARD = `${DOMAIN}/student/dashboard`
+const ADMIN_DASHBOARD = `${DOMAIN}/admin/dashboard`
 const getLocation = ClientFunction(() => document.location.href)
 
 Before('@userHook', async () => {
-  console.log('Running student login test')
+  console.log('Running user login test')
 })
 //test to see if the user is student or admin
 function testIdentity(username, password) {
-  if (username == '123456789' && password == 'password') {
+  if (username == '12345678' && password == 'password') {
     return 'student'
   } else if (username == '11230099' && password == 'password') {
     return 'admin'
@@ -19,7 +22,7 @@ function testIdentity(username, password) {
 }
 //navigate to index
 Given('the user is on the login page', async t => {
-  await t.navigateTo('http://localhost:3000')
+  await t.navigateTo(DOMAIN)
 })
 //clear cookies
 Given('is not logged in', async t => {
@@ -52,13 +55,9 @@ When(
 )
 //test for admin or student dashboard
 Then('they are logged in and sent to the dashboard', async t => {
-  if (this.user == 'student')
-    await t
-      .expect(getLocation())
-      .contains('http://localhost:3000/student/dashboard')
-  else if (this.user == 'admin') {
-    await t
-      .expect(getLocation())
-      .contains('http://localhost:3000/admin/dashboard')
+  if (this.user == 'student') {
+    await t.expect(getLocation()).contains(STUDENT_DASHBOARD)
+  } else if (this.user == 'admin') {
+    await t.expect(getLocation()).contains(ADMIN_DASHBOARD)
   }
 })
