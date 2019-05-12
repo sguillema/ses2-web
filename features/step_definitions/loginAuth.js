@@ -9,11 +9,11 @@ const getLocation = ClientFunction(() => document.location.href)
 Before('@studentHook', async () => {
   console.log('Running student login test')
 })
-
+//navigate to index
 Given('the student is on the login page', async t => {
   await t.navigateTo('http://localhost:3000')
 })
-
+//clear cookies
 Given('is not logged in', async t => {
   ClientFunction(() =>
     document.cookie.split(';').forEach(function(c) {
@@ -23,7 +23,7 @@ Given('is not logged in', async t => {
     })
   )
 })
-
+//test for username and password
 When(
   /^the student enters "(.+)" AND "(.+)" AND submits$/,
   async (t, [username, password]) => {
