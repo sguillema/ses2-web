@@ -15,10 +15,13 @@ Given('the student is on the login page', async t => {
 })
 
 Given('is not logged in', async t => {
-  await t
-    .navigateTo('http://localhost:3000/student/dashboard')
-    .expect(getLocation())
-    .contains('http://localhost:3000')
+  ClientFunction(() =>
+    document.cookie.split(';').forEach(function(c) {
+      document.cookie = c
+        .replace(/^ +/, '')
+        .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
+    })
+  )
 })
 
 When(
