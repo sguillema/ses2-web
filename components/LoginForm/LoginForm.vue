@@ -3,12 +3,14 @@
     <LoginHeading />
     <form>
       <v-text-field
+        id="username"
         v-model="login.id"
         outline
         label="Student/Staff Number"
         prepend-inner-icon="account_box"
       />
       <v-text-field
+        id="password"
         v-model="login.password"
         outline
         label="Password"
@@ -19,6 +21,7 @@
         @click:append="changePasswordMask()"
       />
       <v-btn
+        id="submitBtn"
         class="btn-login"
         type="submit"
         depressed

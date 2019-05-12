@@ -8,6 +8,7 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
+    "test": "gherkin-testcafe chrome ./features/login_auth.feature ./features/step_definitions/loginAuth.js --skip-js-errors",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "lint-staged"
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
     "babel-eslint": "^8.2.6",
+    "cucumber": "^5.1.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^3.6.0",
     "eslint-config-standard": ">=12.0.0",
@@ -47,10 +49,12 @@
     "eslint-plugin-promise": ">=4.0.1",
     "eslint-plugin-standard": ">=4.0.0",
     "eslint-plugin-vue": "^5.2.2",
+    "gherkin-testcafe": "^2.2.0",
     "lint-staged": "^8.1.1",
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.9",
     "prettier": "^1.16.4",
-    "sass-loader": "^7.1.0"
+    "sass-loader": "^7.1.0",
+    "testcafe": "^1.1.4"
   }
 }
