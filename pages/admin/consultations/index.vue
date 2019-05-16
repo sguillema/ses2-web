@@ -4,17 +4,19 @@
       <div class="column-left">
         <v-sheet class="calendar-container" elevation="3">
           <div class="calendar-header">
-            <span class="calendar-year">Year</span>
-            <span class="calendar-date">Date</span>
+            <div class="calendar-header-container">
+              <span class="calendar-year">{{ calendarHeaderYear }}</span>
+              <span class="calendar-date">{{ calendarHeaderDate }}</span>
+            </div>
             <div class="calendar-controls">
               <span class="calendar-back">
-                <v-icon @click="$refs.calendar.prev()">
+                <v-icon @click="prevMonth">
                   arrow_back_ios
                 </v-icon>
               </span>
-              <span class="calendar-selection">May 2019</span>
+              <span class="calendar-selection">{{ calendarMenuDate }}</span>
               <span class="calendar-forward">
-                <v-icon @click="$refs.calendar.next()">
+                <v-icon @click="nextMonth">
                   arrow_forward_ios
                 </v-icon>
               </span>
@@ -22,11 +24,19 @@
           </div>
           <v-calendar
             ref="calendar"
-            v-model="start"
+            v-model="value"
             :type="type"
             :now="today"
             color="primary"
-          />
+            @click:date="setSelectedDate"
+          >
+            <!-- <template v-slot:day="date">
+              fuuk
+            </template> -->
+            <!-- <template v-slot:day="{ date }" @click="console.log(date)">
+              asssa
+            </template> -->
+          </v-calendar>
         </v-sheet>
         <Sheet>
           Filter Sessions
@@ -54,14 +64,51 @@ export default {
     return {
       dummy: '',
       type: 'month',
-      start: moment(),
-      today: moment()
+      start: moment().format('YYYY-MM-DD'),
+      today: moment().format('YYYY-MM-DD'),
+      value: moment().format('YYYY-MM-DD'),
+      selected: moment().format('YYYY-MM-DD')
+    }
+  },
+  computed: {
+    calendarMenuDate() {
+      return moment(this.value).format('MMMM YYYY')
+    },
+    calendarHeaderDate() {
+      return moment(this.selected).format('ddd, MMM DD')
+    },
+    calendarHeaderYear() {
+      return moment(this.selected).format('YYYY')
+    }
+  },
+  methods: {
+    nextMonth() {
+      this.value = moment(this.value)
+        .add(1, 'month')
+        .format('YYYY-MM-DD')
+    },
+    prevMonth() {
+      console.log(123412)
+      this.value = moment(this.value)
+        .subtract(1, 'month')
+        .format('YYYY-MM-DD')
+      console.log(
+        moment(this.value)
+          .subtract(1, 'month')
+          .format('YYYY-MM-DD')
+      )
+    },
+    setSelectedDate(date) {
+      console.log(date)
+      this.selected = date
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '~assets/styles/variables';
+
 #page-consultations {
   .container {
     display: flex;
@@ -71,6 +118,43 @@ export default {
       margin-right: 27px;
       .calendar-container {
         margin-bottom: 27px;
+        user-select: none;
+        .calendar-header {
+          background: $color-black;
+          min-height: 132px;
+          height: 132px;
+          display: flex;
+          flex-direction: column;
+          .calendar-header-container {
+            padding: 15px 22px;
+            display: flex;
+            flex-direction: column;
+            .calendar-year,
+            .calendar-date {
+              color: $color-white;
+            }
+            .calendar-year {
+              font-size: $font-regular;
+              margin-bottom: 5px;
+            }
+            .calendar-date {
+              font-size: 34px;
+              font-weight: 500;
+              line-height: 34px;
+            }
+          }
+          .calendar-controls {
+            margin-top: auto;
+            height: 44px;
+            min-height: 44px;
+            background: $color-white;
+            color: $color-darkgray;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+          }
+        }
       }
     }
     .column-right {
