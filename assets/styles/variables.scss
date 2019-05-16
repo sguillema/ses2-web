@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Roboto:300,500,700');
+
+/*********************
+* COLOURS/VARIABLES  *
+*********************/
+$color-primary: #ff0000;
+$color-secondary: #0a49f1;
+
+$color-black: #000;
+$color-darkgray: #707070;
+$color-divider: #ECECEC;
+$color-graydarker: #dedede;
+$color-divider-dark: #CCC;
+$color-gray: #f8f8f8;
+$color-white: #fff;
+
+$fontweight-ultrabold: 700;
+$fontweight-bold: 500;
+$fontweight-regular: 400;
+$fontweight-light: 300;
+
+$font-reee: 40px;
+$font-heading: 24px;
+$font-subheading: 20px;
+$font-cardtitle: 18px;
+$font-subtitle: 16px;
+$font-button: 15px;
+$font-regular: 14px;
+$font-footer: 12px;
+
+/****************
+* BREAK POINTS  *
+****************/
+$bp-xs: 600px;
+$bp-sm: 960px;
+$bp-md: 1264px;
+$bp-lg: 1904px;
+
+/***********
+* FONTS    *
+***********/
+// For local loading. It's better to use CDN
+
+// @font-face{
+//   font-family: 'Sniglet';
+//   src: url("~assets/fonts/Sniglet-ExtraBold.ttf");
+//   font-weight: bold;
+// }
+
+/***********
+* MIXINS   *
+***********/
+// max-width-1
+@mixin max-width-1() {
+  max-width: 1920px;
+}
+
+// max-width-2
+@mixin max-width-2() {
+  max-width: 1360px;
+}
+
+// col-12: Used to define column size in a 12 column layout
+@mixin col-12($prop) {
+  width: 100% / 12 * $prop;
+}
+
+// col-4: Used to define column size in a 4 column layout
+@mixin col-4($prop) {
+  width: 100% / 4 * $prop;
+}
+
+@mixin shadow() {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+}
