@@ -19,6 +19,7 @@
         <div>Hello this is an authenticated route :) with type {{ type }}</div>
       </div>
     </section>
+    <!--  -->
     <!-- <section class="section-container">
       <div>
         Hello this is an authenticated route :) with user id of {{ user.id }}
@@ -34,7 +35,7 @@
 
 <script>
 import { authModule, TYPE, USER } from '~/store/auth/methods'
-import { BookingApi } from '../core/Api'
+import { BookingApi } from '../../core/Api'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 
 export default {

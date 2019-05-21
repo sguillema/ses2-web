@@ -7,6 +7,7 @@ const AUTHORIZATION = 'Authorization'
 const AUTH_ENDPOINT = `${ENDPOINT}/users/auth`
 const STUDENT_ENDPOINT = `${ENDPOINT}/students`
 const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
+const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -55,6 +56,15 @@ export class BookingApi {
     return await axios({
       method: 'get',
       url: `${BOOKINGS_ENDPOINT}?studentId=${studentId}`
+    })
+  }
+}
+
+export class ConsultationApi {
+  static async getConsultations(studentId) {
+    return await axios({
+      method: 'get',
+      url: `${CONSULTATIONS_ENDPOINT}?studentId=${studentId}`
     })
   }
 }
