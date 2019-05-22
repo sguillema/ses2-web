@@ -22,27 +22,56 @@
             width="290"
             :type="calendarType"
           />
-          <v-divider />
-          <div class="filters">
-            <h2>Filters</h2>
-            <v-autocomplete
-              v-model="advisorsInput"
-              :items="advisors"
-              :loading="isLoading"
-              label="Advisor"
-            />
-            <v-autocomplete
-              v-model="roomsInput"
-              :items="rooms"
-              :loading="isLoading"
-              label="Room"
-            />
-          </div>
         </v-sheet>
       </div>
       <div class="column-right">
         <Sheet header="Upcoming Consultations">
-          <div>123234</div>
+          <div class="section-header">
+            <v-text-field
+              v-model="search"
+              class="input-spacing"
+              append-icon="search"
+              label="Search"
+              placeholder="Search"
+              single-line
+              hide-details
+            />
+            <v-btn
+              class="header-button"
+              depressed
+              color="primary"
+              @click="addStudent"
+            >
+              Create Consultation Session
+            </v-btn>
+          </div>
+          <v-data-table
+            class="table-wrapper"
+            :headers="headers"
+            :items="sessions"
+          >
+            <template v-slot:items="props">
+              <td>{{ props.item.id }}</td>
+              <td>{{ getSessionDate(props.item.date) }}</td>
+              <td>
+                {{ getSessionPeriod(props.item.startTime, props.item.endTime) }}
+              </td>
+              <td>{{ props.item.room }}</td>
+              <td>{{ props.item.createdByName }}</td>
+              <td>
+                <router-link
+                  :to="`/students/${props.item.bookedBookings[0].studentId}`"
+                >
+                  {{ props.item.bookedBookings[0].studentId }}
+                </router-link>
+              </td>
+              <td>
+                <router-link :to="`/consultations/${props.item.id}`">
+                  View
+                </router-link>
+              </td>
+            </template>
+          </v-data-table>
         </Sheet>
       </div>
     </section>
@@ -60,21 +89,24 @@ export default {
   layout: 'admin',
   data() {
     return {
-      dummy: '',
+      search: '',
+      advisorsInput: '',
+      roomsInput: '',
       calendarToggle: false,
       today: moment().format('YYYY-MM-DD'),
       value: moment().format('YYYY-MM'),
       selected: moment().format('YYYY-MM-DD'),
-      advisors: [
-        'blyue',
-        'seb',
-        'asdsda',
-        'and',
-        'hayden',
-        'sheng',
-        'abd',
-        'andre'
-      ]
+      headers: [
+        { text: 'ID', value: 'id', sortable: false },
+        { text: 'Date', value: 'date' },
+        { text: 'Time', value: 'time', sortable: false },
+        { text: 'Room', value: 'room', sortable: false },
+        { text: 'Advisor', value: 'advisor', sortable: false },
+        { text: 'Booked By', value: 'studentId', sortable: false },
+        { text: '', value: '', sortable: false }
+      ],
+      sessions: [],
+      sessionsLoading: false
     }
   },
   computed: {
@@ -96,7 +128,22 @@ export default {
       }
     }
   },
-  methods: {}
+  async mounted() {
+    // await this.$store.dispatch()
+    this.loading = true
+    this.sessions = await this.$axios.$get(
+      'http://localhost:4000/sessions?type=0'
+    )
+    this.loading = false
+  },
+  methods: {
+    getSessionDate(date) {
+      return moment(date).format('DD/MM/YYYY')
+    },
+    getSessionPeriod(start, end) {
+      return `${moment(start).format('kk:mm')} - ${moment(end).format('kk:mm')}`
+    }
+  }
 }
 </script>
 
@@ -130,6 +177,26 @@ export default {
     }
     .column-right {
       width: 100%;
+      .input-spacing {
+        @include input-spacing();
+        max-width: 300px;
+      }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        .header-button {
+          margin-right: 30px;
+        }
+      }
+      .table-wrapper {
+        a {
+          color: #0f4beb;
+          padding-right: 25px;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
     }
   }
 }
