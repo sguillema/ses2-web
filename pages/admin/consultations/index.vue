@@ -2,45 +2,43 @@
   <div id="page-consultations">
     <section class="container">
       <div class="column-left">
-        <v-sheet class="calendar-container" elevation="3">
-          <div class="calendar-header">
-            <div class="calendar-header-container">
-              <span class="calendar-year">{{ calendarHeaderYear }}</span>
-              <span class="calendar-date">{{ calendarHeaderDate }}</span>
-            </div>
-            <div class="calendar-controls">
-              <span class="calendar-back">
-                <v-icon @click="prevMonth">
-                  arrow_back_ios
-                </v-icon>
-              </span>
-              <span class="calendar-selection">{{ calendarMenuDate }}</span>
-              <span class="calendar-forward">
-                <v-icon @click="nextMonth">
-                  arrow_forward_ios
-                </v-icon>
-              </span>
-            </div>
-          </div>
-          <v-calendar
-            ref="calendar"
+        <v-sheet class="filter-container" elevation="3">
+          <v-switch
+            v-model="calendarToggle"
+            class="calendar-toggle"
+            label="Select by day"
+            color="red"
+            dark
+            hide-details
+            flat
+          />
+          <v-date-picker
             v-model="value"
-            :type="type"
-            :now="today"
-            color="primary"
-            @click:date="setSelectedDate"
-          >
-            <!-- <template v-slot:day="date">
-              fuuk
-            </template> -->
-            <!-- <template v-slot:day="{ date }" @click="console.log(date)">
-              asssa
-            </template> -->
-          </v-calendar>
+            class="calendar"
+            :min="calendarMinDate"
+            :max="calendarMaxDate"
+            header-color="black"
+            color="red"
+            width="290"
+            :type="calendarType"
+          />
+          <v-divider />
+          <div class="filters">
+            <h2>Filters</h2>
+            <v-autocomplete
+              v-model="advisorsInput"
+              :items="advisors"
+              :loading="isLoading"
+              label="Advisor"
+            />
+            <v-autocomplete
+              v-model="roomsInput"
+              :items="rooms"
+              :loading="isLoading"
+              label="Room"
+            />
+          </div>
         </v-sheet>
-        <Sheet>
-          Filter Sessions
-        </Sheet>
       </div>
       <div class="column-right">
         <Sheet header="Upcoming Consultations">
@@ -63,46 +61,42 @@ export default {
   data() {
     return {
       dummy: '',
-      type: 'month',
-      start: moment().format('YYYY-MM-DD'),
+      calendarToggle: false,
       today: moment().format('YYYY-MM-DD'),
-      value: moment().format('YYYY-MM-DD'),
-      selected: moment().format('YYYY-MM-DD')
+      value: moment().format('YYYY-MM'),
+      selected: moment().format('YYYY-MM-DD'),
+      advisors: [
+        'blyue',
+        'seb',
+        'asdsda',
+        'and',
+        'hayden',
+        'sheng',
+        'abd',
+        'andre'
+      ]
     }
   },
   computed: {
-    calendarMenuDate() {
-      return moment(this.value).format('MMMM YYYY')
+    calendarMinDate() {
+      return moment(this.today)
+        .subtract(1, 'year')
+        .toISOString()
     },
-    calendarHeaderDate() {
-      return moment(this.selected).format('ddd, MMM DD')
+    calendarMaxDate() {
+      return moment(this.today)
+        .add(1, 'year')
+        .toISOString()
     },
-    calendarHeaderYear() {
-      return moment(this.selected).format('YYYY')
+    calendarType() {
+      if (this.calendarToggle) {
+        return 'date'
+      } else {
+        return 'month'
+      }
     }
   },
-  methods: {
-    nextMonth() {
-      this.value = moment(this.value)
-        .add(1, 'month')
-        .format('YYYY-MM-DD')
-    },
-    prevMonth() {
-      console.log(123412)
-      this.value = moment(this.value)
-        .subtract(1, 'month')
-        .format('YYYY-MM-DD')
-      console.log(
-        moment(this.value)
-          .subtract(1, 'month')
-          .format('YYYY-MM-DD')
-      )
-    },
-    setSelectedDate(date) {
-      console.log(date)
-      this.selected = date
-    }
-  }
+  methods: {}
 }
 </script>
 
@@ -116,44 +110,21 @@ export default {
       min-width: 290px;
       width: 290px;
       margin-right: 27px;
-      .calendar-container {
-        margin-bottom: 27px;
-        user-select: none;
-        .calendar-header {
-          background: $color-black;
-          min-height: 132px;
-          height: 132px;
-          display: flex;
-          flex-direction: column;
-          .calendar-header-container {
-            padding: 15px 22px;
-            display: flex;
-            flex-direction: column;
-            .calendar-year,
-            .calendar-date {
-              color: $color-white;
-            }
-            .calendar-year {
-              font-size: $font-regular;
-              margin-bottom: 5px;
-            }
-            .calendar-date {
-              font-size: 34px;
-              font-weight: 500;
-              line-height: 34px;
-            }
-          }
-          .calendar-controls {
-            margin-top: auto;
-            height: 44px;
-            min-height: 44px;
-            background: $color-white;
-            color: $color-darkgray;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-          }
+      .filter-container {
+        position: relative;
+        .calendar-toggle {
+          position: absolute;
+          right: 0;
+          color: white;
+          z-index: 1;
+          margin-top: 7px;
+          transform: scale(0.8);
+        }
+        .filters {
+          padding: 14px;
+        }
+        .calendar {
+          box-shadow: none;
         }
       }
     }
