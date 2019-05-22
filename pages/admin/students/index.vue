@@ -114,8 +114,7 @@ export default {
 @import '~assets/styles/variables';
 
 .input-spacing {
-  margin-left: 30px;
-  width: 300px;
+  @include input-spacing();
 }
 
 .table-wrapper {
@@ -136,6 +135,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 14px;
   .inputs {
     display: flex;
   }
