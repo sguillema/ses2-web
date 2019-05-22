@@ -1,7 +1,7 @@
 <template>
   <v-menu offset-y>
     <template v-slot:activator="{ on }">
-      <v-btn flat dark v-on="on">
+      <v-btn id="profileBtn" flat dark v-on="on">
         <v-icon class="account-icon">account_circle</v-icon>
         <div class="text">{{ user.id }}</div>
         <v-icon>arrow_drop_down</v-icon>
