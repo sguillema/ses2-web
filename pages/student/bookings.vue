@@ -23,6 +23,7 @@
       <v-toolbar-title>Your Bookings</v-toolbar-title>
     </v-toolbar>
 
+    <i class="fas fa-graduation-cap"></i>
     <v-data-table
       :headers="headers"
       :items="desserts"
