@@ -36,19 +36,99 @@
               single-line
               hide-details
             />
-            <v-btn
-              class="header-button"
-              depressed
-              color="primary"
-              @click="addStudent"
-            >
-              Create Consultation Session
-            </v-btn>
+            <div>
+              <v-dialog v-model="dialog" width="800">
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="header-button"
+                    depressed
+                    color="primary"
+                    v-on="on"
+                  >
+                    Create Consultation Session
+                  </v-btn>
+                </template>
+                <v-card class="dialog">
+                  <v-stepper v-model="stepCount">
+                    <v-stepper-header>
+                      <h1 class="dialog-title">Consultation Form Details</h1>
+                      <v-stepper-step :complete="stepCount > 1" step="1">
+                        Step 1
+                      </v-stepper-step>
+                      <v-divider />
+                      <v-stepper-step :complete="stepCount > 2" step="2">
+                        Step 2
+                      </v-stepper-step>
+                      <v-divider />
+                      <v-stepper-step step="3">Step 3</v-stepper-step>
+                    </v-stepper-header>
+                    <v-stepper-items>
+                      <v-stepper-content step="1" class="step-container">
+                        <div class="step-content">
+                          <p>
+                            To add sessions, please enter their details below
+                            and click
+                            <b>“Add”</b>
+                            . If you do not wish to add a session that you have
+                            selected date & time, please click
+                            <b>“Clear”</b>
+                            next to that session before adding.
+                          </p>
+                          <p>
+                            <b>Please note:</b>
+                            all the fields are compulsory, otherwise that
+                            session will not be added.
+                          </p>
+                          <v-form
+                            ref="stepForm1"
+                            v-model="step1Valid"
+                            lazy-validation
+                          >
+                            <v-text-field
+                              v-model="stepOne.topic"
+                              :rules="stepOne.topicRules"
+                              label="Topic"
+                              placeholder="Topic Title"
+                              outline
+                              required
+                            />
+                            <v-text-field
+                              v-model="stepOne.description"
+                              :rules="stepOne.descriptionRules"
+                              label="Description"
+                              placeholder="Consultation Description"
+                              outline
+                              required
+                            />
+                            <v-text-field
+                              v-model="stepOne.studentId"
+                              :rules="stepOne.studentIdRules"
+                              label="Student ID"
+                              placeholder="Enter Student ID"
+                              outline
+                              required
+                            />
+                          </v-form>
+                        </div>
+                        <div class="step-buttons">
+                          <v-btn color="primary" @click="validateStep(2)">
+                            Continue
+                          </v-btn>
+                          <v-btn text>Cancel</v-btn>
+                        </div>
+                      </v-stepper-content>
+                    </v-stepper-items>
+                  </v-stepper>
+                  <v-divider />
+                </v-card>
+              </v-dialog>
+            </div>
           </div>
           <v-data-table
             class="table-wrapper"
             :headers="headers"
             :items="sessions"
+            :search="search"
           >
             <template v-slot:items="props">
               <td>{{ props.item.id }}</td>
@@ -101,12 +181,29 @@ export default {
         { text: 'Date', value: 'date' },
         { text: 'Time', value: 'time', sortable: false },
         { text: 'Room', value: 'room', sortable: false },
-        { text: 'Advisor', value: 'advisor', sortable: false },
-        { text: 'Booked By', value: 'studentId', sortable: false },
+        { text: 'Advisor', value: 'createdByName', sortable: false },
+        {
+          text: 'Booked By',
+          value: 'bookedBookings[0].studentId',
+          sortable: false
+        },
         { text: '', value: '', sortable: false }
       ],
       sessions: [],
-      sessionsLoading: false
+      sessionsLoading: false,
+      dialog: false,
+      stepCount: 0,
+      step1Valid: true,
+      step2Valid: true,
+      step3Valid: true,
+      stepOne: {
+        topic: '',
+        description: '',
+        studentId: '',
+        topicRules: [v => !!v || 'Topic is required'],
+        descriptionRules: [v => !!v || 'Description is required'],
+        studentIdRules: [v => !!v || 'StudentID is required']
+      }
     }
   },
   computed: {
@@ -142,6 +239,11 @@ export default {
     },
     getSessionPeriod(start, end) {
       return `${moment(start).format('kk:mm')} - ${moment(end).format('kk:mm')}`
+    },
+    validateStep(nextStep) {
+      if (this.$refs[`stepForm${nextStep - 1}`].validate()) {
+        this.stepCount = nextStep
+      }
     }
   }
 }
@@ -190,7 +292,7 @@ export default {
       }
       .table-wrapper {
         a {
-          color: #0f4beb;
+          color: $color-secondary;
           padding-right: 25px;
           &:hover {
             text-decoration: underline;
@@ -198,6 +300,19 @@ export default {
         }
       }
     }
+  }
+}
+.dialog {
+  .dialog-title {
+    margin-left: 14px;
+    margin-right: 40px;
+  }
+  .step-content {
+    padding: 0 20px;
+  }
+  .step-buttons {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>
