@@ -114,7 +114,166 @@
                           <v-btn color="primary" @click="validateStep(2)">
                             Continue
                           </v-btn>
-                          <v-btn text>Cancel</v-btn>
+                          <v-btn text @click="dialog = false">Cancel</v-btn>
+                        </div>
+                      </v-stepper-content>
+                      <v-stepper-content step="2" class="step-container">
+                        <div class="step-content">
+                          <p>
+                            To add sessions, please enter their details below
+                            and click
+                            <b>“Add”</b>
+                            . If you do not wish to add a session that you have
+                            selected date & time, please click
+                            <b>“Clear”</b>
+                            next to that session before adding.
+                          </p>
+                          <p>
+                            <b>Please note:</b>
+                            all the fields are compulsory, otherwise that
+                            session will not be added.
+                          </p>
+                          <v-form
+                            ref="stepForm2"
+                            v-model="step2Valid"
+                            lazy-validation
+                            class="stepForm2"
+                          >
+                            <div>
+                              <v-menu
+                                v-model="stepTwo.datePickerVisible"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px"
+                              >
+                                <template v-slot:activator="{ on }">
+                                  <v-text-field
+                                    class="input"
+                                    v-model="computedForm2Date"
+                                    :rules="stepTwo.dateRules"
+                                    label="Date"
+                                    placeholder="DD/MM/YYYY"
+                                    outline
+                                    required
+                                    readonly
+                                    v-on="on"
+                                  />
+                                </template>
+                                <v-date-picker
+                                  v-model="stepTwo.date"
+                                  :min="today"
+                                  :max="calendarMaxDate"
+                                  @input="stepTwo.datePickerVisible = false"
+                                />
+                              </v-menu>
+                              <!-- <v-text-field
+                                v-model="stepTwo.room"
+                                :rules="stepTwo.roomRules"
+                                label="Room"
+                                placeholder="Select Room Location"
+                                outline
+                                required
+                              /> -->
+                              <v-autocomplete
+                                class="input"
+                                v-model="stepTwo.room"
+                                :items="rooms"
+                                :loading="isLoading"
+                                label="Room"
+                                placeholder="Select Room Location"
+                                outline
+                                required
+                              />
+                            </div>
+                            <div>
+                              <v-text-field
+                                class="input"
+                                v-model="stepTwo.startTime"
+                                :rules="stepTwo.startTimeRules"
+                                label="Start Time"
+                                placeholder="00:00"
+                                outline
+                                required
+                                mask="time"
+                                return-masked-value
+                              />
+                              <v-text-field
+                                class="input"
+                                v-model="stepTwo.endTime"
+                                :rules="stepTwo.endTimeRules"
+                                label="End Time"
+                                placeholder="00:00"
+                                outline
+                                required
+                                mask="time"
+                                return-masked-value
+                              />
+                            </div>
+                          </v-form>
+                        </div>
+                        <div class="step-buttons">
+                          <v-btn color="primary" @click="validateStep(3)">
+                            Continue
+                          </v-btn>
+                          <v-btn text @click="dialog = false">Cancel</v-btn>
+                        </div>
+                      </v-stepper-content>
+                      <v-stepper-content step="3" class="step-container">
+                        <div class="step-content">
+                          <div class="step-review">
+                            <v-text-field
+                              v-model="stepOne.topic"
+                              label="Topic"
+                              disabled
+                            />
+                            <v-text-field
+                              v-model="stepOne.description"
+                              label="Description"
+                              disabled
+                            />
+                            <v-text-field
+                              v-model="stepOne.studentId"
+                              label="Student ID"
+                              disabled
+                            />
+                            <div>
+                              <v-text-field
+                                v-model="stepTwo.date"
+                                label="Date"
+                                disabled
+                              />
+                              <v-text-field
+                                v-model="stepTwo.room"
+                                label="Room"
+                                disabled
+                              />
+                            </div>
+                            <div>
+                              <v-text-field
+                                v-model="stepTwo.startTime"
+                                label="Start Time"
+                                disabled
+                              />
+                              <v-text-field
+                                v-model="stepTwo.endTime"
+                                label="End Time"
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="step-buttons">
+                          <v-btn
+                            color="primary"
+                            @click="submitConsultationSession"
+                          >
+                            Create Consultation Session
+                          </v-btn>
+                          <v-btn text @click="dialog = false">Cancel</v-btn>
                         </div>
                       </v-stepper-content>
                     </v-stepper-items>
@@ -189,6 +348,7 @@ export default {
         },
         { text: '', value: '', sortable: false }
       ],
+      rooms: ['cb11.05.400', 'cb11.09.104'],
       sessions: [],
       sessionsLoading: false,
       dialog: false,
@@ -203,6 +363,17 @@ export default {
         topicRules: [v => !!v || 'Topic is required'],
         descriptionRules: [v => !!v || 'Description is required'],
         studentIdRules: [v => !!v || 'StudentID is required']
+      },
+      stepTwo: {
+        datePickerVisible: false,
+        date: moment().format('YYYY-MM-DD'),
+        room: '',
+        startTime: '',
+        endTime: '',
+        dateRules: [v => !!v || 'Date is required'],
+        roomRules: [v => !!v || 'Room is required'],
+        startTimeRules: [v => !!v || 'Start Time is required'],
+        endTimeRules: [v => !!v || 'End Time is required']
       }
     }
   },
@@ -223,6 +394,9 @@ export default {
       } else {
         return 'month'
       }
+    },
+    computedForm2Date() {
+      return moment(this.stepTwo.date).format('DD/MM/YYYY')
     }
   },
   async mounted() {
@@ -244,6 +418,11 @@ export default {
       if (this.$refs[`stepForm${nextStep - 1}`].validate()) {
         this.stepCount = nextStep
       }
+    },
+    submitConsultationSession() {
+      // this.$axios.$post('http://localhost:4000/sessions?type=0')
+      alert('Sent!')
+      this.dialog = false
     }
   }
 }
@@ -313,6 +492,25 @@ export default {
   .step-buttons {
     display: flex;
     justify-content: center;
+  }
+  .stepForm2 {
+    display: flex;
+    flex-direction: column;
+    > div {
+      flex: 1;
+      display: flex;
+    }
+    .input {
+      width: 340px;
+    }
+  }
+  .step-review {
+    padding: 10px;
+    border: 1px solid black;
+    margin-bottom: 40px;
+    > div {
+      display: flex;
+    }
   }
 }
 </style>
