@@ -114,7 +114,9 @@
                           <v-btn color="primary" @click="validateStep(2)">
                             Continue
                           </v-btn>
-                          <v-btn text @click="dialog = false">Cancel</v-btn>
+                          <v-btn text @click="cancelConsultationSession">
+                            Cancel
+                          </v-btn>
                         </div>
                       </v-stepper-content>
                       <v-stepper-content step="2" class="step-container">
@@ -170,14 +172,6 @@
                                   @input="stepTwo.datePickerVisible = false"
                                 />
                               </v-menu>
-                              <!-- <v-text-field
-                                v-model="stepTwo.room"
-                                :rules="stepTwo.roomRules"
-                                label="Room"
-                                placeholder="Select Room Location"
-                                outline
-                                required
-                              /> -->
                               <v-autocomplete
                                 class="input"
                                 v-model="stepTwo.room"
@@ -219,7 +213,7 @@
                           <v-btn color="primary" @click="validateStep(3)">
                             Continue
                           </v-btn>
-                          <v-btn text @click="dialog = false">Cancel</v-btn>
+                          <v-btn text @click="stepCount = 1">Back</v-btn>
                         </div>
                       </v-stepper-content>
                       <v-stepper-content step="3" class="step-container">
@@ -273,7 +267,7 @@
                           >
                             Create Consultation Session
                           </v-btn>
-                          <v-btn text @click="dialog = false">Cancel</v-btn>
+                          <v-btn text @click="stepCount = 2">Back</v-btn>
                         </div>
                       </v-stepper-content>
                     </v-stepper-items>
@@ -419,8 +413,26 @@ export default {
         this.stepCount = nextStep
       }
     },
+    cancelConsultationSession() {
+      this.dialog = false
+      this.stepOne.topic = ''
+      this.stepOne.description = ''
+      this.stepOne.studentId = ''
+      this.stepTwo.date = moment().format('YYYY-MM-DD')
+      this.stepTwo.room = ''
+      this.stepTwo.startTime = ''
+      this.stepTwo.endTime = ''
+    },
     submitConsultationSession() {
-      // this.$axios.$post('http://localhost:4000/sessions?type=0')
+      // this.$axios.$post('http://localhost:4000/sessions', {
+      //   id: sessionId,
+      //   startTime: req.body.startTime,
+      //   endTime: req.body.endTime,
+      //   sessionSize: req.body.sessionSize,
+      //   room: req.body.room,
+      //   type: req.body.type,
+      //   createdBy: req.body.createdBy
+      // })
       alert('Sent!')
       this.dialog = false
     }

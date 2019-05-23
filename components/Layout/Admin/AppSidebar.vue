@@ -75,6 +75,10 @@ export default {
     height: 92px;
     display: flex;
     align-items: center;
+    > div {
+      display: flex;
+      justify-content: center;
+    }
   }
   .logo-flag {
     height: 30px;
