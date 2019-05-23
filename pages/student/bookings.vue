@@ -102,15 +102,15 @@ export default {
       selected: [],
       desserts: [
         {
-          name: 'Frozen Yogurt',
-          calories: 159,
+          name: '15/05/2019',
+          calories: 3413,
           fat: 6.0,
           carbs: 24,
           protein: 4.0,
           iron: '1%'
         },
         {
-          name: 'Ice cream sandwich',
+          name: '18/05/2019',
           calories: 237,
           fat: 9.0,
           carbs: 37,
@@ -118,7 +118,7 @@ export default {
           iron: '1%'
         },
         {
-          name: 'Eclair',
+          name: '16/05/2019',
           calories: 262,
           fat: 16.0,
           carbs: 23,
@@ -126,7 +126,7 @@ export default {
           iron: '7%'
         },
         {
-          name: 'Cupcake',
+          name: '14/05/2019',
           calories: 305,
           fat: 3.7,
           carbs: 67,
@@ -134,7 +134,7 @@ export default {
           iron: '8%'
         },
         {
-          name: 'Gingerbread',
+          name: '01/05/2019',
           calories: 356,
           fat: 16.0,
           carbs: 49,
@@ -142,7 +142,7 @@ export default {
           iron: '16%'
         },
         {
-          name: 'Jelly bean',
+          name: '23/05/2019',
           calories: 375,
           fat: 0.0,
           carbs: 94,
@@ -150,7 +150,7 @@ export default {
           iron: '0%'
         },
         {
-          name: 'Lollipop',
+          name: '26/05/2019',
           calories: 392,
           fat: 0.2,
           carbs: 98,
@@ -158,7 +158,7 @@ export default {
           iron: '2%'
         },
         {
-          name: 'Honeycomb',
+          name: '19/05/2019',
           calories: 408,
           fat: 3.2,
           carbs: 87,
@@ -166,7 +166,7 @@ export default {
           iron: '45%'
         },
         {
-          name: 'Donut',
+          name: '25/05/2019',
           calories: 452,
           fat: 25.0,
           carbs: 51,
@@ -174,7 +174,7 @@ export default {
           iron: '22%'
         },
         {
-          name: 'KitKat',
+          name: '20/05/2019',
           calories: 518,
           fat: 26.0,
           carbs: 65,
