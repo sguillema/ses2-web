@@ -1,74 +1,53 @@
 <template>
-  <!-- <div id="page-authenticated">
-    <section class="container">
-      <div class="section-container">
-        <div>Hello this is an authenticated route :) with type {{ type }}</div>
-      </div>
-    </section>
- 
-  </div>-->
   <div id="page-dataTable">
-    <section class="table">
-      <div class="section-table">
-        <header>
-          <h1>
-            <v-btn color="error" style="float:right;">Add Session</v-btn>
-            <!-- //need to make the button working with something -->
-          </h1>
-          <h1>My Bookings</h1>
-        </header>
-      </div>
+    <section class="container">
+      <v-btn color="error" style="float:right;">Add Session</v-btn>
+      <h1>My Bookings</h1>
+      <v-toolbar flat color="white">
+        <v-toolbar-title>Your Bookings</v-toolbar-title>
+      </v-toolbar>
+      <v-data-table
+        :headers="headers"
+        :items="bookings"
+        class="elevation-1"
+        item-key="name"
+      >
+        <template v-slot:items="props">
+          <td>{{ props.item.name }}</td>
+          <td class="text-xs-right">{{ props.item.type }}</td>
+          <td class="text-xs-right">{{ props.item.time }}</td>
+          <td class="text-xs-right">{{ props.item.room }}</td>
+          <td class="text-xs-right">{{ props.item.advisor }}</td>
+          <td class="text-xs-right">{{ props.item.type2 }}</td>
+          <td class="text-xs-right">{{ props.item.icon }}</td>
+          <td><v-checkbox v-model="props.selected" /></td>
+          <td><i class="fa fa-angle-down" style="font-size:20px"></i></td>
+        </template>
+      </v-data-table>
     </section>
-    <v-toolbar flat color="white">
-      <v-toolbar-title>Your Bookings</v-toolbar-title>
-    </v-toolbar>
-
-    <i class="fas fa-graduation-cap"></i>
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      class="elevation-1"
-      item-key="name"
-    >
-      <template v-slot:items="props">
-        <td>{{ props.item.name }}</td>
-        <td class="text-xs-right">{{ props.item.calories }}</td>
-        <td class="text-xs-right">{{ props.item.fat }}</td>
-        <td class="text-xs-right">{{ props.item.carbs }}</td>
-        <td class="text-xs-right">{{ props.item.protein }}</td>
-        <td class="text-xs-right">{{ props.item.iron }}</td>
-        <td class="text-xs-right">{{ props.item.icon }}</td>
-        <td>
-          <v-checkbox v-model="props.selected" />
-        </td>
-      </template>
-    </v-data-table>
-    <section class="table2">
-      <div class="section-table2">
-        <v-toolbar flat color="white">
-          <v-toolbar-title>Past Bookings</v-toolbar-title>
-        </v-toolbar>
-
-        <v-data-table
-          :headers="headers"
-          :items="desserts"
-          class="elevation-1"
-          item-key="name"
-        >
-          <template v-slot:items="props">
-            <td>{{ props.item.name }}</td>
-            <td class="text-xs-right">{{ props.item.calories }}</td>
-            <td class="text-xs-right">{{ props.item.fat }}</td>
-            <td class="text-xs-right">{{ props.item.carbs }}</td>
-            <td class="text-xs-right">{{ props.item.protein }}</td>
-            <td class="text-xs-right">{{ props.item.iron }}</td>
-            <td class="text-xs-right">{{ props.item.icon }}</td>
-            <td>
-              <v-checkbox v-model="props.selected" />
-            </td>
-          </template>
-        </v-data-table>
-      </div>
+    <section class="container">
+      <v-btn color="error" style="float:right;">Add Session</v-btn>
+      <v-toolbar flat color="white">
+        <v-toolbar-title>Past Bookings</v-toolbar-title>
+      </v-toolbar>
+      <v-data-table
+        :headers="headers"
+        :items="bookings"
+        class="elevation-1"
+        item-key="name"
+      >
+        <template v-slot:items="props">
+          <td>{{ props.item.name }}</td>
+          <td class="text-xs-right">{{ props.item.type }}</td>
+          <td class="text-xs-right">{{ props.item.time }}</td>
+          <td class="text-xs-right">{{ props.item.room }}</td>
+          <td class="text-xs-right">{{ props.item.advisor }}</td>
+          <td class="text-xs-right">{{ props.item.type2 }}</td>
+          <td class="text-xs-right">{{ props.item.icon }}</td>
+          <td><v-checkbox v-model="props.selected" /></td>
+          <td><i class="fa fa-angle-down" style="font-size:20px"></i></td>
+        </template>
+      </v-data-table>
     </section>
   </div>
 </template>
@@ -91,95 +70,45 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { text: 'Type', value: 'calories' },
-        { text: 'Time', value: 'fat' },
-        { text: 'Room', value: 'carbs' },
-        { text: 'Advisor', value: 'protein' },
-        { text: 'Type', value: 'iron' }
-        // { text: 'Blank', value: 'icon' }
-        // { text: 'Dropdown', value: '' }
+        { text: 'Type', value: 'type' },
+        { text: 'Time', value: 'time' },
+        { text: 'Room', value: 'room' },
+        { text: 'Advisor', value: 'advisor' },
+        { text: 'Type', value: 'type2' }
       ],
       selected: [],
-      desserts: [
+      bookings: [
         {
           name: '15/05/2019',
-          calories: 3413,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: '1%'
+          type: 'Consultation',
+          time: '10:00 AM - 1:30 PM',
+          room: 'CB11.03.301',
+          advisor: 'John Smith',
+          type2: 'How to write a Report'
+        },
+        {
+          name: '15/05/2019',
+          type: 'Program 1',
+          time: '11:00 AM - 12:30 PM',
+          room: 'TBA',
+          advisor: 'Andrew Smith',
+          type2: 'Part 1 of Program Name'
+        },
+        {
+          name: '12/05/2019',
+          type: 'Program 2',
+          time: '10:00 AM - 1:30 PM',
+          room: 'CB05.03.301',
+          advisor: 'John Wick',
+          type2: 'How to Draw with a Pencil'
         },
         {
           name: '18/05/2019',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: '1%'
-        },
-        {
-          name: '16/05/2019',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: '7%'
-        },
-        {
-          name: '14/05/2019',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: '8%'
-        },
-        {
-          name: '01/05/2019',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: '16%'
-        },
-        {
-          name: '23/05/2019',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: '0%'
-        },
-        {
-          name: '26/05/2019',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: '2%'
-        },
-        {
-          name: '19/05/2019',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: '45%'
-        },
-        {
-          name: '25/05/2019',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: '22%'
-        },
-        {
-          name: '20/05/2019',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: '6%'
+          type: 'Workshop',
+          time: '11:30 AM - 12:30 PM',
+          room: 'CB11.00.201',
+          advisor: 'Graham Smith',
+          type2: 'Part 2 of Program Name'
         }
       ]
     }
