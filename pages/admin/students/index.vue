@@ -19,8 +19,10 @@
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.email }}</td>
             <td>
-              <router-link :to="`/students/${props.item.id}`">Edit</router-link>
-              <router-link :to="`/students/${props.item.id}/history`">
+              <router-link :to="`students/${props.item.id}`">
+                Edit
+              </router-link>
+              <router-link :to="`students/${props.item.id}/history`">
                 View History
               </router-link>
             </td>
@@ -114,8 +116,7 @@ export default {
 @import '~assets/styles/variables';
 
 .input-spacing {
-  margin-left: 30px;
-  width: 300px;
+  @include input-spacing();
 }
 
 .table-wrapper {
@@ -136,6 +137,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 14px;
   .inputs {
     display: flex;
   }
