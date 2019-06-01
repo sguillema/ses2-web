@@ -65,6 +65,7 @@ export default {
       overflow: hidden;
       .content {
         overflow-y: auto;
+        flex: 1 1 auto;
       }
     }
   }
