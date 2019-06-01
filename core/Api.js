@@ -10,6 +10,8 @@ const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
+const ADVISORS_ENDPOINT = `${ENDPOINT}/advisors`
+
 export class AuthApi {
   static setAuthorizationHeader(token) {
     axios.defaults.headers.common[AUTHORIZATION] = `Bearer ${token}`
@@ -28,6 +30,7 @@ export class AuthApi {
   }
 }
 
+//Student API
 export class StudentApi {
   static async getStudents() {
     return await axios({
@@ -59,6 +62,8 @@ export class StudentApi {
     })
   }
 }
+
+//Booking API
 export class BookingApi {
   static async getBookings(studentId) {
     return await axios({
@@ -68,6 +73,7 @@ export class BookingApi {
   }
 }
 
+//Booking API
 export class ConsultationApi {
   static async getConsultations(studentId) {
     return await axios({
@@ -77,6 +83,7 @@ export class ConsultationApi {
   }
 }
 
+//Skillset API
 export class SkillsetApi {
   static async getSkillsets() {
     return await axios({
@@ -108,6 +115,7 @@ export class SkillsetApi {
   }
 }
 
+//Programs API
 export class ProgramsApi {
   static async getPrograms() {
     return await axios({
@@ -143,6 +151,46 @@ export class ProgramsApi {
     return await axios({
       method: 'delete',
       url: `${PROGRAMS_ENDPOINT}/${id}`
+    })
+  }
+}
+
+//Advisors API
+export class AdvisorApi {
+  static async getAdvisors() {
+    return await axios({
+      method: 'get',
+      url: ADVISORS_ENDPOINT
+    })
+  }
+
+  static async getAdvisor(id) {
+    return await axios({
+      method: 'get',
+      url: `${ADVISORS_ENDPOINT}/${id}`
+    })
+  }
+
+  static async createAdvisor(data) {
+    return await axios({
+      method: 'post',
+      url: ADVISORS_ENDPOINT,
+      data: data
+    })
+  }
+
+  static async updateAdvisor(data) {
+    return await axios({
+      method: 'patch',
+      url: `${ADVISORS_ENDPOINT}/${data.id}`,
+      data: data
+    })
+  }
+
+  static async deleteAdvisor(id) {
+    return await axios({
+      method: 'delete',
+      url: `${ADVISORS_ENDPOINT}/${id}`
     })
   }
 }
