@@ -22,14 +22,14 @@
         <v-data-table
           class="table-wrapper"
           :headers="headers"
-          :items="skillset"
+          :items="skillsets"
           :search="search"
         >
           <template v-slot:items="props">
             <td>{{ props.item.no }}</td>
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.title }}</td>
-            <td>{{ props.item.shortName }}</td>
+            <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
               <router-link :to="`/skillset/${props.item.id}`">Edit</router-link>
@@ -38,7 +38,7 @@
         </v-data-table>
         <section class="add-skillset-section">
           <p class="title">
-            <b>Add new student</b>
+            <b>Add new skillset</b>
           </p>
           <div class="inputs">
             <v-text-field
@@ -111,6 +111,8 @@ export default {
   methods: {
     async addSkillset() {
       console.log(this.addNew)
+      console.log(this.skillsets)
+      // this.$store.getters.
     },
     async deleteSkillset() {
       // console.log(this.delete)
