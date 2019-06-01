@@ -3,7 +3,12 @@
   <div id="page-dataTable">
     <section class="container">
       <v-layout style="float:right">
-        <v-btn color="primary" style="float:right" @click.stop="dialog = true">
+        <v-btn
+          color="primary"
+          style="float:right"
+          @click.stop="dialog = true"
+          @click="e1 = 0"
+        >
           Register Skillset
         </v-btn>
         <v-dialog v-model="dialog" max-width="1100" max-height="300">
@@ -12,9 +17,7 @@
               <v-stepper v-model="e1">
                 <v-stepper-header>
                   <h1>HELPS Workshop Booking</h1>
-                  <v-stepper-step :complete="e1 > 1" step="0">
-                    test
-                  </v-stepper-step>
+                  <!-- <v-stepper-step step="0" /> -->
 
                   <v-stepper-step :complete="e1 > 1" step="1">
                     Step 1
@@ -33,38 +36,52 @@
                 <section class="container"></section>
 
                 <v-stepper-content step="0" class="step-container">
-                  <div class="firstpage-content">
+                  <div class="firstPage-content">
                     <p>
                       <b>Important Information:</b>
                     </p>
+
+                    <ul>
+                      <li>
+                        <b>Follow</b>
+                        each site complete your booking.
+                      </li>
+                      <li>
+                        <b>Check</b>
+                        the time to ensure that there is no timetable clash.
+                      </li>
+                      <li>
+                        <b>Check your email</b>
+                        (UTS email address) for the booking confirmation.
+                        <br />
+                      </li>
+
+                      <li>
+                        <b>Cancel,</b>
+                        if no longer available,
+                        <b>24 hours before</b>
+                        the scheduled session by clicking on
+                        <b>'My Booking'</b>
+                        tab and then the
+                        <b>'detail'</b>
+                        link.
+                      </li>
+                      <li>
+                        Please know that failing to turn up for your registered
+                        workshop is not fair to those on the waiting list.
+                        Repeat offenders (2 no-shows) may be barred from
+                        registering for workshop.
+                      </li>
+                    </ul>
+
+                    <br />
                     <p>
-                      <b>• Follow</b>
-                      each site complete your booking.
-                      <br />
-                      <b>• Check</b>
-                      the time to ensure that there is no timetable clash.
-                      <br />
-                      <b>• Check your email</b>
-                      (UTS email address) for the booking confirmation.
-                      <br />
-                      <b>• Cancel,</b>
-                      if no longer avaiable,
-                      <b>24 hours before</b>
-                      the scheduled session by clicking on
-                      <b>‘My Booking‘</b>
-                      tab and then the
-                      <b>‘detail’</b>
-                      link.
-                      <br />
-                      • Please know that failing to turn up for your registered
-                      workshop is not fair to those on the waiting list. Repeat
-                      offenders (2 no-shows) may be barred from registering for
-                      workshop.
-                      <br />
-                      <b>Registration is now open for 2019 Autumn workshops!</b>
+                      <b>
+                        Registration is now open for 2019 Autumn workshops!
+                      </b>
                       <br />
                       <b>
-                        this stage, we only open registration for March and
+                        At this stage, we only open registration for March and
                         April workshops. For the remaining workshops,
                         registration will be open in week 5.
                       </b>
@@ -75,7 +92,16 @@
 
                 <v-stepper-items>
                   <v-stepper-content step="1" class="step-container">
-                    <p>Bla Blah</p>
+                    <div class="secondPage-content">
+                      <div style="margin-left:-5px; ">
+                        <p>
+                          <b>
+                            To start the booking process, please click the
+                            skill-set that you want to improve:
+                          </b>
+                        </p>
+                      </div>
+                    </div>
 
                     <v-btn color="primary" @click="e1 = 2">Next</v-btn>
                   </v-stepper-content>
@@ -97,8 +123,6 @@
                     <v-btn color="primary" style="float:left" @click="e1 = 3">
                       Next
                     </v-btn>
-
-                    <v-btn flat>Cancel</v-btn>
                   </v-stepper-content>
 
                   <v-stepper-content step="3">
@@ -109,8 +133,6 @@
                     />
 
                     <v-btn color="primary" @click="e1 = 0">Continue</v-btn>
-
-                    <v-btn flat>Cancel</v-btn>
                   </v-stepper-content>
                 </v-stepper-items>
               </v-stepper>
@@ -210,7 +232,7 @@ export default {
       selected: [],
       bookings: [
         {
-          name: '15/05/2019',
+          name: '20/05/2019',
           type: 'Consultation',
           time: '10:00 AM - 1:30 PM',
           room: 'CB11.03.301',
@@ -261,5 +283,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+ul {
+  margin: 10px;
+}
+h1 {
+  margin: 30px;
+}
+p {
+  margin: 5px;
 }
 </style>
