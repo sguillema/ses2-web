@@ -63,7 +63,7 @@ export default {
         {
           title: 'Miscellaneous',
           links: [
-            { title: 'Skill Set', icon: 'receipt', to: '/admin/skillset' },
+            { title: 'Skill Set', icon: 'receipt', to: '/admin/skillsets' },
             { title: 'Email', icon: 'email', to: '/admin/email' },
             { title: 'Reports', icon: 'book', to: '/admin/reports' },
             { title: 'Room', icon: 'home', to: '/admin/room' },
