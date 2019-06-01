@@ -9,16 +9,16 @@
             append-icon="add"
             placeholder="Add a new Skill-set"
           />
-          <v-btn depressed color="primary" @click="addSkillSet">
+          <v-btn depressed color="primary" @click="addSkillset">
             Add
           </v-btn>
-          <v-btn depressed color="primary" @click="archiveSkillSet">
+          <v-btn depressed color="primary" @click="archiveSkillset">
             Archive
           </v-btn>
-          <v-btn depressed color="primary" @click="deleteSkillSet">
+          <v-btn depressed color="primary" @click="deleteSkillset">
             Delete
           </v-btn>
-          <v-btn depressed color="primary" @click="viewSkillSet">
+          <v-btn depressed color="primary" @click="viewOldSkillset">
             View Archive
           </v-btn>
         </div>
@@ -49,12 +49,13 @@
 </template>
 
 <script>
+//skill store
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import {
-  studentsModule,
+  skillsetsModule,
   REQUEST,
-  STUDENTS
-} from '../../../store/students/methods'
+  SKILLSETS
+} from '../../../store/skillsets/methods'
 import Sheet from '../../../components/Sheet/Sheet'
 
 export default {
@@ -67,38 +68,49 @@ export default {
       headers: [
         { text: 'No', value: 'no' },
         { text: 'ID', value: 'id' },
-        { text: 'Skill-set', value: 'skillSet' },
+        { text: 'Skill-set', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
         { text: 'No. of Workshops', value: 'noWorkshops' }
       ],
-      addNew: {
+      add: {
         id: '',
-        name: '',
-        email: ''
+        title: '',
+        shortTitle: '',
+        noWorkshops: ''
       }
     }
   },
   computed: {
-    students: {
-      get() {
-        return this.$store.getters[studentsModule(STUDENTS)]
-      }
-    }
+    // skillsets: {
+    //   get() {
+    //     // return this.$store.getters[skillsetsModule(SKILLSETS)]
+    //   }
+    // }
   },
 
-  async mounted() {
-    await this.$store.dispatch(studentsModule(REQUEST))
+  mounted() {
+    // this.$store.dispatch(skillsetsModule(REQUEST))
   },
 
   methods: {
-    async addStudent() {
-      console.log(this.addNew)
+    async addSkillset() {
+      //console.log(this.add)
+    },
+    async deleteSkillsset() {
+      //console.log(this.delete)
+    },
+    async archiveSkillset() {
+      //console.log(this.archive)
+    },
+    async viewOldSkillset() {
+      //TODO: switch to arhived skillset
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+// somestupid scss is here
 @import '~assets/styles/variables';
 
 .input-spacing {

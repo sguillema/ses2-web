@@ -8,6 +8,7 @@ const AUTH_ENDPOINT = `${ENDPOINT}/users/auth`
 const STUDENT_ENDPOINT = `${ENDPOINT}/students`
 const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
+const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -65,6 +66,30 @@ export class ConsultationApi {
     return await axios({
       method: 'get',
       url: `${CONSULTATIONS_ENDPOINT}?studentId=${studentId}`
+    })
+  }
+}
+
+export class SkillsetApi {
+  static async getSkillsets() {
+    return await axios({
+      method: 'get',
+      url: SKILLSET_ENDPOINT
+    })
+  }
+
+  static async getSkillset(id) {
+    return await axios({
+      method: 'get',
+      url: `${SKILLSET_ENDPOINT}/${id}`
+    })
+  }
+
+  static async updateSkillset(skillset) {
+    return await axios({
+      method: 'patch',
+      url: `${SKILLSET_ENDPOINT}/${skillset.id}`,
+      data: skillset
     })
   }
 }

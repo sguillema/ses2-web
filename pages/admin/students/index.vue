@@ -100,8 +100,8 @@ export default {
     }
   },
 
-  async mounted() {
-    await this.$store.dispatch(studentsModule(REQUEST))
+  mounted() {
+    this.$store.dispatch(studentsModule(REQUEST))
   },
 
   methods: {
