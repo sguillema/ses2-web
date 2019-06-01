@@ -1,15 +1,15 @@
-import { StudentApi } from '../../core/Api'
-import { REQUEST, SUCCESS, ERROR, STUDENTS, CLEAR, CREATE } from './methods'
+import { SkillsetApi } from '../../core/Api.js'
+import { REQUEST, SUCCESS, ERROR, SKILLSETS, CLEAR, DELETE } from './methods'
 
 const emptyState = () => ({
   status: '',
-  students: []
+  skillsets: []
 })
 
 export const state = () => emptyState()
 
 export const getters = {
-  [STUDENTS]: state => state.students
+  [SKILLSETS]: state => state.skillsets
 }
 
 export const mutations = {
@@ -17,14 +17,9 @@ export const mutations = {
     state.status = 'loading'
   },
 
-  [CREATE]: (state, student) => {
-    state.status = 'create'
-    state.students.push = student
-  },
-
-  [SUCCESS]: (state, { students }) => {
+  [SUCCESS]: (state, { skillsets }) => {
     state.status = 'success'
-    state.students = students
+    state.skillsets = skillsets
   },
 
   [ERROR]: state => {
@@ -41,8 +36,8 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
-        const response = await StudentApi.getStudents()
-        commit(SUCCESS, { students: response.data })
+        const response = await SkillsetApi.getSkillsets()
+        commit(SUCCESS, { skillsets: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)
@@ -50,12 +45,12 @@ export const actions = {
       }
     }),
 
-  [CREATE]: ({ commit }, data) =>
+  [DELETE]: ({ commit, state }) =>
     new Promise(async (resolve, reject) => {
-      commit(CREATE)
+      commit(REQUEST)
       try {
-        const response = await StudentApi.createStudent(data)
-        commit(SUCCESS, { student: response.data })
+        const response = await SkillsetApi.deleteSkillset(state.skillsets)
+        commit(SUCCESS, { skillsets: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)
