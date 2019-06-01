@@ -28,7 +28,7 @@
             </td>
           </template>
         </v-data-table>
-        <section class="add-student-section">
+        <!-- <section class="add-student-section">
           <p>
             To enter more students, please enter their details below and click
             ‘Add’.
@@ -57,7 +57,7 @@
           <v-btn depressed color="primary" @click="addStudent">
             Add
           </v-btn>
-        </section>
+        </section> -->
       </Sheet>
     </section>
   </div>
@@ -68,7 +68,8 @@ import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import {
   studentsModule,
   REQUEST,
-  STUDENTS
+  STUDENTS,
+  CREATE
 } from '../../../store/students/methods'
 import Sheet from '../../../components/Sheet/Sheet'
 
@@ -100,13 +101,14 @@ export default {
     }
   },
 
-  async mounted() {
-    await this.$store.dispatch(studentsModule(REQUEST))
+  mounted() {
+    this.$store.dispatch(studentsModule(REQUEST))
   },
 
   methods: {
     async addStudent() {
       console.log(this.addNew)
+      await this.$store.dispatch(studentsModule(CREATE, this.addNew))
     }
   }
 }
