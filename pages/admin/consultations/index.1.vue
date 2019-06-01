@@ -1,19 +1,9 @@
 <template>
   <div id="page-consultations">
     <section class="container">
-      <v-snackbar v-model="snackbar.active" :timeout="3000" top>
-        {{ snackbar.message }}
-        <v-btn color="primary" flat @click="snackbar.active = false">
-          Close
-        </v-btn>
-      </v-snackbar>
       <div class="column-left">
         <div>
-          <v-dialog
-            v-model="dialog"
-            width="800"
-            @input="v => v || cancelSessionCreation()"
-          >
+          <v-dialog v-model="dialog" width="800">
             <template v-slot:activator="{ on }">
               <v-btn class="header-button" depressed v-on="on">
                 Create Session
@@ -22,7 +12,7 @@
             <v-card class="dialog">
               <v-stepper v-model="stepCount">
                 <v-stepper-header>
-                  <h1 class="dialog-title">Consultation Session Form</h1>
+                  <h1 class="dialog-title">Consultation Form Details</h1>
                   <v-stepper-step :complete="stepCount > 1" step="1">
                     Step 1
                   </v-stepper-step>
@@ -50,17 +40,30 @@
                         ref="stepForm1"
                         v-model="step1Valid"
                         lazy-validation
-                        class="step-subcontainer form"
                       >
-                        <v-autocomplete
-                          v-model="stepOne.advisors"
-                          :items="advisors"
-                          :rules="stepOne.advisorsRules"
-                          label="Advisor"
-                          placeholder="Select an Advisor"
+                        <v-text-field
+                          v-model="stepOne.topic"
+                          :rules="stepOne.topicRules"
+                          label="Topic"
+                          placeholder="Topic Title"
                           outline
                           required
-                          class="input"
+                        />
+                        <v-text-field
+                          v-model="stepOne.description"
+                          :rules="stepOne.descriptionRules"
+                          label="Description"
+                          placeholder="Consultation Description"
+                          outline
+                          required
+                        />
+                        <v-text-field
+                          v-model="stepOne.studentId"
+                          :rules="stepOne.studentIdRules"
+                          label="Student ID"
+                          placeholder="Enter Student ID"
+                          outline
+                          required
                         />
                       </v-form>
                     </div>
@@ -68,7 +71,7 @@
                       <v-btn color="primary" @click="validateStep(2)">
                         Continue
                       </v-btn>
-                      <v-btn text @click="cancelSessionCreation">
+                      <v-btn text @click="cancelConsultationSession">
                         Cancel
                       </v-btn>
                     </div>
@@ -82,13 +85,14 @@
                       </p>
                       <p>
                         <b>Please note:</b>
+                        all the fields are compulsory, otherwise that session
                         will not be added.
                       </p>
                       <v-form
                         ref="stepForm2"
                         v-model="step2Valid"
                         lazy-validation
-                        class="stepForm2 step-subcontainer form"
+                        class="stepForm2"
                       >
                         <div>
                           <v-menu
@@ -167,7 +171,7 @@
                   </v-stepper-content>
                   <v-stepper-content step="3" class="step-container">
                     <div class="step-content">
-                      <div class="step-review step-subcontainer">
+                      <div class="step-review">
                         <v-text-field
                           v-model="stepOne.topic"
                           label="Topic"
@@ -272,12 +276,10 @@
               <td>{{ props.item.room }}</td>
               <td>
                 <router-link
-                  v-if="props.item.bookedBookings[0].studentId != ''"
                   :to="`/students/${props.item.bookedBookings[0].studentId}`"
                 >
                   {{ props.item.bookedBookings[0].studentId }}
                 </router-link>
-                <a @click="activateBookingDialog(props.item)">Book now</a>
               </td>
               <td>xx</td>
               <td>
@@ -287,211 +289,6 @@
               </td>
             </template>
           </v-data-table>
-          <v-dialog
-            v-model="dialogBooking.active"
-            width="800"
-            @input="v => v || cancelConsultationBooking()"
-          >
-            <v-card class="dialog">
-              <v-stepper v-model="stepCount">
-                <v-stepper-header>
-                  <h1 class="dialog-title">Consultation Booking Form</h1>
-                  <v-stepper-step :complete="stepCount > 1" step="1">
-                    Step 1
-                  </v-stepper-step>
-                  <v-divider />
-                  <v-stepper-step :complete="stepCount > 2" step="2">
-                    Step 2
-                  </v-stepper-step>
-                  <v-divider />
-                  <v-stepper-step step="3">Step 3</v-stepper-step>
-                </v-stepper-header>
-                <v-stepper-items>
-                  <v-stepper-content
-                    step="1"
-                    class="bookingDialog step-container"
-                  >
-                    <div class="step-content step1">
-                      <p>
-                        To create a student booking, please enter the student’s
-                        name or ID below. A student is only allowed a maximum of
-                        one session per week, and have up to 3 waiting lists
-                        bookings at one time.
-                      </p>
-                      <p>
-                        <b>Please note:</b>
-                        If you cannot find the student, advise the student to
-                        login into UTS:HELPS to register.
-                      </p>
-                      <v-form
-                        ref="stepForm1"
-                        v-model="step1Valid"
-                        lazy-validation
-                        class="step-subcontainer form"
-                      >
-                        <v-text-field
-                          v-model="computedSelectedSession"
-                          label="Session selected"
-                          outline
-                          required
-                          readonly
-                          class="input"
-                        />
-                        <v-text-field
-                          v-model="dialogBooking.stepOne.studentIdName"
-                          :rules="dialogBooking.stepOne.studentIdNameRules"
-                          label="Student ID/Name"
-                          placeholder="Enter StudentID/Name"
-                          outline
-                          required
-                          class="input"
-                        />
-                      </v-form>
-                    </div>
-                    <div class="step-buttons">
-                      <v-btn color="primary" @click="validateStep(2)">
-                        Continue
-                      </v-btn>
-                      <v-btn text @click="cancelConsultationBooking">
-                        Cancel
-                      </v-btn>
-                    </div>
-                  </v-stepper-content>
-                  <v-stepper-content
-                    step="2"
-                    class="bookingDialog step-container"
-                  >
-                    <div class="step-content step2">
-                      <v-form
-                        ref="stepForm2"
-                        v-model="step2Valid"
-                        lazy-validation
-                        class="step-subcontainer form"
-                      >
-                        <v-text-field
-                          v-model="dialogBooking.stepTwo.topic"
-                          :rules="dialogBooking.stepTwo.topicRules"
-                          label="Topic"
-                          placeholder="Enter a consultation reason"
-                          outline
-                          required
-                          class="input"
-                        />
-                        <v-text-field
-                          v-model="dialogBooking.stepTwo.subjectName"
-                          :rules="dialogBooking.stepTwo.subjectNameRules"
-                          label="Subject Name"
-                          placeholder="Enter the name of the subject"
-                          outline
-                          required
-                          class="input"
-                        />
-                        <v-text-field
-                          v-model="dialogBooking.stepTwo.assignmentType"
-                          :rules="dialogBooking.stepTwo.assignmentTypeRules"
-                          label="Assignment Type"
-                          placeholder="Enter an assignment type"
-                          outline
-                          required
-                          class="input"
-                        />
-                        <v-checkbox
-                          v-model="dialogBooking.stepTwo.groupAssignment"
-                          :label="`Is this a group assignment?`"
-                        />
-                        <v-divider />
-                        <h3>Need help with...</h3>
-                        <div>
-                          <div>
-                            <v-checkbox
-                              v-model="dialogBooking.stepTwo.help0"
-                              :label="`Addressing the assignment question`"
-                            />
-                            <v-checkbox
-                              v-model="dialogBooking.stepTwo.help1"
-                              :label="`Addressing the marking criteria`"
-                            />
-                            <v-checkbox
-                              v-model="dialogBooking.stepTwo.help2"
-                              :label="`Structure`"
-                            />
-                          </div>
-                          <div>
-                            <v-checkbox
-                              v-model="dialogBooking.stepTwo.help3"
-                              :label="`Paragraph development`"
-                            />
-                            <v-checkbox
-                              v-model="dialogBooking.stepTwo.help4"
-                              :label="`Referencing`"
-                            />
-                            <v-checkbox
-                              v-model="dialogBooking.stepTwo.help5"
-                              :label="`Grammar`"
-                            />
-                          </div>
-                        </div>
-                        <v-text-field
-                          v-model="dialogBooking.stepTwo.helpOther"
-                          label="Others, please specify below"
-                          placeholder="Enter other details here"
-                          outline
-                          class="input"
-                        />
-                      </v-form>
-                    </div>
-                    <div class="step-buttons">
-                      <v-btn color="primary" @click="validateStep(3)">
-                        Continue
-                      </v-btn>
-                      <v-btn text @click="stepCount = 1">Back</v-btn>
-                    </div>
-                  </v-stepper-content>
-                  <v-stepper-content
-                    step="3"
-                    class="bookingDialog step-container"
-                  >
-                    <div class="step-content">
-                      <div class="step-review step-subcontainer">
-                        <v-text-field
-                          v-model="dialogBooking.stepOne.studentIdName"
-                          label="Student ID"
-                          disabled
-                        />
-                        <v-text-field
-                          v-model="dialogBooking.stepTwo.topic"
-                          label="Description"
-                          disabled
-                        />
-                        <v-text-field
-                          v-model="computedBookingDialogDate"
-                          label="Date"
-                          disabled
-                        />
-                        <v-text-field
-                          v-model="computedBookingDialogTime"
-                          label="Time"
-                          disabled
-                        />
-                        <v-text-field
-                          v-model="dialogBooking.session.room"
-                          label="Room"
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <div class="step-buttons">
-                      <v-btn color="primary" @click="submitConsultationBooking">
-                        Submit Consultation Booking
-                      </v-btn>
-                      <v-btn text @click="stepCount = 2">Back</v-btn>
-                    </div>
-                  </v-stepper-content>
-                </v-stepper-items>
-              </v-stepper>
-              <v-divider />
-            </v-card>
-          </v-dialog>
         </Sheet>
       </div>
     </section>
@@ -509,10 +306,6 @@ export default {
   layout: 'admin',
   data() {
     return {
-      snackbar: {
-        active: false,
-        message: ''
-      },
       search: '',
       advisorsInput: '',
       roomsInput: '',
@@ -534,41 +327,20 @@ export default {
         { text: '', value: '', sortable: false }
       ],
       rooms: ['cb11.05.400', 'cb11.09.104'],
-      advisors: ['John Smith', 'Jane Doe'],
       sessions: [],
       sessionsLoading: false,
       dialog: false,
-      dialogBooking: {
-        active: false,
-        session: {},
-        stepOne: {
-          studentIdName: '',
-          studentIdNameRules: [v => !!v || 'Student ID/Name is required']
-        },
-        stepTwo: {
-          topic: '',
-          subjectName: '',
-          assignmentType: '',
-          groupAssignment: false,
-          help0: false,
-          help1: false,
-          help2: false,
-          help3: false,
-          help4: false,
-          help5: false,
-          helpOther: '',
-          topicRules: [v => !!v || 'Topic is required'],
-          subjectNameRules: [v => !!v || 'Subject Name is required'],
-          assignmentTypeRules: [v => !!v || 'Assignment Type is required']
-        }
-      },
-      stepCount: 1,
+      stepCount: 0,
       step1Valid: true,
       step2Valid: true,
       step3Valid: true,
       stepOne: {
-        advisors: '',
-        advisorsRules: [v => !!v || 'Advisors is required']
+        topic: '',
+        description: '',
+        studentId: '',
+        topicRules: [v => !!v || 'Topic is required'],
+        descriptionRules: [v => !!v || 'Description is required'],
+        studentIdRules: [v => !!v || 'StudentID is required']
       },
       stepTwo: {
         datePickerVisible: false,
@@ -610,17 +382,6 @@ export default {
     },
     computedForm2Date() {
       return moment(this.stepTwo.date).format('DD/MM/YYYY')
-    },
-    computedSelectedSession() {
-      return this.dialogBooking.session.startTime
-    },
-    computedBookingDialogDate() {
-      return moment(this.dialogBooking.session.startTime).format('DD/MM/YYYY')
-    },
-    computedBookingDialogTime() {
-      return `${moment(this.dialogBooking.session.startTime).format(
-        'HH:mm A'
-      )} - ${moment(this.dialogBooking.session.endTime).format('HH:mm A')}`
     }
   },
   async mounted() {
@@ -643,8 +404,7 @@ export default {
         this.stepCount = nextStep
       }
     },
-    cancelSessionCreation() {
-      this.stepCount = 1
+    cancelConsultationSession() {
       this.dialog = false
       this.stepOne.topic = ''
       this.stepOne.description = ''
@@ -653,22 +413,6 @@ export default {
       this.stepTwo.room = ''
       this.stepTwo.startTime = ''
       this.stepTwo.endTime = ''
-    },
-    cancelConsultationBooking() {
-      this.stepCount = 1
-      this.dialogBooking.active = false
-      this.dialogBooking.session = {}
-      this.dialogBooking.stepOne.studentIdName = ''
-      this.dialogBooking.stepTwo.topic = ''
-      this.dialogBooking.stepTwo.subjectName = ''
-      this.dialogBooking.stepTwo.assignmentType = ''
-      this.dialogBooking.stepTwo.help0 = false
-      this.dialogBooking.stepTwo.help1 = false
-      this.dialogBooking.stepTwo.help2 = false
-      this.dialogBooking.stepTwo.help3 = false
-      this.dialogBooking.stepTwo.help4 = false
-      this.dialogBooking.stepTwo.help5 = false
-      this.dialogBooking.stepTwo.helpOther = ''
     },
     submitConsultationSession() {
       // this.$axios.$post('http://localhost:4000/sessions', {
@@ -680,20 +424,8 @@ export default {
       //   type: req.body.type,
       //   createdBy: req.body.createdBy
       // })
-      // alert('Sent!')
-      this.snackbar.active = true
-      this.snackbar.message = 'Session Created!'
+      alert('Sent!')
       this.dialog = false
-    },
-    submitConsultationBooking() {
-      // alert('Sent!')
-      this.snackbar.active = true
-      this.snackbar.message = 'Booking Created!'
-      this.dialogBooking.active = false
-    },
-    activateBookingDialog(session) {
-      this.dialogBooking.active = true
-      this.dialogBooking.session = session
     }
   }
 }
@@ -767,11 +499,6 @@ export default {
   }
   .step-content {
     padding: 0 20px;
-    .step-subcontainer {
-      &.form {
-        margin-top: 30px;
-      }
-    }
   }
   .step-buttons {
     display: flex;
@@ -794,21 +521,6 @@ export default {
     margin-bottom: 40px;
     > div {
       display: flex;
-    }
-  }
-  .bookingDialog {
-    .step2 {
-      .form {
-        h3 {
-          margin-top: 20px;
-        }
-        > div {
-          display: flex;
-          > * {
-            flex: 0.5;
-          }
-        }
-      }
     }
   }
 }
