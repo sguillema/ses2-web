@@ -1,7 +1,7 @@
 <template>
   <div id="page-authenticated">
     <section class="container">
-      <Sheet header="Registered Students">
+      <!-- <Sheet header="Registered Students">
         <v-text-field
           v-model="search"
           class="input-spacing"
@@ -14,7 +14,8 @@
           :items="students"
           :search="search"
         />
-      </Sheet>
+      </Sheet> -->
+      <ViewSkillsets />
       <div class="section-container">
         <div>Hello this is an authenticated route :) with type {{ type }}</div>
       </div>
@@ -37,8 +38,10 @@
 import { authModule, TYPE, USER } from '~/store/auth/methods'
 import { BookingApi } from '../../core/Api'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
+import ViewSkillsets from '../../components/ViewSkillsets/ViewSkillsets'
 
 export default {
+  components: { ViewSkillsets },
   middleware: studentAuthenticated,
   layout: 'student',
   data() {
