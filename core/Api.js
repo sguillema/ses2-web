@@ -50,8 +50,15 @@ export class StudentApi {
       data: student
     })
   }
-}
 
+  static async createStudent(student) {
+    return await axios({
+      method: 'post',
+      url: `${STUDENT_ENDPOINT}`,
+      data: student
+    })
+  }
+}
 export class BookingApi {
   static async getBookings(studentId) {
     return await axios({

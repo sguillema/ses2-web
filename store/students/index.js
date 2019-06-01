@@ -1,5 +1,5 @@
 import { StudentApi } from '../../core/Api'
-import { REQUEST, SUCCESS, ERROR, STUDENTS, CLEAR } from './methods'
+import { REQUEST, SUCCESS, ERROR, STUDENTS, CLEAR, CREATE } from './methods'
 
 const emptyState = () => ({
   status: '',
@@ -15,6 +15,11 @@ export const getters = {
 export const mutations = {
   [REQUEST]: state => {
     state.status = 'loading'
+  },
+
+  [CREATE]: (state, student) => {
+    state.status = 'create'
+    state.students.push = student
   },
 
   [SUCCESS]: (state, { students }) => {
@@ -38,6 +43,19 @@ export const actions = {
       try {
         const response = await StudentApi.getStudents()
         commit(SUCCESS, { students: response.data })
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
+
+  [CREATE]: ({ commit }, data) =>
+    new Promise(async (resolve, reject) => {
+      commit(CREATE)
+      try {
+        const response = await StudentApi.createStudent(data)
+        commit(SUCCESS, { student: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)
