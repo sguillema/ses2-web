@@ -92,4 +92,11 @@ export class SkillsetApi {
       data: skillset
     })
   }
+
+  static async deleteSkillset(id) {
+    return await axios({
+      method: 'delete',
+      url: `${SKILLSET_ENDPOINT}/${id}`
+    })
+  }
 }

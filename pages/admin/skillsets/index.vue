@@ -6,21 +6,17 @@
           <v-text-field
             v-model="search"
             class="input-spacing"
-            append-icon="add"
-            placeholder="Add a new Skill-set"
+            append-icon="search"
+            placeholder="Search for skill-set"
           />
-          <v-btn depressed color="primary" @click="addSkillset">
-            Add
-          </v-btn>
-          <v-btn depressed color="primary" @click="archiveSkillset">
+          <!--
+            <v-btn depressed color="primary" @click="archiveSkillset">
             Archive
-          </v-btn>
-          <v-btn depressed color="primary" @click="deleteSkillset">
-            Delete
           </v-btn>
           <v-btn depressed color="primary" @click="viewOldSkillset">
             View Archive
           </v-btn>
+          -->
         </div>
 
         <v-data-table
@@ -32,17 +28,39 @@
           <template v-slot:items="props">
             <td>{{ props.item.no }}</td>
             <td>{{ props.item.id }}</td>
-            <td>{{ props.item.skillSet }}</td>
+            <td>{{ props.item.title }}</td>
             <td>{{ props.item.shortName }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
               <router-link :to="`/skillset/${props.item.id}`">Edit</router-link>
-              <router-link :to="`/skillset/${props.item.id}`">
-                Set Workshop
-              </router-link>
             </td>
           </template>
         </v-data-table>
+        <section class="add-skillset-section">
+          <p class="title">
+            <b>Add new student</b>
+          </p>
+          <div class="inputs">
+            <v-text-field
+              v-model="addNew.title"
+              label="Title"
+              class="input-spacing"
+            />
+            <v-text-field
+              v-model="addNew.shortTitle"
+              label="Short Title"
+              class="input-spacing"
+            />
+          </div>
+          <div>
+            <v-btn depressed color="primary" @click="addSkillset">
+              Add
+            </v-btn>
+            <v-btn depressed color="primary" @click="deleteSkillset">
+              Delete
+            </v-btn>
+          </div>
+        </section>
       </Sheet>
     </section>
   </div>
@@ -68,42 +86,34 @@ export default {
       headers: [
         { text: 'No', value: 'no' },
         { text: 'ID', value: 'id' },
-        { text: 'Skill-set', value: 'title' },
+        { text: 'Title', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
         { text: 'No. of Workshops', value: 'noWorkshops' }
       ],
-      add: {
-        id: '',
+      addNew: {
         title: '',
-        shortTitle: '',
-        noWorkshops: ''
+        shortTitle: ''
       }
     }
   },
   computed: {
-    // skillsets: {
-    //   get() {
-    //     // return this.$store.getters[skillsetsModule(SKILLSETS)]
-    //   }
-    // }
+    skillsets: {
+      get() {
+        return this.$store.getters[skillsetsModule(SKILLSETS)]
+      }
+    }
   },
 
   mounted() {
-    // this.$store.dispatch(skillsetsModule(REQUEST))
+    this.$store.dispatch(skillsetsModule(REQUEST))
   },
 
   methods: {
     async addSkillset() {
-      //console.log(this.add)
+      console.log(this.addNew)
     },
-    async deleteSkillsset() {
-      //console.log(this.delete)
-    },
-    async archiveSkillset() {
-      //console.log(this.archive)
-    },
-    async viewOldSkillset() {
-      //TODO: switch to arhived skillset
+    async deleteSkillset() {
+      // console.log(this.delete)
     }
   }
 }
@@ -132,7 +142,7 @@ export default {
   }
 }
 
-.add-student-section {
+.add-skillset-section {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -142,6 +152,9 @@ export default {
   p {
     width: 100%;
   }
+}
+
+.title {
 }
 
 a {
