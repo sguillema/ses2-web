@@ -1,7 +1,7 @@
 <template>
   <div id="page-dataTable">
     <section class="container">
-      <v-btn color="error" style="float:right;">Add Session</v-btn>
+      <v-btn color="#FF2305" style="float:right;color:white">Add Session</v-btn>
       <h1>My Bookings</h1>
       <v-toolbar flat color="white">
         <v-toolbar-title>Your Bookings</v-toolbar-title>
