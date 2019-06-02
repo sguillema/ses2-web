@@ -124,7 +124,6 @@
                           <v-autocomplete
                             v-model="stepTwo.room"
                             :items="rooms"
-                            :loading="isLoading"
                             label="Room"
                             placeholder="Select Room Location"
                             outline
