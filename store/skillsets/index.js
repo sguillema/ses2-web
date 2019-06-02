@@ -8,7 +8,8 @@ import {
   CLEAR,
   DELETE,
   ADD_SKILLSET,
-  REMOVE_SKILLSET
+  REMOVE_SKILLSET,
+  ARCHIVE
 } from './methods'
 
 const emptyState = () => ({
@@ -53,7 +54,7 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
-        const response = await SkillsetApi.getSkillsets()
+        const response = await SkillsetApi.getActiveSkillsets()
         commit(SUCCESS, { skillsets: response.data })
         resolve(response)
       } catch (e) {
@@ -62,11 +63,28 @@ export const actions = {
       }
     }),
 
-  [REMOVE_SKILLSET]: ({ commit, dispatch }, skillsetId) =>
+  [REMOVE_SKILLSET]: ({ commit, dispatch }, { skillsetId, active }) =>
     new Promise(async (resolve, reject) => {
       commit(REMOVE_SKILLSET)
       try {
-        const response = await SkillsetApi.deleteSkillset(skillsetId)
+        const response = await SkillsetApi.updateSkillset(skillsetId, {
+          active
+        })
+        dispatch(REQUEST)
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
+
+  [ARCHIVE]: ({ commit, dispatch }, skillsetId) =>
+    new Promise(async (resolve, reject) => {
+      commit(REQUEST)
+      try {
+        const response = await SkillsetApi.updateSkillset(skillsetId, {
+          active: false
+        })
         dispatch(REQUEST)
         resolve(response)
       } catch (e) {

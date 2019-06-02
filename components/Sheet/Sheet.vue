@@ -33,7 +33,7 @@ export default {
 @import '~assets/styles/variables';
 
 .sheet {
-  padding: 14px 0;
+  padding: 14px 0 0;
   .header {
     padding-left: 30px;
     background-color: $color-primary;

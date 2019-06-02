@@ -11,6 +11,7 @@ export const CLEAR = 'clear'
 export const DELETE = 'delete'
 
 // mapped fields
+export const ACTIVESKILLSETS = 'activeSkillsets'
 export const SKILLSETS = 'skillsets'
 export const SKILLSET = 'skillset'
 // export const TITLE = 'skillset.title'
@@ -20,5 +21,6 @@ export const SKILLSET = 'skillset'
 // methods
 export const ADD_SKILLSET = 'addSkillset'
 export const REMOVE_SKILLSET = 'removeSkillset'
+export const ARCHIVE = 'archive'
 
 export const skillsetsModule = method => storeModule(MODULE, method)
