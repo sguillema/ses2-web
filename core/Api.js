@@ -8,7 +8,7 @@ const AUTH_ENDPOINT = `${ENDPOINT}/users/auth`
 const STUDENT_ENDPOINT = `${ENDPOINT}/students`
 const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
-const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
+const SKILLSETS_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
 const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
 const STAFF_ENDPOINT = `${ENDPOINT}/staff`
@@ -116,21 +116,21 @@ export class SkillsetApi {
   static async getSkillsets() {
     return await axios({
       method: 'get',
-      url: SKILLSET_ENDPOINT
+      url: SKILLSETS_ENDPOINT
     })
   }
 
   static async getSkillset(id) {
     return await axios({
       method: 'get',
-      url: `${SKILLSET_ENDPOINT}/${id}`
+      url: `${SKILLSETS_ENDPOINT}/${id}`
     })
   }
 
   static async updateSkillset(skillsetId, body) {
     return await axios({
       method: 'patch',
-      url: `${SKILLSET_ENDPOINT}/${skillsetId}`,
+      url: `${SKILLSETS_ENDPOINT}/${skillsetId}`,
       data: body
     })
   }
@@ -138,14 +138,14 @@ export class SkillsetApi {
   static async deleteSkillset(id) {
     return await axios({
       method: 'delete',
-      url: `${SKILLSET_ENDPOINT}/${id}`
+      url: `${SKILLSETS_ENDPOINT}/${id}`
     })
   }
 
   static async addSkillset(data) {
     return await axios({
       method: 'post',
-      url: `${SKILLSET_ENDPOINT}`,
+      url: `${SKILLSETS_ENDPOINT}`,
       data: data
     })
   }
@@ -153,7 +153,7 @@ export class SkillsetApi {
   static async getActiveSkillsets() {
     return await axios({
       method: 'get',
-      url: `${SKILLSET_ENDPOINT}?type=active`
+      url: `${SKILLSETS_ENDPOINT}?type=active`
     })
   }
 }

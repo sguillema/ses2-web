@@ -38,8 +38,6 @@ import {
   BookingDetailsApi
 } from '../../core/Api'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
-import { type } from 'os'
-import { async } from 'q'
 
 export default {
   middleware: studentAuthenticated,
