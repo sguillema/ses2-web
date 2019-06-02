@@ -78,7 +78,15 @@
                   edit
                 </v-icon>
               </router-link>
-              <!-- <v-dialog v-model="dialog" max-width="290">
+              <!-- <v-dialog v-model="dialog2" max-width="290">
+                <template v-slot:activator="{ on }">
+                  <v-icon small @click="archiveSkillset(props.item)">
+                    delete
+                  </v-icon>
+                </template>
+                <v-card>wow</v-card>
+              </v-dialog> -->
+              <v-dialog v-model="dialog2" max-width="290">
                 <template v-slot:activator="{ on }">
                   <v-icon small v-on="on">
                     delete
@@ -92,11 +100,11 @@
                     Agree will archive the skillset.
                   </v-card-text>
                   <v-card-actions>
-                    <v-btn color="green darken-1" flat @click="dialog = false">
+                    <v-btn color="#ff0000" flat @click="dialog2 = false">
                       Cancel
                     </v-btn>
                     <v-btn
-                      color="green darken-1"
+                      color="#ff0000"
                       flat
                       @click="archiveSkillset(props.item)"
                     >
@@ -104,7 +112,7 @@
                     </v-btn>
                   </v-card-actions>
                 </v-card>
-              </v-dialog> -->
+              </v-dialog>
             </td>
           </template>
         </v-data-table>
@@ -147,7 +155,8 @@ export default {
         }
       },
       valid: true,
-      dialog: false
+      dialog: false,
+      dialog2: false
     }
   },
   computed: {
@@ -164,13 +173,11 @@ export default {
 
   methods: {
     async addSkillset() {
-      this.$refs.form.validate()
       let { title, shortTitle } = this.addNew
       if (title !== '' && shortTitle !== '') {
         await this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
         this.addNew.title = ''
         this.addNew.shortTitle = ''
-        this.$refs.form.resetValidation()
       } else {
         console.log(
           'You must enter a title and short title in order to add a skillset'
@@ -179,7 +186,7 @@ export default {
     },
     async archiveSkillset(skill) {
       console.log(skill.id)
-      this.dialog = false
+      this.dialog2 = false
       await this.$store.dispatch(skillsetsModule(ARCHIVE), skill.id)
     }
   }
