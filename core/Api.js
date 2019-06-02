@@ -108,11 +108,11 @@ export class SkillsetApi {
     })
   }
 
-  static async updateSkillset(skillset) {
+  static async updateSkillset(skillsetId, body) {
     return await axios({
-      method: 'delete',
-      url: `${SKILLSETS_ENDPOINT}/${skillset.id}`,
-      data: skillset
+      method: 'patch',
+      url: `${SKILLSETS_ENDPOINT}/${skillsetId}`,
+      data: body
     })
   }
 
@@ -128,6 +128,13 @@ export class SkillsetApi {
       method: 'post',
       url: `${SKILLSETS_ENDPOINT}`,
       data: data
+    })
+  }
+
+  static async getActiveSkillsets() {
+    return await axios({
+      method: 'get',
+      url: `${SKILLSETS_ENDPOINT}?type=active`
     })
   }
 }
