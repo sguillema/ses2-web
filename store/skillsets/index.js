@@ -1,5 +1,14 @@
+// import { stat } from 'fs'
 import { SkillsetApi } from '../../core/Api.js'
-import { REQUEST, SUCCESS, ERROR, SKILLSETS, CLEAR, DELETE } from './methods'
+import {
+  REQUEST,
+  SUCCESS,
+  ERROR,
+  SKILLSETS,
+  CLEAR,
+  DELETE,
+  ADD_SKILLSET
+} from './methods'
 
 const emptyState = () => ({
   status: '',
@@ -15,6 +24,10 @@ export const getters = {
 export const mutations = {
   [REQUEST]: state => {
     state.status = 'loading'
+  },
+
+  [ADD_SKILLSET]: state => {
+    state.status = 'adding skillset'
   },
 
   [SUCCESS]: (state, { skillsets }) => {
@@ -51,6 +64,19 @@ export const actions = {
       try {
         const response = await SkillsetApi.deleteSkillset(state.skillsets)
         commit(SUCCESS, { skillsets: response.data })
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
+
+  [ADD_SKILLSET]: ({ commit, dispatch }, skillset) =>
+    new Promise(async (resolve, reject) => {
+      commit(ADD_SKILLSET)
+      try {
+        const response = await SkillsetApi.addSkillset(skillset)
+        dispatch(REQUEST)
         resolve(response)
       } catch (e) {
         commit(ERROR)

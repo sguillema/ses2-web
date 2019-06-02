@@ -43,11 +43,13 @@
           <div class="inputs">
             <v-text-field
               v-model="addNew.title"
+              :rules="[addNew.rules.required]"
               label="Title"
               class="input-spacing"
             />
             <v-text-field
               v-model="addNew.shortTitle"
+              :rules="[addNew.rules.required]"
               label="Short Title"
               class="input-spacing"
             />
@@ -72,7 +74,8 @@ import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import {
   skillsetsModule,
   REQUEST,
-  SKILLSETS
+  SKILLSETS,
+  ADD_SKILLSET
 } from '../../../store/skillsets/methods'
 import Sheet from '../../../components/Sheet/Sheet'
 
@@ -92,7 +95,10 @@ export default {
       ],
       addNew: {
         title: '',
-        shortTitle: ''
+        shortTitle: '',
+        rules: {
+          required: value => !!value || 'Required.'
+        }
       }
     }
   },
@@ -110,9 +116,14 @@ export default {
 
   methods: {
     async addSkillset() {
-      console.log(this.addNew)
-      console.log(this.skillsets)
-      // this.$store.getters.
+      const { title, shortTitle } = this.addNew
+      if (title !== '' && shortTitle !== '') {
+        await this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
+      } else {
+        console.log(
+          'You must enter a title and short title in order to add a skillset'
+        )
+      }
     },
     async deleteSkillset() {
       // console.log(this.delete)
