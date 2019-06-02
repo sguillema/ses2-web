@@ -24,7 +24,6 @@
           :headers="headers"
           :items="skillsets"
           item-key="name"
-          select-all
           class="elevation-1"
         >
           <template v-slot:items="props">
@@ -73,7 +72,7 @@
               Add
             </v-btn>
             <v-btn depressed color="primary" @click="archiveSkillset">
-              Delete
+              Archive
             </v-btn>
           </div>
         </section>
@@ -103,7 +102,7 @@ export default {
     return {
       search: '',
       headers: [
-        // { text: 'No', value: 'no' },
+        { text: '', value: '' },
         { text: 'ID', value: 'id' },
         { text: 'Title', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
@@ -147,8 +146,13 @@ export default {
       }
     },
     async archiveSkillset() {
-      let selectedId = this.selected[0].id
-      console.log(selectedId)
+      let selectedId = []
+      for (let index in this.selected) {
+        if (this.selected[index].id) {
+          selectedId.push(this.selected[0].id)
+        }
+      }
+      this.selected = []
       await this.$store.dispatch(skillsetsModule(ARCHIVE), selectedId)
     }
   }
