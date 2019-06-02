@@ -10,8 +10,8 @@
       <div class="column-left">
         <div>
           <v-dialog
-            v-model="dialog"
-            width="800"
+            v-model="dialogCreateSession.active"
+            :width="dialogCreateSession.width"
             @input="v => v || cancelSessionCreation()"
           >
             <template v-slot:activator="{ on }">
@@ -34,8 +34,11 @@
                   <v-stepper-step step="3">Step 3</v-stepper-step>
                 </v-stepper-header>
                 <v-stepper-items>
-                  <v-stepper-content step="1" class="step-container">
-                    <div class="step-content">
+                  <v-stepper-content
+                    step="1"
+                    class="createSessionDialog step-container"
+                  >
+                    <div class="step-content step1">
                       <p>
                         To add sessions, please select an advisor below and
                         select their availabilities. Each timeslot represents a
@@ -47,15 +50,15 @@
                         will not be added.
                       </p>
                       <v-form
-                        ref="stepForm1"
+                        ref="SessionCreateStepForm1"
                         v-model="step1Valid"
                         lazy-validation
                         class="step-subcontainer form"
                       >
                         <v-autocomplete
-                          v-model="stepOne.advisors"
+                          v-model="dialogCreateSession.stepOne.advisor"
                           :items="advisors"
-                          :rules="stepOne.advisorsRules"
+                          :rules="dialogCreateSession.stepOne.advisorRules"
                           label="Advisor"
                           placeholder="Select an Advisor"
                           outline
@@ -65,7 +68,13 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn color="primary" @click="validateStep(2)">
+                      <v-btn
+                        color="primary"
+                        @click="
+                          validateStep(2, 'SessionCreateStepForm1')
+                          dialogCreateSession.width = 1200
+                        "
+                      >
                         Continue
                       </v-btn>
                       <v-btn text @click="cancelSessionCreation">
@@ -73,141 +82,105 @@
                       </v-btn>
                     </div>
                   </v-stepper-content>
-                  <v-stepper-content step="2" class="step-container">
-                    <div class="step-content">
-                      <p>
-                        To add sessions, please select an advisor below and
-                        select their availabilities. Each timeslot represents a
-                        single session.
-                      </p>
-                      <p>
-                        <b>Please note:</b>
-                        will not be added.
-                      </p>
-                      <v-form
-                        ref="stepForm2"
-                        v-model="step2Valid"
-                        lazy-validation
-                        class="stepForm2 step-subcontainer form"
-                      >
-                        <div>
-                          <v-menu
-                            v-model="stepTwo.datePickerVisible"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            lazy
-                            transition="scale-transition"
-                            offset-y
-                            full-width
-                            min-width="290px"
-                          >
-                            <template v-slot:activator="{ on }">
-                              <v-text-field
-                                v-model="computedForm2Date"
-                                :rules="stepTwo.dateRules"
-                                label="Date"
-                                placeholder="DD/MM/YYYY"
-                                outline
-                                required
-                                readonly
-                                class="input"
-                                v-on="on"
-                              />
-                            </template>
-                            <v-date-picker
-                              v-model="stepTwo.date"
-                              :min="today"
-                              :max="calendarMaxDate"
-                              @input="stepTwo.datePickerVisible = false"
-                            />
-                          </v-menu>
-                          <v-autocomplete
-                            v-model="stepTwo.room"
-                            :items="rooms"
-                            :loading="isLoading"
-                            label="Room"
-                            placeholder="Select Room Location"
-                            outline
-                            required
-                            class="input"
-                          />
-                        </div>
-                        <div>
-                          <v-text-field
-                            v-model="stepTwo.startTime"
-                            :rules="stepTwo.startTimeRules"
-                            label="Start Time"
-                            placeholder="00:00"
-                            outline
-                            required
-                            mask="time"
-                            return-masked-value
-                            class="input"
-                          />
-                          <v-text-field
-                            v-model="stepTwo.endTime"
-                            :rules="stepTwo.endTimeRules"
-                            label="End Time"
-                            placeholder="00:00"
-                            outline
-                            required
-                            mask="time"
-                            return-masked-value
-                            class="input"
-                          />
-                        </div>
-                      </v-form>
-                    </div>
-                    <div class="step-buttons">
-                      <v-btn color="primary" @click="validateStep(3)">
-                        Continue
-                      </v-btn>
-                      <v-btn text @click="stepCount = 1">Back</v-btn>
-                    </div>
-                  </v-stepper-content>
-                  <v-stepper-content step="3" class="step-container">
-                    <div class="step-content">
-                      <div class="step-review step-subcontainer">
-                        <v-text-field
-                          v-model="stepOne.topic"
-                          label="Topic"
-                          disabled
-                        />
-                        <v-text-field
-                          v-model="stepOne.description"
-                          label="Description"
-                          disabled
-                        />
-                        <v-text-field
-                          v-model="stepOne.studentId"
-                          label="Student ID"
-                          disabled
-                        />
-                        <div>
-                          <v-text-field
-                            v-model="stepTwo.date"
-                            label="Date"
-                            disabled
-                          />
-                          <v-text-field
-                            v-model="stepTwo.room"
-                            label="Room"
-                            disabled
-                          />
-                        </div>
-                        <div>
-                          <v-text-field
-                            v-model="stepTwo.startTime"
-                            label="Start Time"
-                            disabled
-                          />
-                          <v-text-field
-                            v-model="stepTwo.endTime"
-                            label="End Time"
-                            disabled
-                          />
+                  <v-stepper-content
+                    step="2"
+                    class="createSessionDialog step-container"
+                  >
+                    <div class="step-content step2">
+                      <div class="column-left">
+                        <h4>Selected Sessions</h4>
+                        <div class="step-buttons">
+                          <v-btn text @click="stepCount = 1">Back</v-btn>
+                          <v-btn color="primary" @click="validateStep(3)">
+                            Continue
+                          </v-btn>
                         </div>
                       </div>
+                      <div class="column-right">
+                        <div class="calendar-header">
+                          <div>
+                            <v-btn class="button" outline disabled>
+                              {{ createSessionCalendarSemester }}
+                            </v-btn>
+                          </div>
+                          <div class="calendar-navigation">
+                            <v-btn
+                              outline
+                              class="calendar-back"
+                              color="accent"
+                              @click="createSessionCalendarChangeWeek(1)"
+                            >
+                              <v-icon class="icon">
+                                arrow_back_ios
+                              </v-icon>
+                            </v-btn>
+                            <span class="calendar-selection">
+                              {{ createSessionCalendarNavigationDate }}
+                            </span>
+                            <v-btn
+                              outline
+                              class="calendar-forward"
+                              color="accent"
+                              @click="createSessionCalendarChangeWeek(1)"
+                            >
+                              <v-icon class="icon">
+                                arrow_forward_ios
+                              </v-icon>
+                            </v-btn>
+                          </div>
+                          <div class="calendar-type">
+                            <v-btn
+                              outline
+                              :disabled="
+                                dialogCreateSession.stepTwo.calendarType ==
+                                  'week'
+                              "
+                              color="accent"
+                              class="button"
+                              @click="
+                                dialogCreateSession.stepTwo.calendarType =
+                                  'week'
+                              "
+                            >
+                              Weekly
+                            </v-btn>
+                            <v-btn
+                              outline
+                              :disabled="
+                                dialogCreateSession.stepTwo.calendarType ==
+                                  'day'
+                              "
+                              color="accent"
+                              class="button"
+                              @click="
+                                dialogCreateSession.stepTwo.calendarType = 'day'
+                              "
+                            >
+                              Daily
+                            </v-btn>
+                          </div>
+                        </div>
+                        <v-calendar
+                          ref="calendar"
+                          v-model="dialogCreateSession.stepTwo.valueDate"
+                          :now="today"
+                          :value="today"
+                          color="primary"
+                          class="calendar"
+                          :type="dialogCreateSession.stepTwo.calendarType"
+                          interval-minutes="30"
+                          first-interval="16"
+                          intervals="18"
+                        />
+                      </div>
+                    </div>
+                  </v-stepper-content>
+                  <v-stepper-content
+                    step="3"
+                    class="createSessionDialog step-container"
+                  >
+                    <div class="step-content step3">
+                      a
                     </div>
                     <div class="step-buttons">
                       <v-btn color="primary" @click="submitConsultationSession">
@@ -324,7 +297,7 @@
                         login into UTS:HELPS to register.
                       </p>
                       <v-form
-                        ref="stepForm1"
+                        ref="BookingStepForm1"
                         v-model="step1Valid"
                         lazy-validation
                         class="step-subcontainer form"
@@ -349,7 +322,10 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn color="primary" @click="validateStep(2)">
+                      <v-btn
+                        color="primary"
+                        @click="validateStep(2, 'BookingStepForm1')"
+                      >
                         Continue
                       </v-btn>
                       <v-btn text @click="cancelConsultationBooking">
@@ -363,7 +339,7 @@
                   >
                     <div class="step-content step2">
                       <v-form
-                        ref="stepForm2"
+                        ref="BookingStepForm2"
                         v-model="step2Valid"
                         lazy-validation
                         class="step-subcontainer form"
@@ -441,7 +417,10 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn color="primary" @click="validateStep(3)">
+                      <v-btn
+                        color="primary"
+                        @click="validateStep(3, 'BookingStepForm2')"
+                      >
                         Continue
                       </v-btn>
                       <v-btn text @click="stepCount = 1">Back</v-btn>
@@ -537,7 +516,27 @@ export default {
       advisors: ['John Smith', 'Jane Doe'],
       sessions: [],
       sessionsLoading: false,
-      dialog: false,
+      dialogCreateSession: {
+        active: true, // change to false when done
+        width: 1200, // change to 800 when done
+        stepOne: {
+          advisor: '',
+          advisorRules: [v => !!v || 'Advisor is required']
+        },
+        stepTwo: {
+          datePickerVisible: false,
+          date: moment().format('YYYY-MM-DD'),
+          valueDate: moment().format('YYYY-MM-DD'),
+          calendarType: 'week',
+          room: '',
+          startTime: '',
+          endTime: '',
+          dateRules: [v => !!v || 'Date is required'],
+          roomRules: [v => !!v || 'Room is required'],
+          startTimeRules: [v => !!v || 'Start Time is required'],
+          endTimeRules: [v => !!v || 'End Time is required']
+        }
+      },
       dialogBooking: {
         active: false,
         session: {},
@@ -562,25 +561,10 @@ export default {
           assignmentTypeRules: [v => !!v || 'Assignment Type is required']
         }
       },
-      stepCount: 1,
+      stepCount: 2, // change to 1 when done
       step1Valid: true,
       step2Valid: true,
-      step3Valid: true,
-      stepOne: {
-        advisors: '',
-        advisorsRules: [v => !!v || 'Advisors is required']
-      },
-      stepTwo: {
-        datePickerVisible: false,
-        date: moment().format('YYYY-MM-DD'),
-        room: '',
-        startTime: '',
-        endTime: '',
-        dateRules: [v => !!v || 'Date is required'],
-        roomRules: [v => !!v || 'Room is required'],
-        startTimeRules: [v => !!v || 'Start Time is required'],
-        endTimeRules: [v => !!v || 'End Time is required']
-      }
+      step3Valid: true
     }
   },
   computed: {
@@ -607,6 +591,14 @@ export default {
       } else {
         return 'Upcoming Consultations (monthly)'
       }
+    },
+    createSessionCalendarNavigationDate() {
+      return moment(this.dialogCreateSession.stepTwo.valueDate).format(
+        'D MMMM YYYY'
+      )
+    },
+    createSessionCalendarSemester() {
+      return 'Autumn'
     },
     computedForm2Date() {
       return moment(this.stepTwo.date).format('DD/MM/YYYY')
@@ -638,21 +630,41 @@ export default {
     getSessionPeriod(start, end) {
       return `${moment(start).format('kk:mm')} - ${moment(end).format('kk:mm')}`
     },
-    validateStep(nextStep) {
-      if (this.$refs[`stepForm${nextStep - 1}`].validate()) {
+    validateStep(nextStep, form) {
+      if (this.$refs[form].validate() || !form) {
         this.stepCount = nextStep
+      }
+    },
+    createSessionCalendarChangeWeek(direction) {
+      let date = this.dialogCreateSession.stepTwo.valueDate
+      switch (direction) {
+        case -1: {
+          // Go back
+          this.dialogCreateSession.stepTwo.valueDate = moment(date)
+            .subtract(1, 'week')
+            .format('YYYY-MM-DD')
+          break
+        }
+        case 1: {
+          // Go forward
+          this.dialogCreateSession.stepTwo.valueDate = moment(date)
+            .add(1, 'week')
+            .format('YYYY-MM-DD')
+        }
       }
     },
     cancelSessionCreation() {
       this.stepCount = 1
-      this.dialog = false
-      this.stepOne.topic = ''
-      this.stepOne.description = ''
-      this.stepOne.studentId = ''
-      this.stepTwo.date = moment().format('YYYY-MM-DD')
-      this.stepTwo.room = ''
-      this.stepTwo.startTime = ''
-      this.stepTwo.endTime = ''
+      this.dialogCreateSession.active = false
+      this.dialogCreateSession.width = 800
+      this.dialogCreateSession.stepOne.advisor = ''
+      // this.stepOne.topic = ''
+      // this.stepOne.description = ''
+      // this.stepOne.studentId = ''
+      // this.stepTwo.date = moment().format('YYYY-MM-DD')
+      // this.stepTwo.room = ''
+      // this.stepTwo.startTisme = ''
+      // this.stepTwo.endTime = ''
     },
     cancelConsultationBooking() {
       this.stepCount = 1
@@ -705,7 +717,7 @@ export default {
 #page-consultations {
   .container {
     display: flex;
-    .column-left {
+    > .column-left {
       min-width: 290px;
       width: 290px;
       margin-right: 27px;
@@ -738,7 +750,7 @@ export default {
         }
       }
     }
-    .column-right {
+    > .column-right {
       width: 100%;
       .input-spacing {
         @include input-spacing();
@@ -794,6 +806,73 @@ export default {
     margin-bottom: 40px;
     > div {
       display: flex;
+    }
+  }
+  .createSessionDialog {
+    .step2 {
+      display: flex;
+      .column-left {
+        display: flex;
+        flex-direction: column;
+        min-width: 230px;
+        max-width: 230px;
+        .step-buttons {
+          margin-top: auto;
+        }
+      }
+      .column-right {
+        width: 100%;
+        .calendar-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 37px;
+          > div:first-child {
+            flex: calc(1 / 3);
+            .button {
+              margin: 0;
+              min-width: 0;
+              width: 200px;
+            }
+          }
+          .calendar-navigation {
+            display: flex;
+            flex: calc(1 / 3);
+            .calendar-selection {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: $color-darkgray;
+              background: $color-graydarker;
+              height: 100%;
+              width: 245px;
+            }
+            .calendar-back,
+            .calendar-forward {
+              margin: 0;
+              min-width: 0;
+              max-width: 40px;
+            }
+            .calendar-back {
+              .icon {
+                padding-left: 10px;
+              }
+            }
+          }
+          .calendar-type {
+            display: flex;
+            justify-content: flex-end;
+            flex: calc(1 / 3);
+            .button {
+              margin: 0;
+              min-width: 0;
+              width: 100px;
+            }
+          }
+        }
+        .calendar {
+          max-height: 480px;
+        }
+      }
     }
   }
   .bookingDialog {
