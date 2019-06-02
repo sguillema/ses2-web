@@ -19,7 +19,10 @@
               </template>
               <v-card class="dialog">
                 <v-card-title class="dialog-title-card">
-                  <h1 class="dialog-title">Program Form</h1>
+                  <h1 class="dialog-title">Create Program Information</h1>
+                </v-card-title>
+                <v-card-title class="dialog-title-card2">
+                  <h1 class="dialog-title2">Program Details Form</h1>
                 </v-card-title>
                 <v-divider />
                 <v-card-text>
@@ -167,6 +170,15 @@ export default {
       }
       await this.$store.dispatch(programsModule(CREATE), this.newProgram)
       this.dialog = false
+      this.newProgram = {
+        title: '',
+        skillsetId: null,
+        targetGroup: '',
+        description: '',
+        rules: {
+          required: value => !!value || 'Required.'
+        }
+      }
     },
     setTargetGroup(targetGroup) {
       if (targetGroup === 'all') return 'All Students'
@@ -239,14 +251,30 @@ export default {
     }
   }
 }
+.form {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 25px;
+}
 .dialog {
   .dialog-title {
-    margin-left: 14px;
-    margin-right: 40px;
+    margin: 0;
+    padding-left: 25px;
     color: #ffffff;
+    font-size: 20px;
+  }
+  .dialog-title2 {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 20px;
   }
   .dialog-title-card {
     background: #ff1818;
+    height: 70px;
+  }
+  .dialog-title-card2 {
+    background: #ffffff;
+    height: 70px;
   }
   .step-content {
     padding: 0 20px;
