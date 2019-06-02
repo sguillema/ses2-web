@@ -154,7 +154,6 @@ export default {
         skillsetsModule(REMOVE_SKILLSET),
         this.deleteId
       )
-      console.log(this.name)
     }
   }
 }
