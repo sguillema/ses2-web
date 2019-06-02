@@ -181,7 +181,8 @@ export class WorkshopApi {
   static async createWorkshop(data) {
     return await axios({
       method: 'post',
-      url: WORKSHOPS_ENDPOINT
+      url: WORKSHOPS_ENDPOINT,
+      data: data
     })
   }
 
@@ -192,10 +193,10 @@ export class WorkshopApi {
     })
   }
 
-  static async deleteProgram(id) {
+  static async deleteWorkshop(id) {
     return await axios({
       method: 'delete',
-      url: `${PROGRAMS_ENDPOINT}/${id}`
+      url: `${WORKSHOPS_ENDPOINT}/${id}`
     })
   }
 }
