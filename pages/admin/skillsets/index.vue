@@ -3,12 +3,62 @@
     <section class="container">
       <Sheet header="Skill-set">
         <div>
-          <v-text-field
-            v-model="search"
-            class="input-spacing"
-            append-icon="search"
-            placeholder="Search for skill-set"
-          />
+          <v-toolbar flat color="white">
+            <v-text-field
+              v-model="search"
+              class="input-spacing"
+              append-icon="search"
+              placeholder="Search for Skillsets"
+            />
+            <v-spacer />
+            <v-dialog v-model="dialog" width="800">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark class="mb-2" v-on="on">
+                  Create Skillset
+                </v-btn>
+              </template>
+              <v-card class="dialog">
+                <v-card-title class="dialog-title-card">
+                  <h1 class="dialog-title">Create Skillset Information</h1>
+                </v-card-title>
+                <v-card-title class="dialog-title-card2">
+                  <h1 class="dialog-title2">Skillset Details Form</h1>
+                </v-card-title>
+                <v-divider />
+                <v-form v-model="valid" ef="form" lazy-validation>
+                  <div class="form">
+                    <v-text-field
+                      v-model="addNew.title"
+                      class="input"
+                      label="Title"
+                      outline
+                      :rules="[addNew.rules.required]"
+                    />
+                    <v-text-field
+                      v-model="addNew.shortTitle"
+                      :rules="[addNew.rules.required]"
+                      label="Short Title"
+                      class="input"
+                      outline
+                    />
+                  </div>
+                </v-form>
+                <v-card-text>
+                  <v-form>
+                    <div class="step-buttons">
+                      <v-btn
+                        color="primary"
+                        :disabled="!valid"
+                        @click="addSkillset"
+                      >
+                        Create Program
+                      </v-btn>
+                    </div>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
         </div>
 
         <v-data-table
@@ -28,7 +78,7 @@
                   edit
                 </v-icon>
               </router-link>
-              <v-dialog v-model="dialog" max-width="290">
+              <!-- <v-dialog v-model="dialog" max-width="290">
                 <template v-slot:activator="{ on }">
                   <v-icon small v-on="on">
                     delete
@@ -54,42 +104,10 @@
                     </v-btn>
                   </v-card-actions>
                 </v-card>
-              </v-dialog>
+              </v-dialog> -->
             </td>
           </template>
         </v-data-table>
-
-        <section class="add-skillset-section">
-          <p class="title">
-            <b>Add new skillset</b>
-          </p>
-          <v-form ref="form" v-model="valid" lazy-validation>
-            <div class="inputs">
-              <v-text-field
-                v-model="addNew.title"
-                :rules="[addNew.rules.required]"
-                label="Title"
-                class="input-spacing"
-              />
-              <v-text-field
-                v-model="addNew.shortTitle"
-                :rules="[addNew.rules.required]"
-                label="Short Title"
-                class="input-spacing"
-              />
-            </div>
-          </v-form>
-          <div>
-            <v-btn
-              :disabled="!valid"
-              depressed
-              color="primary"
-              @click="addSkillset"
-            >
-              Add
-            </v-btn>
-          </div>
-        </section>
       </Sheet>
     </section>
   </div>
@@ -169,49 +187,108 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// somestupid scss is here
 @import '~assets/styles/variables';
 
-.input-spacing {
-  margin-left: 30px;
-  width: 300px;
-}
-
-.table-wrapper {
-  border-bottom: 2px solid $color-divider;
-  margin-bottom: 12px;
-
-  thead {
-    background: black;
-    tr {
-      &:first-child {
-        border-bottom: 2px solid $color-divider;
+#page-consultations {
+  .container {
+    display: flex;
+    .column-left {
+      min-width: 290px;
+      width: 290px;
+      margin-right: 27px;
+      .filter-container {
+        position: relative;
+        .calendar-toggle {
+          position: absolute;
+          right: 0;
+          color: white;
+          z-index: 1;
+          margin-top: 7px;
+          transform: scale(0.8);
+        }
+        .filters {
+          padding: 14px;
+        }
+        .calendar {
+          box-shadow: none;
+        }
+      }
+    }
+    .column-right {
+      width: 100%;
+      .input-spacing {
+        @include input-spacing();
+        max-width: 300px;
+      }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        .header-button {
+          margin-right: 30px;
+        }
+      }
+      .table-wrapper {
+        a {
+          color: $color-secondary;
+          padding-right: 25px;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
     }
   }
 }
-
-.add-skillset-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .inputs {
+.form {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 25px;
+}
+.dialog {
+  .dialog-title {
+    margin: 0;
+    padding-left: 25px;
+    color: #ffffff;
+    font-size: 20px;
+  }
+  .dialog-title2 {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 20px;
+  }
+  .dialog-title-card {
+    background: #ff1818;
+    height: 70px;
+  }
+  .dialog-title-card2 {
+    background: #ffffff;
+    height: 70px;
+  }
+  .step-content {
+    padding: 0 20px;
+  }
+  .step-buttons {
     display: flex;
+    justify-content: center;
   }
-  p {
-    width: 100%;
+  .stepForm2 {
+    display: flex;
+    flex-direction: column;
+    > div {
+      flex: 1;
+      display: flex;
+    }
+    .input {
+      width: 340px;
+    }
   }
-}
-
-.title {
-  padding: 15px;
-}
-
-a {
-  color: #0f4beb;
-  padding-right: 25px;
-  &:hover {
-    text-decoration: underline;
+  .step-review {
+    padding: 10px;
+    border: 1px solid black;
+    margin-bottom: 40px;
+    > div {
+      display: flex;
+    }
   }
 }
 </style>
