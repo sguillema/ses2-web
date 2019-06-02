@@ -21,14 +21,14 @@
                   <v-form>
                     <div>
                       <v-text-field
-                        v-model="addProgram.title"
+                        v-model="newProgram.title"
                         class="input"
                         label="Title"
                         outline
                         required
                       />
                       <v-select
-                        v-model="addProgram.skillsetId"
+                        v-model="newProgram.skillsetId"
                         label="Skillset"
                         :items="skillsets"
                         item-value="id"
@@ -37,7 +37,7 @@
                         required
                       />
                       <v-select
-                        v-model="addProgram.targetGroup"
+                        v-model="newProgram.targetGroup"
                         :items="targetGroups"
                         item-value="value"
                         item-text="text"
@@ -46,7 +46,7 @@
                         required
                       />
                       <v-textarea
-                        v-model="addProgram.description"
+                        v-model="newProgram.description"
                         class="input"
                         label="Description"
                         outline
@@ -57,7 +57,7 @@
                       />
                     </div>
                     <div class="step-buttons">
-                      <v-btn color="primary" @click="submitProgram">
+                      <v-btn color="primary" @click="addProgram">
                         Create Program
                       </v-btn>
                     </div>
@@ -127,7 +127,7 @@ export default {
       ],
       programsLoading: false,
       dialog: false,
-      addProgram: {
+      newProgram: {
         title: '',
         skillsetId: null,
         targetGroup: '',
@@ -146,16 +146,9 @@ export default {
     this.$store.dispatch(programsModule(REQUEST))
   },
   methods: {
-    getSessionDate(date) {
-      return moment(date).format('DD/MM/YYYY')
-    },
-    getSessionPeriod(start, end) {
-      return `${moment(start).format('kk:mm')} - ${moment(end).format('kk:mm')}`
-    },
-    validateStep(nextStep) {
-      if (this.$refs[`stepForm${nextStep - 1}`].validate()) {
-        this.stepCount = nextStep
-      }
+    async addProgram() {
+      console.log(this.newProgram)
+      await this.$store.dispatch(programsModule(CREATE, this.newProgram))
     },
     setTargetGroup(targetGroup) {
       if (targetGroup === 'all') return 'All Students'
@@ -170,16 +163,6 @@ export default {
         }
       })
       return result
-    },
-    submitProgram() {
-      this.$axios.$post('http://localhost:4000/programs', {
-        skillsetId: this.program.skillsetId,
-        title: this.program.title,
-        targetGroup: this.program.targetGroup,
-        description: this.program.description
-      })
-      this.dialog = false
-      location.reload()
     }
   }
 }
