@@ -68,6 +68,9 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
+                      <v-btn text @click="cancelSessionCreation">
+                        Cancel
+                      </v-btn>
                       <v-btn
                         color="primary"
                         @click="
@@ -77,9 +80,6 @@
                       >
                         Continue
                       </v-btn>
-                      <v-btn text @click="cancelSessionCreation">
-                        Cancel
-                      </v-btn>
                     </div>
                   </v-stepper-content>
                   <v-stepper-content
@@ -88,7 +88,45 @@
                   >
                     <div class="step-content step2">
                       <div class="column-left">
-                        <h4>Selected Sessions</h4>
+                        <h4
+                          v-if="
+                            getArrayLength(
+                              dialogCreateSession.stepTwo.selectedTimes
+                            ) > 0
+                          "
+                        >
+                          Selected
+                          {{
+                            getArrayLength(
+                              dialogCreateSession.stepTwo.selectedTimes
+                            )
+                          }}
+                          Session(s)
+                        </h4>
+                        <h4 v-else>
+                          Selected Sessions
+                        </h4>
+                        <v-list class="selected-times">
+                          <v-list-tile
+                            v-for="session in dialogCreateSession.stepTwo
+                              .selectedTimes"
+                            :key="session.startTime"
+                          >
+                            <v-list-tile-content class="time-item">
+                              <span>
+                                {{
+                                  getSessionPeriod(
+                                    session.startTime,
+                                    session.endTime
+                                  )
+                                }}
+                              </span>
+                              <span>
+                                {{ getSessionDate(session.startTime) }}
+                              </span>
+                            </v-list-tile-content>
+                          </v-list-tile>
+                        </v-list>
                         <div class="step-buttons">
                           <v-btn text @click="stepCount = 1">Back</v-btn>
                           <v-btn color="primary" @click="validateStep(3)">
@@ -108,7 +146,7 @@
                               outline
                               class="calendar-back"
                               color="accent"
-                              @click="createSessionCalendarChangeWeek(1)"
+                              @click="createSessionCalendarChangePeriod(-1)"
                             >
                               <v-icon class="icon">
                                 arrow_back_ios
@@ -121,7 +159,7 @@
                               outline
                               class="calendar-forward"
                               color="accent"
-                              @click="createSessionCalendarChangeWeek(1)"
+                              @click="createSessionCalendarChangePeriod(1)"
                             >
                               <v-icon class="icon">
                                 arrow_forward_ios
@@ -171,7 +209,59 @@
                           interval-minutes="30"
                           first-interval="16"
                           intervals="18"
-                        />
+                          @click:time="createSessionCalendarSelectTime"
+                        >
+                          <template
+                            v-slot:dayBody="{ date, timeToY, minutesToPixels }"
+                          >
+                            <template
+                              v-for="session in createSessionCalendarSessionsMap[
+                                date
+                              ]"
+                            >
+                              <div
+                                :key="session.id"
+                                :style="{
+                                  top:
+                                    timeToY(
+                                      getFormattedSessionTime(session.startTime)
+                                    ) + 'px',
+                                  height:
+                                    minutesToPixels(
+                                      getSessionDuration(
+                                        session.startTime,
+                                        session.endTime
+                                      )
+                                    ) + 'px'
+                                }"
+                                class="calendar-session"
+                              ></div>
+                            </template>
+                            <template
+                              v-for="session in createSessionCalendarSelectionsMap[
+                                date
+                              ]"
+                            >
+                              <div
+                                :key="session.startTime"
+                                :style="{
+                                  top:
+                                    timeToY(
+                                      getFormattedSessionTime(session.startTime)
+                                    ) + 'px',
+                                  height:
+                                    minutesToPixels(
+                                      getSessionDuration(
+                                        session.startTime,
+                                        session.endTime
+                                      )
+                                    ) + 'px'
+                                }"
+                                class="calendar-session selected"
+                              ></div>
+                            </template>
+                          </template>
+                        </v-calendar>
                       </div>
                     </div>
                   </v-stepper-content>
@@ -183,10 +273,10 @@
                       a
                     </div>
                     <div class="step-buttons">
+                      <v-btn text @click="stepCount = 2">Back</v-btn>
                       <v-btn color="primary" @click="submitConsultationSession">
                         Create Consultation Session
                       </v-btn>
-                      <v-btn text @click="stepCount = 2">Back</v-btn>
                     </div>
                   </v-stepper-content>
                 </v-stepper-items>
@@ -235,24 +325,29 @@
             :headers="headers"
             :items="sessions"
             :search="search"
+            :loading="sessionsLoading"
           >
-            <template v-slot:items="props">
+            <template v-if="!sessionsLoading" v-slot:items="props">
               <td>{{ props.item.id }}</td>
-              <td>{{ getSessionDate(props.item.date) }}</td>
+              <td>{{ getSessionDate(props.item.startTime) }}</td>
               <td>
                 {{ getSessionPeriod(props.item.startTime, props.item.endTime) }}
               </td>
               <td>{{ props.item.room }}</td>
               <td>
                 <router-link
-                  v-if="props.item.bookedBookings[0].studentId != ''"
-                  :to="`/students/${props.item.bookedBookings[0].studentId}`"
+                  v-if="getArrayLength(props.item.bookings) > 0"
+                  :to="`/students/${props.item.bookings[0].studentId}`"
                 >
-                  {{ props.item.bookedBookings[0].studentId }}
+                  {{ props.item.bookings[0].studentId }}
                 </router-link>
-                <a @click="activateBookingDialog(props.item)">Book now</a>
+                <a v-else @click="activateBookingDialog(props.item)">
+                  Book now
+                </a>
               </td>
-              <td>xx</td>
+              <td>
+                {{ getArrayLength(props.item.waitlist) }}
+              </td>
               <td>
                 <router-link :to="`/consultations/${props.item.id}`">
                   View
@@ -322,14 +417,14 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
+                      <v-btn text @click="cancelConsultationBooking">
+                        Cancel
+                      </v-btn>
                       <v-btn
                         color="primary"
                         @click="validateStep(2, 'BookingStepForm1')"
                       >
                         Continue
-                      </v-btn>
-                      <v-btn text @click="cancelConsultationBooking">
-                        Cancel
                       </v-btn>
                     </div>
                   </v-stepper-content>
@@ -417,13 +512,13 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
+                      <v-btn text @click="stepCount = 1">Back</v-btn>
                       <v-btn
                         color="primary"
                         @click="validateStep(3, 'BookingStepForm2')"
                       >
                         Continue
                       </v-btn>
-                      <v-btn text @click="stepCount = 1">Back</v-btn>
                     </div>
                   </v-stepper-content>
                   <v-stepper-content
@@ -460,10 +555,10 @@
                       </div>
                     </div>
                     <div class="step-buttons">
+                      <v-btn text @click="stepCount = 2">Back</v-btn>
                       <v-btn color="primary" @click="submitConsultationBooking">
                         Submit Consultation Booking
                       </v-btn>
-                      <v-btn text @click="stepCount = 2">Back</v-btn>
                     </div>
                   </v-stepper-content>
                 </v-stepper-items>
@@ -506,7 +601,7 @@ export default {
         { text: 'Room', value: 'room', sortable: false },
         {
           text: 'Booked By',
-          value: 'bookedBookings[0].studentId',
+          value: 'bookings[0].studentId',
           sortable: false
         },
         { text: 'No. Waiting', value: '', sortable: false },
@@ -515,9 +610,11 @@ export default {
       rooms: ['cb11.05.400', 'cb11.09.104'],
       advisors: ['John Smith', 'Jane Doe'],
       sessions: [],
-      sessionsLoading: false,
+      sessionsLoading: true,
       dialogCreateSession: {
+        // active: false,
         active: true, // change to false when done
+        // width: 800,
         width: 1200, // change to 800 when done
         stepOne: {
           advisor: '',
@@ -528,6 +625,7 @@ export default {
           date: moment().format('YYYY-MM-DD'),
           valueDate: moment().format('YYYY-MM-DD'),
           calendarType: 'week',
+          selectedTimes: [],
           room: '',
           startTime: '',
           endTime: '',
@@ -561,6 +659,7 @@ export default {
           assignmentTypeRules: [v => !!v || 'Assignment Type is required']
         }
       },
+      // stepCount: 1,
       stepCount: 2, // change to 1 when done
       step1Valid: true,
       step2Valid: true,
@@ -592,6 +691,26 @@ export default {
         return 'Upcoming Consultations (monthly)'
       }
     },
+    createSessionCalendarSessionsMap() {
+      let map = {}
+      this.sessions.forEach(session => {
+        if (!map.hasOwnProperty(this.getFormattedDate(session.startTime))) {
+          map[this.getFormattedDate(session.startTime)] = []
+        }
+        map[this.getFormattedDate(session.startTime)].push(session)
+      })
+      return map
+    },
+    createSessionCalendarSelectionsMap() {
+      let map = {}
+      this.dialogCreateSession.stepTwo.selectedTimes.forEach(session => {
+        if (!map.hasOwnProperty(this.getFormattedDate(session.startTime))) {
+          map[this.getFormattedDate(session.startTime)] = []
+        }
+        map[this.getFormattedDate(session.startTime)].push(session)
+      })
+      return map
+    },
     createSessionCalendarNavigationDate() {
       return moment(this.dialogCreateSession.stepTwo.valueDate).format(
         'D MMMM YYYY'
@@ -617,39 +736,140 @@ export default {
   },
   async mounted() {
     // await this.$store.dispatch()
-    this.loading = true
-    this.sessions = await this.$axios.$get(
-      'http://localhost:4000/sessions?type=0'
+    this.sessionsLoading = true
+    let sessions = await this.$axios.$get(
+      'http://localhost:4000/sessions?type=consultation'
     )
-    this.loading = false
+    let newSessions = []
+    sessions.forEach(async session => {
+      let newSession = session
+      let bookings = await this.$axios.$get(
+        `http://localhost:4000/bookings?sessionId=${session.id}`
+      )
+      newSession.bookings = bookings.bookings
+      newSession.waitlist = bookings.waitlist
+      newSessions.push(newSession)
+    })
+    this.sessions = newSessions
+    this.sessionsLoading = false
   },
   methods: {
+    getArrayLength(array) {
+      return array.length
+    },
     getSessionDate(date) {
       return moment(date).format('DD/MM/YYYY')
     },
+    getFormattedSessionTime(start) {
+      return moment(start).format('kk:mm')
+    },
     getSessionPeriod(start, end) {
-      return `${moment(start).format('kk:mm')} - ${moment(end).format('kk:mm')}`
+      return `${this.getFormattedSessionTime(
+        start
+      )} - ${this.getFormattedSessionTime(end)}`
+    },
+    getSessionDuration(start, end) {
+      return moment(end).diff(moment(start), 'minutes')
+    },
+    getFormattedDate(date) {
+      return moment(date).format('YYYY-MM-DD')
     },
     validateStep(nextStep, form) {
       if (this.$refs[form].validate() || !form) {
         this.stepCount = nextStep
       }
     },
-    createSessionCalendarChangeWeek(direction) {
+    createSessionCalendarSelectTime({ date, time }) {
+      let timeFull = moment(`${date} ${time}`, 'YYYY-MM-DD kk:mm').format()
+      let timePadded = moment(timeFull)
+        .add(30, 'minutes')
+        .format()
+      let timeMin = moment(timeFull)
+        .startOf('hour')
+        .format()
+      let timeMax = moment(timeFull)
+        .endOf('hour')
+        .format()
+      let timeMid = moment(timeMin)
+        .add(30, 'minutes')
+        .format()
+      let session = {
+        startTime: '',
+        endTime: ''
+      }
+      if (moment(timePadded).isBefore(timeMax)) {
+        session.startTime = timeMin
+        session.endTime = moment(timeMin)
+          .add(30, 'minutes')
+          .format()
+      } else {
+        session.startTime = timeMid
+        session.endTime = moment(timeMid)
+          .add(30, 'minutes')
+          .format()
+      }
+
+      if (moment(session.startTime).isAfter(moment())) {
+        let alreadyExists = undefined // equiv to false for our case
+        this.dialogCreateSession.stepTwo.selectedTimes.find(
+          (selectedTime, i) => {
+            if (
+              selectedTime.startTime == session.startTime &&
+              selectedTime.endTime == session.endTime
+            ) {
+              alreadyExists = i
+            }
+          }
+        )
+        if (alreadyExists != undefined) {
+          this.dialogCreateSession.stepTwo.selectedTimes.splice(
+            alreadyExists,
+            1
+          )
+        } else if (alreadyExists == undefined) {
+          alreadyExists = this.sessions.find(storedSession => {
+            return (
+              storedSession.startTime == session.startTime ||
+              storedSession.endTime == session.endTime
+            )
+          })
+          if (alreadyExists == undefined) {
+            this.dialogCreateSession.stepTwo.selectedTimes.push(session)
+          }
+        }
+      } else {
+        this.snackbar.active = true
+        this.snackbar.message =
+          'You cannot create a session before the current time.'
+      }
+    },
+    createSessionCalendarChangePeriod(direction) {
       let date = this.dialogCreateSession.stepTwo.valueDate
       switch (direction) {
         case -1: {
           // Go back
-          this.dialogCreateSession.stepTwo.valueDate = moment(date)
-            .subtract(1, 'week')
-            .format('YYYY-MM-DD')
+          if (this.dialogCreateSession.stepTwo.calendarType == 'week') {
+            this.dialogCreateSession.stepTwo.valueDate = moment(date)
+              .subtract(1, 'week')
+              .format('YYYY-MM-DD')
+          } else if (this.dialogCreateSession.stepTwo.calendarType == 'day') {
+            this.dialogCreateSession.stepTwo.valueDate = moment(date)
+              .subtract(1, 'day')
+              .format('YYYY-MM-DD')
+          }
           break
         }
         case 1: {
           // Go forward
-          this.dialogCreateSession.stepTwo.valueDate = moment(date)
-            .add(1, 'week')
-            .format('YYYY-MM-DD')
+          if (this.dialogCreateSession.stepTwo.calendarType == 'week') {
+            this.dialogCreateSession.stepTwo.valueDate = moment(date)
+              .add(1, 'week')
+              .format('YYYY-MM-DD')
+          } else if (this.dialogCreateSession.stepTwo.calendarType == 'day') {
+            this.dialogCreateSession.stepTwo.valueDate = moment(date)
+              .add(1, 'day')
+              .format('YYYY-MM-DD')
+          }
         }
       }
     },
@@ -816,6 +1036,23 @@ export default {
         flex-direction: column;
         min-width: 230px;
         max-width: 230px;
+        padding-right: 30px;
+        margin-right: 30px;
+        border-right: 1px solid $color-darkgray;
+        .selected-times {
+          margin-top: 24px;
+          max-height: 430px;
+          overflow: scroll;
+          /deep/ .v-list__tile {
+            padding: 0 !important;
+          }
+          .time-item {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-size: $font-regular;
+          }
+        }
         .step-buttons {
           margin-top: auto;
         }
@@ -826,6 +1063,7 @@ export default {
           display: flex;
           justify-content: space-between;
           margin-bottom: 37px;
+          margin-left: 43px;
           > div:first-child {
             flex: calc(1 / 3);
             .button {
@@ -871,6 +1109,36 @@ export default {
         }
         .calendar {
           max-height: 480px;
+          /deep/ .v-calendar-daily__day {
+            cursor: pointer;
+          }
+          /deep/ .v-past {
+            cursor: not-allowed;
+          }
+          .calendar-session {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-radius: 2px;
+            background-color: $color-graydarker;
+            color: #ffffff;
+            border: 1px solid $color-graydarker;
+            font-size: 12px;
+            padding: 3px;
+            cursor: default;
+            margin-bottom: 1px;
+            left: 4px;
+            margin-right: 8px;
+            position: relative;
+            position: absolute;
+            right: 4px;
+            margin-right: 0px;
+            &.selected {
+              background-color: $color-red2;
+              border-color: $color-red2;
+              cursor: pointer;
+            }
+          }
         }
       }
     }
