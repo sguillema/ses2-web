@@ -1,5 +1,5 @@
-import { ProgramsApi } from '../../core/Api.js'
-import { REQUEST, SUCCESS, ERROR, PROGRAMS, CLEAR } from './methods'
+import { ProgramApi } from '../../core/Api'
+import { REQUEST, SUCCESS, ERROR, PROGRAMS, CLEAR, CREATE } from './methods'
 
 const emptyState = () => ({
   status: '',
@@ -9,12 +9,17 @@ const emptyState = () => ({
 export const state = () => emptyState()
 
 export const getters = {
-  [PROGRAMS]: state => state.program
+  [PROGRAMS]: state => state.programs
 }
 
 export const mutations = {
   [REQUEST]: state => {
     state.status = 'loading'
+  },
+
+  [CREATE]: (state, program) => {
+    state.status = 'create'
+    state.programs.push = program
   },
 
   [SUCCESS]: (state, { programs }) => {
@@ -36,8 +41,21 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
-        const response = await ProgramsApi.getProgram(1)
+        const response = await ProgramApi.getPrograms()
         commit(SUCCESS, { programs: response.data })
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
+
+  [CREATE]: ({ commit }, data) =>
+    new Promise(async (resolve, reject) => {
+      commit(CREATE)
+      try {
+        const response = await ProgramApi.createProgram(data)
+        commit(SUCCESS, { student: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)

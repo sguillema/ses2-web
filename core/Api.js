@@ -10,6 +10,7 @@ const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
+
 export class AuthApi {
   static setAuthorizationHeader(token) {
     axios.defaults.headers.common[AUTHORIZATION] = `Bearer ${token}`
@@ -108,7 +109,7 @@ export class SkillsetApi {
   }
 }
 
-export class ProgramsApi {
+export class ProgramApi {
   static async getPrograms() {
     return await axios({
       method: 'get',

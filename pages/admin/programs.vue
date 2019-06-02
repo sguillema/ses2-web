@@ -21,30 +21,32 @@
                   <v-form>
                     <div>
                       <v-text-field
-                        v-model="program.title"
+                        v-model="addProgram.title"
                         class="input"
                         label="Title"
                         outline
                         required
                       />
                       <v-select
-                        v-model="program.skillsetId"
+                        v-model="addProgram.skillsetId"
                         label="Skillset"
                         :items="skillsets"
                         item-value="id"
                         item-text="title"
                         outline
+                        required
                       />
                       <v-select
-                        v-model="program.targetGroup"
+                        v-model="addProgram.targetGroup"
                         :items="targetGroups"
                         item-value="value"
                         item-text="text"
                         label="Target Group"
                         outline
+                        required
                       />
                       <v-textarea
-                        v-model="program.description"
+                        v-model="addProgram.description"
                         class="input"
                         label="Description"
                         outline
@@ -73,7 +75,7 @@
             <template v-slot:items="props">
               <td>{{ props.item.title }}</td>
               <td>
-                {{ getSkillsetTitle(props.item.skillsetId) }}
+                {{ props.item.skillsetId }}
               </td>
               <td>{{ setTargetGroup(props.item.targetGroup) }}</td>
               <td>{{ props.item.description }}</td>
@@ -88,6 +90,12 @@
 <script>
 import moment from 'moment'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+import {
+  programsModule,
+  REQUEST,
+  PROGRAMS,
+  CREATE
+} from '../../store/programs/methods'
 import Sheet from '../../components/Sheet/Sheet'
 
 export default {
@@ -117,11 +125,9 @@ export default {
           value: 'postgraduate'
         }
       ],
-      programs: [],
-      skillsets: [],
       programsLoading: false,
       dialog: false,
-      program: {
+      addProgram: {
         title: '',
         skillsetId: null,
         targetGroup: '',
@@ -129,13 +135,15 @@ export default {
       }
     }
   },
-  computed: {},
-  async mounted() {
-    // await this.$store.dispatch()
-    this.loading = true
-    this.programs = await this.$axios.$get('http://localhost:4000/programs')
-    this.skillsets = await this.$axios.$get('http://localhost:4000/skillsets')
-    this.loading = false
+  computed: {
+    programs: {
+      get() {
+        return this.$store.getters[programsModule(PROGRAMS)]
+      }
+    }
+  },
+  mounted() {
+    this.$store.dispatch(programsModule(REQUEST))
   },
   methods: {
     getSessionDate(date) {
