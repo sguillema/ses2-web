@@ -165,7 +165,6 @@ export default {
       ) {
         return false
       }
-      console.log(this.newProgram)
       await this.$store.dispatch(programsModule(CREATE), this.newProgram)
       this.dialog = false
     },

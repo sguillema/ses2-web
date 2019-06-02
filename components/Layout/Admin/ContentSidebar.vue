@@ -35,17 +35,18 @@ export default {
         {
           title: 'Bookings',
           links: [
-            { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
-            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
             {
               title: 'Consultations',
               icon: 'forum',
               to: '/admin/consultations'
-            }
+            },
+            { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
+            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
+            { title: 'Skill Sets', icon: 'receipt', to: '/admin/skillsets' }
           ]
         },
         {
-          title: 'Advisor',
+          title: 'Users',
           links: [
             {
               title: 'Advisors',
@@ -63,10 +64,9 @@ export default {
         {
           title: 'Miscellaneous',
           links: [
-            { title: 'Skill Set', icon: 'receipt', to: '/admin/skillsets' },
-            { title: 'Email', icon: 'email', to: '/admin/email' },
+            { title: 'Emails', icon: 'email', to: '/admin/emails' },
             { title: 'Reports', icon: 'book', to: '/admin/reports' },
-            { title: 'Room', icon: 'home', to: '/admin/room' },
+            { title: 'Rooms', icon: 'home', to: '/admin/rooms' },
             { title: 'Messages', icon: 'chat', to: '/admin/messages' }
           ]
         }

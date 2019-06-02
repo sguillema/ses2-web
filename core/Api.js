@@ -11,6 +11,7 @@ const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
 const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
+const STAFF_ENDPOINT = `${ENDPOINT}/staff`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -30,6 +31,7 @@ export class AuthApi {
   }
 }
 
+//Student API
 export class StudentApi {
   static async getStudents() {
     return await axios({
@@ -61,6 +63,8 @@ export class StudentApi {
     })
   }
 }
+
+//Booking API
 export class BookingApi {
   static async getBookings(studentId) {
     return await axios({
@@ -70,6 +74,7 @@ export class BookingApi {
   }
 }
 
+//Booking API
 export class ConsultationApi {
   static async getConsultations(studentId) {
     return await axios({
@@ -79,6 +84,7 @@ export class ConsultationApi {
   }
 }
 
+//Skillset API
 export class SkillsetApi {
   static async getSkillsets() {
     return await axios({
@@ -110,7 +116,6 @@ export class SkillsetApi {
   }
 
   static async addSkillset(data) {
-    console.log(data)
     return await axios({
       method: 'post',
       url: `${SKILLSET_ENDPOINT}`,
@@ -176,16 +181,14 @@ export class WorkshopApi {
   static async createWorkshop(data) {
     return await axios({
       method: 'post',
-      url: WORKSHOPS_ENDPOINT,
-      data: data
+      url: WORKSHOPS_ENDPOINT
     })
   }
 
   static async updateWorkshop(data) {
     return await axios({
       method: 'patch',
-      url: `${WORKSHOPS_ENDPOINT}/${data.id}`,
-      data: data
+      url: `${WORKSHOPS_ENDPOINT}/${data.id}`
     })
   }
 
@@ -193,6 +196,44 @@ export class WorkshopApi {
     return await axios({
       method: 'delete',
       url: `${PROGRAMS_ENDPOINT}/${id}`
+    })
+  }
+}
+
+//Advisors API
+export class AdvisorApi {
+  static async getAdvisors() {
+    return await axios({
+      method: 'get',
+      url: STAFF_ENDPOINT
+    })
+  }
+
+  static async getAdvisor(id) {
+    return await axios({
+      method: 'get',
+      url: `${STAFF_ENDPOINT}/${id}`
+    })
+  }
+
+  static async createAdvisor(data) {
+    return await axios({
+      method: 'post',
+      url: `${STAFF_ENDPOINT}`,
+      data: data
+    })
+  }
+  static async updateAdvisor(data) {
+    return await axios({
+      method: 'patch',
+      url: `${STAFF_ENDPOINT}/${data.id}`,
+      data: data
+    })
+  }
+  static async deleteAdvisor(id) {
+    return await axios({
+      method: 'delete',
+      url: `${STAFF_ENDPOINT}/${id}`
     })
   }
 }
