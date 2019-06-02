@@ -1,7 +1,7 @@
 <template>
   <div id="page-authenticated">
     <section class="container">
-      <h1>Welcome to UTS:HELPS Booking System</h1>
+      <h1>Welcome to UTS:HELPS Bookeing System</h1>
       <v-toolbar flat color="white">
         <v-toolbar-title>Your Bookings</v-toolbar-title>
       </v-toolbar>
@@ -92,20 +92,6 @@ export default {
       }
     })
     this.bookingsWithData = await Promise.all(promises)
-    console.log(this.bookingsWithData)
-    // for each booking
-    // get its session (booking.sessionId)
-    // if (session.type === 'consultation')
-    //
-
-    // const answer = await SessionApi.getSessions(this.bookings.sessionId)
-    // this.sessions = answer.data
-    // if (this.sessions.workshopId != null) {
-    //   const hello = await WorkshopApi.getWorkshop(this.sessions.workshopId)
-    //   this.workshops = hello.data
-    // }
-    // const jello = await BookingDetailsApi.getBookingDetailByBookingId(this.id)
-    // this.bookingDetails = jello.data
   }
 }
 </script>
