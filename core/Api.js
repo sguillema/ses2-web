@@ -12,6 +12,8 @@ const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
 const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
 const STAFF_ENDPOINT = `${ENDPOINT}/staff`
+const SESSIONS_ENDPOINT = `${ENDPOINT}/sessions`
+const BOOKINGDETAIL_ENDPOINT = `${ENDPOINT}/booking-details`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -70,6 +72,31 @@ export class BookingApi {
     return await axios({
       method: 'get',
       url: `${BOOKINGS_ENDPOINT}?studentId=${studentId}`
+    })
+  }
+}
+//Booking details API
+export class BookingDetailsApi {
+  static async getBookingDetailByBookingId(bookingId) {
+    return await axios({
+      method: 'get',
+      url: `${BOOKINGDETAIL_ENDPOINT}?bookingId=${bookingId}`
+    })
+  }
+}
+//Session API
+export class SessionApi {
+  static async getSessions() {
+    return await axios({
+      method: 'get',
+      url: SESSIONS_ENDPOINT
+    })
+  }
+
+  static async getSession(sessionId) {
+    return await axios({
+      method: 'get',
+      url: `${SESSIONS_ENDPOINT}/${sessionId}`
     })
   }
 }

@@ -1,24 +1,22 @@
 <template>
   <div id="page-authenticated">
     <section class="container">
-      <p>{{ sessions }}</p>
       <h1>Welcome to UTS:HELPS Booking System</h1>
       <v-toolbar flat color="white">
         <v-toolbar-title>Your Bookings</v-toolbar-title>
       </v-toolbar>
       <v-data-table
         :headers="headers"
-        :items="sessions"
+        :items="bookingsWithData"
         class="elevation-1"
         item-key="name"
       >
         <template v-slot:items="props">
-          <td>{{ props.item.startTime }}</td>
-          <td class="text-xs-right">{{ props.item.type }}</td>
-          <td class="text-xs-right">{{ props.item.room }}</td>
-          <td class="text-xs-right">{{ props.item.createdBy }}</td>
+          <td>{{ props.item.session.startTime }}</td>
+          <td class="text-xs-right">{{ props.item.session.type }}</td>
+          <td class="text-xs-right">{{ props.item.session.room }}</td>
+          <td class="text-xs-right">{{ props.item.session.createdBy }}</td>
           <td class="text-xs-right">{{ props.item.title }}</td>
-          <td class="text-xs-right">{{ props.item.icon }}</td>
           <td>
             <i class="material-icons">school</i>
           </td>
@@ -33,9 +31,15 @@
 
 <script>
 import { authModule, TYPE, USER } from '~/store/auth/methods'
-import { BookingApi, SessionApi } from '../../core/Api'
+import {
+  BookingApi,
+  SessionApi,
+  WorkshopApi,
+  BookingDetailsApi
+} from '../../core/Api'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import { type } from 'os'
+import { async } from 'q'
 
 export default {
   middleware: studentAuthenticated,
@@ -55,17 +59,53 @@ export default {
         { text: 'Type', value: 'type', sortable: false },
         { text: 'Room', value: 'room', sortable: false },
         { text: 'Advisor', value: 'advisor', sortable: false },
-        { text: 'Title', value: 'title', sortable: false }
+        { text: 'Title', value: 'title', sortable: false },
+        { text: 'Attended', value: 'attended', sortable: false },
+        { text: 'Actions', value: 'actions', sortable: false }
       ],
       sessions: [],
-      bookings: []
+      bookings: [],
+      workshops: [],
+      bookingDetails: [],
+      bookingsWithData: []
     }
   },
   async mounted() {
     const response = await BookingApi.getBookings(this.user.id)
     this.bookings = response.data
-    const answer = await SessionApi.getSessions(this.bookings.id)
-    this.sessions = answer.data
+    const promises = this.bookings.map(async booking => {
+      let title
+      const session = (await SessionApi.getSession(booking.sessionId)).data
+      if (session.type === 'consultation') {
+        const bookingDetails = (await BookingDetailsApi.getBookingDetailByBookingId(
+          booking.id
+        )).data
+        title = bookingDetails.appointmentFor
+      } else {
+        const result = await WorkshopApi.getWorkshop(session.workshopId)
+        title = result.data.title
+      }
+      return {
+        booking,
+        session,
+        title
+      }
+    })
+    this.bookingsWithData = await Promise.all(promises)
+    console.log(this.bookingsWithData)
+    // for each booking
+    // get its session (booking.sessionId)
+    // if (session.type === 'consultation')
+    //
+
+    // const answer = await SessionApi.getSessions(this.bookings.sessionId)
+    // this.sessions = answer.data
+    // if (this.sessions.workshopId != null) {
+    //   const hello = await WorkshopApi.getWorkshop(this.sessions.workshopId)
+    //   this.workshops = hello.data
+    // }
+    // const jello = await BookingDetailsApi.getBookingDetailByBookingId(this.id)
+    // this.bookingDetails = jello.data
   }
 }
 </script>
