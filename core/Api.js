@@ -106,6 +106,15 @@ export class SkillsetApi {
       url: `${SKILLSET_ENDPOINT}/${id}`
     })
   }
+
+  static async addSkillset(data) {
+    console.log(data)
+    return await axios({
+      method: 'post',
+      url: `${SKILLSET_ENDPOINT}`,
+      data: data
+    })
+  }
 }
 
 export class ProgramsApi {

@@ -12,13 +12,13 @@ export const DELETE = 'delete'
 
 // mapped fields
 export const SKILLSETS = 'skillsets'
-// export const SKILLSET = 'skillset'
+export const SKILLSET = 'skillset'
 // export const TITLE = 'skillset.title'
 // export const SHORT_TITLE = 'skillset.shortTitle'
 // export const NO_OF_WORKSHOPS = 'skillset.noOfWorkshops'
 
 // methods
-// export const ADD_SKILLSET = 'addSkillset'
-// export const REMOVE_SKILLSET = 'removeSkillset'
+export const ADD_SKILLSET = 'addSkillset'
+export const REMOVE_SKILLSET = 'removeSkillset'
 
 export const skillsetsModule = method => storeModule(MODULE, method)
