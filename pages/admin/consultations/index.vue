@@ -154,8 +154,8 @@
                               >
                                 <template v-slot:activator="{ on }">
                                   <v-text-field
-                                    class="input"
                                     v-model="computedForm2Date"
+                                    class="input"
                                     :rules="stepTwo.dateRules"
                                     label="Date"
                                     placeholder="DD/MM/YYYY"
@@ -173,8 +173,8 @@
                                 />
                               </v-menu>
                               <v-autocomplete
-                                class="input"
                                 v-model="stepTwo.room"
+                                class="input"
                                 :items="rooms"
                                 :loading="isLoading"
                                 label="Room"
@@ -185,8 +185,8 @@
                             </div>
                             <div>
                               <v-text-field
-                                class="input"
                                 v-model="stepTwo.startTime"
+                                class="input"
                                 :rules="stepTwo.startTimeRules"
                                 label="Start Time"
                                 placeholder="00:00"
@@ -196,8 +196,8 @@
                                 return-masked-value
                               />
                               <v-text-field
-                                class="input"
                                 v-model="stepTwo.endTime"
+                                class="input"
                                 :rules="stepTwo.endTimeRules"
                                 label="End Time"
                                 placeholder="00:00"

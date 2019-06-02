@@ -1,7 +1,7 @@
-/* eslint-disable no-undef */ /* eslint-disable prettier/prettier */
 <template>
   <div id="page-dataTable">
     <section class="container">
+      <WorkshopRegisterDialog />
       <v-layout style="float:right">
         <v-btn
           color="primary"
@@ -11,149 +11,143 @@
         >
           Register Skillset
         </v-btn>
-        <v-dialog v-model="dialog" max-width="1100" max-height="300">
-          <v-card>
-            <section class="container">
-              <v-stepper v-model="e1">
-                <v-stepper-header>
-                  <h1>HELPS Workshop Booking</h1>
+        <v-dialog v-model="dialog" max-width="1100">
+          <section class="container">
+            <v-stepper v-model="e1">
+              <v-stepper-header>
+                <h1>HELPS Workshop Booking</h1>
 
-                  <v-stepper-step :complete="e1 > 1" step="1">
-                    Step 1
-                  </v-stepper-step>
+                <v-stepper-step :complete="e1 > 1" step="1">
+                  Step 1
+                </v-stepper-step>
 
-                  <v-divider />
+                <v-divider />
 
-                  <v-stepper-step :complete="e1 > 2" step="2">
-                    Step 2
-                  </v-stepper-step>
+                <v-stepper-step :complete="e1 > 2" step="2">
+                  Step 2
+                </v-stepper-step>
 
-                  <v-divider />
+                <v-divider />
 
-                  <v-stepper-step step="3">Step 3</v-stepper-step>
-                </v-stepper-header>
-                <section class="container"></section>
+                <v-stepper-step step="3">Step 3</v-stepper-step>
+              </v-stepper-header>
+              <section class="container"></section>
 
-                <v-stepper-content step="0" class="step-container">
-                  <div class="firstPage-content">
-                    <p>
-                      <b>Important Information:</b>
-                    </p>
+              <v-stepper-content step="0" class="step-container">
+                <div class="firstPage-content">
+                  <p>
+                    <b>Important Information:</b>
+                  </p>
 
-                    <ul>
-                      <li>
-                        <b>Follow</b>
-                        each site complete your booking.
-                      </li>
-                      <li>
-                        <b>Check</b>
-                        the time to ensure that there is no timetable clash.
-                      </li>
-                      <li>
-                        <b>Check your email</b>
-                        (UTS email address) for the booking confirmation.
-                        <br />
-                      </li>
-
-                      <li>
-                        <b>Cancel,</b>
-                        if no longer available,
-                        <b>24 hours before</b>
-                        the scheduled session by clicking on
-                        <b>'My Booking'</b>
-                        tab and then the
-                        <b>'detail'</b>
-                        link.
-                      </li>
-                      <li>
-                        Please know that failing to turn up for your registered
-                        workshop is not fair to those on the waiting list.
-                        Repeat offenders (2 no-shows) may be barred from
-                        registering for workshop.
-                      </li>
-                    </ul>
-
-                    <br />
-                    <p>
-                      <b>Registration is now open for 2019 Autumn workshops!</b>
+                  <ul>
+                    <li>
+                      <b>Follow</b>
+                      each site complete your booking.
+                    </li>
+                    <li>
+                      <b>Check</b>
+                      the time to ensure that there is no timetable clash.
+                    </li>
+                    <li>
+                      <b>Check your email</b>
+                      (UTS email address) for the booking confirmation.
                       <br />
+                    </li>
+
+                    <li>
+                      <b>Cancel,</b>
+                      if no longer available,
+                      <b>24 hours before</b>
+                      the scheduled session by clicking on
+                      <b>'My Booking'</b>
+                      tab and then the
+                      <b>'detail'</b>
+                      link.
+                    </li>
+                    <li>
+                      Please know that failing to turn up for your registered
+                      workshop is not fair to those on the waiting list. Repeat
+                      offenders (2 no-shows) may be barred from registering for
+                      workshop.
+                    </li>
+                  </ul>
+
+                  <br />
+                  <p>
+                    <b>Registration is now open for 2019 Autumn workshops!</b>
+                    <br />
+                    <b>
+                      At this stage, we only open registration for March and
+                      April workshops. For the remaining workshops, registration
+                      will be open in week 5.
+                    </b>
+                  </p>
+                </div>
+                <v-btn color="primary" @click="e1 = 1">Next</v-btn>
+              </v-stepper-content>
+
+              <v-stepper-items>
+                <v-stepper-content
+                  step="1"
+                  class="step-container"
+                  max-width="1100"
+                  max-height="300"
+                >
+                  <div class="secondPage-content" style="margin-left:5px; ">
+                    <h2>
                       <b>
-                        At this stage, we only open registration for March and
-                        April workshops. For the remaining workshops,
-                        registration will be open in week 5.
+                        To start the booking process, please click the skill-set
+                        that you want to improve:
                       </b>
-                    </p>
+                    </h2>
+                    <br />
+                    <v-layout column="wrap">
+                      <v-list-tile
+                        v-for="(skillset, index) in skillsets"
+                        :key="index"
+                        class="skillsetItem"
+                        :class="[selectedItemIndex === index && 'selected']"
+                        @click="setSelected(index)"
+                      >
+                        <v-list-tile-content>
+                          {{ skillset.title }}
+                        </v-list-tile-content>
+                      </v-list-tile>
+                    </v-layout>
                   </div>
-                  <v-btn color="primary" @click="e1 = 1">Next</v-btn>
+                  <br />
+
+                  <v-btn color="primary" @click="e1 = 2">
+                    Next
+                  </v-btn>
                 </v-stepper-content>
 
-                <v-stepper-items>
-                  <v-stepper-content
-                    step="1"
-                    class="step-container"
-                    max-width="1100"
-                    max-height="300"
-                  >
-                    <div class="secondPage-content" style="margin-left:5px; ">
-                      <h2>
-                        <b>
-                          To start the booking process, please click the
-                          skill-set that you want to improve:
-                        </b>
-                      </h2>
-                      <br />
-                      <v-layout column="wrap">
-                        <v-list-tile
-                          v-for="(skillset, index) in skillsets"
-                          :key="index"
-                          class="skillsetItem"
-                          :class="[selectedItemIndex === index && 'selected']"
-                          @click="setSelected(index)"
-                        >
-                          <v-list-tile-content>
-                            {{ skillset.title }}
-                          </v-list-tile-content>
-                        </v-list-tile>
-                      </v-layout>
+                <v-stepper-content step="2">
+                  <v-stepper-items>
+                    <div class="step-content">
+                      <p>
+                        <b>Important Information:</b>
+                      </p>
                     </div>
-                    <br />
+                  </v-stepper-items>
 
-                    <v-btn color="primary" @click="e1 = 2">
-                      Next
-                    </v-btn>
-                  </v-stepper-content>
+                  <v-btn color="primary" style="float:left" @click="e1 = 3">
+                    Next
+                  </v-btn>
+                </v-stepper-content>
 
-                  <v-stepper-content step="2">
-                    <v-stepper-items>
-                      <div class="step-content">
-                        <p>
-                          <b>Important Information:</b>
-                        </p>
-                      </div>
-                    </v-stepper-items>
+                <v-stepper-content step="3">
+                  <v-card class="mb-5" color="grey lighten-1" height="200px" />
 
-                    <v-btn color="primary" style="float:left" @click="e1 = 3">
-                      Next
-                    </v-btn>
-                  </v-stepper-content>
+                  <v-btn color="primary" @click="e1 = 0">Continue</v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
 
-                  <v-stepper-content step="3">
-                    <v-card
-                      class="mb-5"
-                      color="grey lighten-1"
-                      height="200px"
-                    />
-
-                    <v-btn color="primary" @click="e1 = 0">Continue</v-btn>
-                  </v-stepper-content>
-                </v-stepper-items>
-              </v-stepper>
-
-              <v-card-actions>
-                <v-spacer />
-              </v-card-actions>
-            </section>
-          </v-card>
+            <v-card-actions>
+              <v-spacer />
+            </v-card-actions>
+          </section>
         </v-dialog>
       </v-layout>
       <section class="container">
@@ -245,12 +239,13 @@
 </template>
 
 <script>
-// import moment from 'moment'
 import { authModule, TYPE } from '~/store/auth/methods'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import { SkillsetsApi } from '../../core/Api'
+import WorkshopRegisterDialog from '../../components/WorkshopRegisterDialog/WorkshopRegisterDialog'
 
 export default {
+  components: { WorkshopRegisterDialog },
   middleware: studentAuthenticated,
   layout: 'student',
   data() {
@@ -340,12 +335,6 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 
-.section-container {
-  height: inherit;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 ul {
   margin: 10px;
 }
