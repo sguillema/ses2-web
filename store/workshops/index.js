@@ -1,15 +1,15 @@
-import { ProgramApi } from '../../core/Api'
-import { REQUEST, SUCCESS, ERROR, PROGRAMS, CLEAR, CREATE } from './methods'
+import { WorkshopApi } from '../../core/Api'
+import { REQUEST, SUCCESS, ERROR, WORKSHOPS, CLEAR, CREATE } from './methods'
 
 const emptyState = () => ({
   status: '',
-  programs: []
+  workshops: []
 })
 
 export const state = () => emptyState()
 
 export const getters = {
-  [PROGRAMS]: state => state.programs
+  [WORKSHOPS]: state => state.workshops
 }
 
 export const mutations = {
@@ -17,14 +17,9 @@ export const mutations = {
     state.status = 'loading'
   },
 
-  [CREATE]: (state, program) => {
-    state.status = 'create'
-    state.programs.push = program
-  },
-
-  [SUCCESS]: (state, { programs }) => {
+  [SUCCESS]: (state, { workshops }) => {
     state.status = 'success'
-    state.programs = programs
+    state.workshops = workshops
   },
 
   [ERROR]: state => {
@@ -41,8 +36,8 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
-        const response = await ProgramApi.getPrograms()
-        commit(SUCCESS, { programs: response.data })
+        const response = await WorkshopApi.getWorkshops()
+        commit(SUCCESS, { workshops: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)
@@ -54,7 +49,7 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(CREATE)
       try {
-        const response = await ProgramApi.createProgram(data)
+        const response = await WorkshopApi.createWorkshop(data)
         dispatch(REQUEST)
         resolve(response)
       } catch (e) {

@@ -1,11 +1,11 @@
 import { storeModule } from '../../core/helpers'
 
-const MODULE = 'programs'
+const MODULE = 'workshops'
 export const REQUEST = `request`
 export const SUCCESS = `success`
 export const ERROR = `error`
-export const PROGRAMS = 'users'
+export const WORKSHOPS = 'users'
 export const CLEAR = 'clear'
 export const CREATE = 'create'
 
-export const programsModule = method => storeModule(MODULE, method)
+export const workshopsModule = method => storeModule(MODULE, method)
