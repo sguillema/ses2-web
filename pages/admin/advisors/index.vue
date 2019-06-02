@@ -1,6 +1,12 @@
 <template>
   <div id="page-advisors">
     <section class="container">
+      <!-- <v-snackbar v-model="snackbar.active" :timeout="3000" top>
+        {{ snackbar.message }}
+        <v-btn color="primary" flat @click="snackbar.active = false">
+          Close
+        </v-btn>
+      </v-snackbar> -->
       <Sheet header="Available Advisors">
         <v-text-field
           v-model="search"
@@ -19,10 +25,10 @@
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.email }}</td>
             <td>
-              <router-link :to="`advisors/${props.item.id}`">
+              <router-link :to="`/advisors/${props.item.id}`">
                 Edit
               </router-link>
-              <router-link :to="`advisors/${props.item.id}/history`">
+              <router-link :to="`/advisors/${props.item.id}/history`">
                 View History
               </router-link>
             </td>
@@ -42,19 +48,22 @@
               v-model="addNew.id"
               label="Advisor ID"
               class="input-spacing"
+              :rules="[addNew.rules.required]"
             />
             <v-text-field
               v-model="addNew.name"
               label="Name"
               class="input-spacing"
+              :rules="[addNew.rules.required]"
             />
             <v-text-field
               v-model="addNew.email"
               label="Email"
               class="input-spacing"
+              :rules="[addNew.rules.required]"
             />
           </div>
-          <v-btn depressed color="primary" @click="addAdvisors">
+          <v-btn depressed color="primary" @click="addAdvisor">
             Add
           </v-btn>
         </section>
@@ -89,26 +98,39 @@ export default {
       addNew: {
         id: '',
         name: '',
-        email: ''
+        email: '',
+        rules: {
+          required: value => !!value || 'Required.'
+        }
       }
     }
   },
   computed: {
     advisors: {
       get() {
-        return this.$store.getters[advisorsModule(ADVISORS)]
+        return this.$store.getters[advisorsModule(ADVISORS)] //this is fine
       }
     }
   },
 
-  mounted() {
-    this.$store.dispatch(advisorsModule(REQUEST))
+  async mounted() {
+    this.$store.dispatch(advisorsModule(REQUEST)) //this is fine
+    // this.loading = true
+    // this.advisors = await this.$axios.$get('http://localhost:4000/advisors')
+    // this.loading = false
   },
 
   methods: {
-    async addAdvisors() {
+    async addAdvisor() {
       console.log(this.addNew)
-      await this.$store.dispatch(advisorsModule(CREATE, this.addNew))
+      const { id, name, email } = this.addNew
+      if (id !== '' && name !== '' && email !== '') {
+        await this.$store.dispatch(advisorsModule(CREATE), this.addNew)
+      } else {
+        console.log(
+          'You must enter an id, fullname and email in order to add an advisor'
+        )
+      }
     }
   }
 }

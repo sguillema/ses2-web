@@ -10,7 +10,7 @@ const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
-const ADVISORS_ENDPOINT = `${ENDPOINT}/advisors`
+const ADVISOR_ENDPOINT = `${ENDPOINT}/advisors`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -169,21 +169,21 @@ export class AdvisorApi {
   static async getAdvisors() {
     return await axios({
       method: 'get',
-      url: ADVISORS_ENDPOINT
+      url: ADVISOR_ENDPOINT
     })
   }
 
   static async getAdvisor(id) {
     return await axios({
       method: 'get',
-      url: `${ADVISORS_ENDPOINT}/${id}`
+      url: `${ADVISOR_ENDPOINT}/${id}`
     })
   }
 
   static async createAdvisor(data) {
     return await axios({
       method: 'post',
-      url: ADVISORS_ENDPOINT,
+      url: `${ADVISOR_ENDPOINT}`,
       data: data
     })
   }
@@ -191,7 +191,7 @@ export class AdvisorApi {
   static async updateAdvisor(data) {
     return await axios({
       method: 'patch',
-      url: `${ADVISORS_ENDPOINT}/${data.id}`,
+      url: `${ADVISOR_ENDPOINT}/${data.id}`,
       data: data
     })
   }
@@ -199,7 +199,7 @@ export class AdvisorApi {
   static async deleteAdvisor(id) {
     return await axios({
       method: 'delete',
-      url: `${ADVISORS_ENDPOINT}/${id}`
+      url: `${ADVISOR_ENDPOINT}/${id}`
     })
   }
 }
