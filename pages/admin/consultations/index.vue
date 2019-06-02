@@ -12,7 +12,7 @@
           <v-dialog
             v-model="dialogCreateSession.active"
             :width="dialogCreateSession.width"
-            @input="v => v || cancelSessionCreation()"
+            @input="v => v || clearSessionCreation()"
           >
             <template v-slot:activator="{ on }">
               <v-btn class="header-button" depressed v-on="on">
@@ -68,7 +68,7 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="cancelSessionCreation">
+                      <v-btn text @click="clearSessionCreation">
                         Cancel
                       </v-btn>
                       <v-btn
@@ -428,7 +428,7 @@
           <v-dialog
             v-model="dialogBooking.active"
             width="800"
-            @input="v => v || cancelConsultationBooking()"
+            @input="v => v || clearConsultationBooking()"
           >
             <v-card class="dialog">
               <v-stepper v-model="stepCount">
@@ -487,7 +487,7 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="cancelConsultationBooking">
+                      <v-btn text @click="clearConsultationBooking">
                         Cancel
                       </v-btn>
                       <v-btn
@@ -935,7 +935,7 @@ export default {
         }
       }
     },
-    cancelSessionCreation() {
+    clearSessionCreation() {
       this.stepCount = 1
       this.dialogCreateSession.active = false
       this.dialogCreateSession.width = 800
@@ -944,7 +944,7 @@ export default {
       this.dialogCreateSession.stepTwo.calendarType = 'week'
       this.dialogCreateSession.stepTwo.selectedTimes = []
     },
-    cancelConsultationBooking() {
+    clearConsultationBooking() {
       this.stepCount = 1
       this.dialogBooking.active = false
       this.dialogBooking.session = {}
@@ -973,11 +973,13 @@ export default {
       this.snackbar.active = true
       this.snackbar.message = 'Session(s) Created!'
       this.dialogCreateSession.active = false
+      this.clearSessionCreation()
     },
     submitConsultationBooking() {
       this.snackbar.active = true
       this.snackbar.message = 'Booking Created!'
       this.dialogBooking.active = false
+      this.clearConsultationBooking()
     },
     activateBookingDialog(session) {
       this.dialogBooking.active = true
