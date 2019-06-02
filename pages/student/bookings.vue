@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable no-undef */ /* eslint-disable prettier/prettier */
 <template>
   <div id="page-dataTable">
     <section class="container">
@@ -17,7 +17,6 @@
               <v-stepper v-model="e1">
                 <v-stepper-header>
                   <h1>HELPS Workshop Booking</h1>
-                  <!-- <v-stepper-step step="0" /> -->
 
                   <v-stepper-step :complete="e1 > 1" step="1">
                     Step 1
@@ -76,9 +75,7 @@
 
                     <br />
                     <p>
-                      <b>
-                        Registration is now open for 2019 Autumn workshops!
-                      </b>
+                      <b>Registration is now open for 2019 Autumn workshops!</b>
                       <br />
                       <b>
                         At this stage, we only open registration for March and
@@ -91,27 +88,42 @@
                 </v-stepper-content>
 
                 <v-stepper-items>
-                  <v-stepper-content step="1" class="step-container">
-                    <div class="secondPage-content">
-                      <div style="margin-left:-5px; ">
-                        <p>
-                          <b>
-                            To start the booking process, please click the
-                            skill-set that you want to improve:
-                          </b>
-                        </p>
-                      </div>
+                  <v-stepper-content
+                    step="1"
+                    class="step-container"
+                    max-width="1100"
+                    max-height="300"
+                  >
+                    <div class="secondPage-content" style="margin-left:5px; ">
+                      <h2>
+                        <b>
+                          To start the booking process, please click the
+                          skill-set that you want to improve:
+                        </b>
+                      </h2>
+                      <br />
+                      <v-layout column="wrap">
+                        <v-list-tile
+                          v-for="(skillset, index) in skillsets"
+                          :key="index"
+                          class="skillsetItem"
+                          :class="[selectedItemIndex === index && 'selected']"
+                          @click="setSelected(index)"
+                        >
+                          <v-list-tile-content>
+                            {{ skillset.title }}
+                          </v-list-tile-content>
+                        </v-list-tile>
+                      </v-layout>
                     </div>
+                    <br />
 
-                    <v-btn color="primary" @click="e1 = 2">Next</v-btn>
+                    <v-btn color="primary" @click="e1 = 2">
+                      Next
+                    </v-btn>
                   </v-stepper-content>
 
                   <v-stepper-content step="2">
-                    <!-- <v-card
-                      class="mb-5"
-                      color="grey lighten-1"
-                      height="200px"
-                    />-->
                     <v-stepper-items>
                       <div class="step-content">
                         <p>
@@ -144,67 +156,99 @@
           </v-card>
         </v-dialog>
       </v-layout>
-      <h1>My Bookings</h1>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Your Bookings</v-toolbar-title>
-      </v-toolbar>
-      <v-data-table
-        :headers="headers"
-        :items="bookings"
-        class="elevation-1"
-        item-key="name"
-      >
-        <template v-slot:items="props">
-          <td>{{ props.item.name }}</td>
-          <td class="text-xs-left">{{ props.item.type }}</td>
-          <td class="text-xs-left">{{ props.item.time }}</td>
-          <td class="text-xs-left">{{ props.item.room }}</td>
-          <td class="text-xs-left">{{ props.item.advisor }}</td>
-          <td class="text-xs-left">{{ props.item.type2 }}</td>
-          <td class="text-xs-left">{{ props.item.icon }}</td>
-          <td>
-            <v-checkbox v-model="props.selected" />
-          </td>
-          <td>
-            <i class="fa fa-angle-down" style="font-size:20px"></i>
-          </td>
-        </template>
-      </v-data-table>
+      <section class="container">
+        <h1>My Bookings</h1>
+
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Your Bookings</v-toolbar-title>
+        </v-toolbar>
+        <v-data-table
+          :headers="headers"
+          :items="bookings"
+          class="elevation-1"
+          item-key="name"
+        >
+          <template v-slot:items="props">
+            <td>{{ props.item.name }}</td>
+            <td class="text-xs-left">{{ props.item.type }}</td>
+            <td class="text-xs-left">{{ props.item.time }}</td>
+            <td class="text-xs-left">{{ props.item.room }}</td>
+            <td class="text-xs-left">{{ props.item.advisor }}</td>
+            <td class="text-xs-left">{{ props.item.type2 }}</td>
+            <td class="text-xs-left">{{ props.item.icon }}</td>
+            <td>
+              <v-checkbox v-model="props.selected" />
+            </td>
+            <td>
+              <i class="fa fa-angle-down" style="font-size:20px"></i>
+            </td>
+          </template>
+        </v-data-table>
+      </section>
+
+      <section class="container">
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Past Bookings</v-toolbar-title>
+        </v-toolbar>
+        <v-data-table
+          :headers="headers"
+          :items="bookings"
+          class="elevation-1"
+          item-key="name"
+        >
+          <template v-slot:items="props">
+            <td>{{ props.item.name }}</td>
+            <td class="text-xs-left">{{ props.item.type }}</td>
+            <td class="text-xs-left">{{ props.item.time }}</td>
+            <td class="text-xs-left">{{ props.item.room }}</td>
+            <td class="text-xs-left">{{ props.item.advisor }}</td>
+            <td class="text-xs-left">{{ props.item.type2 }}</td>
+            <td class="text-xs-left">{{ props.item.icon }}</td>
+            <td>
+              <v-checkbox v-model="props.selected" />
+            </td>
+            <td>
+              <i class="fa fa-angle-down" style="font-size:20px"></i>
+            </td>
+          </template>
+        </v-data-table>
+      </section>
     </section>
-    <section class="container">
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Past Bookings</v-toolbar-title>
-      </v-toolbar>
-      <v-data-table
-        :headers="headers"
-        :items="bookings"
-        class="elevation-1"
-        item-key="name"
-      >
-        <template v-slot:items="props">
-          <td>{{ props.item.name }}</td>
-          <td class="text-xs-left">{{ props.item.type }}</td>
-          <td class="text-xs-left">{{ props.item.time }}</td>
-          <td class="text-xs-left">{{ props.item.room }}</td>
-          <td class="text-xs-left">{{ props.item.advisor }}</td>
-          <td class="text-xs-left">{{ props.item.type2 }}</td>
-          <td class="text-xs-left">{{ props.item.icon }}</td>
-          <td>
-            <v-checkbox v-model="props.selected" />
-          </td>
-          <td>
-            <i class="fa fa-angle-down" style="font-size:20px"></i>
-          </td>
-        </template>
-      </v-data-table>
-    </section>
+    <div id="test">
+      <v-layout style="float:right">Î</v-layout>
+    </div>
+    <!-- <ul>
+      <li v-for="(skillset, index) in skillsets" :key="index">
+        {{ skillset.title }}
+      </li>
+    </ul> -->
+    <!-- <ul id="example-1">
+      <li v-for="item in items">
+        {{ item.message }}
+      </li>
+    </ul>-->
+    <!-- <div v-for="(booking, index) in bookings" :key="index">
+      {{ booking.createdAt }}
+    </div>-->
+    <!-- <v-layout
+      v-for="(item, index) in testItems"
+      :key="index"
+      :class="[selectedItemIndex === index && 'selected']"
+      @click="setSelected(index)"
+    >
+      <v-list-tile-content>
+        <v-btn color @click="e1 = 0">Improve your Speaking</v-btn>
+        {{ item.title }} - {{ index }}
+      </v-list-tile-content>
+    </v-layout> -->
   </div>
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
 import { authModule, TYPE } from '~/store/auth/methods'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
+import { SkillsetsApi } from '../../core/Api'
 
 export default {
   middleware: studentAuthenticated,
@@ -213,7 +257,7 @@ export default {
     return {
       dialog: false,
       e1: 0,
-
+      skillsets: [],
       type: this.$store.getters[authModule(TYPE)],
 
       headers: [
@@ -263,13 +307,31 @@ export default {
           advisor: 'Graham Smith',
           type2: 'Part 2 of Program Name'
         }
+      ],
+
+      selectedItemIndex: null,
+      testItems: [
+        { title: 'test1' },
+        {
+          title: 'test2'
+        },
+        { title: 'test3' }
       ]
     }
+  },
+  async mounted() {
+    this.skillsets = (await SkillsetsApi.getSkillsets()).data
+
+    console.log(this.skillsets)
   },
   methods: {
     stepOne() {
       alert('Sent!')
       this.dialog = false
+    },
+    setSelected(index) {
+      this.selectedItemIndex = index
+      console.log(this.selectedItemIndex)
     }
   }
 }
@@ -292,5 +354,14 @@ h1 {
 }
 p {
   margin: 5px;
+}
+.skillsetItem {
+  background-color: #ececec;
+  margin: 2px;
+  padding-left: 5px;
+  &.selected {
+    background-color: red;
+    color: white;
+  }
 }
 </style>
