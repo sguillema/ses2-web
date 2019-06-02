@@ -12,7 +12,7 @@
           <v-dialog
             v-model="dialogCreateSession.active"
             :width="dialogCreateSession.width"
-            @input="v => v || cancelSessionCreation()"
+            @input="v => v || clearSessionCreation()"
           >
             <template v-slot:activator="{ on }">
               <v-btn class="header-button" depressed v-on="on">
@@ -68,7 +68,7 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="cancelSessionCreation">
+                      <v-btn text @click="clearSessionCreation">
                         Cancel
                       </v-btn>
                       <v-btn
@@ -428,7 +428,7 @@
           <v-dialog
             v-model="dialogBooking.active"
             width="800"
-            @input="v => v || cancelConsultationBooking()"
+            @input="v => v || clearConsultationBooking()"
           >
             <v-card class="dialog">
               <v-stepper v-model="stepCount">
@@ -487,7 +487,7 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="cancelConsultationBooking">
+                      <v-btn text @click="clearConsultationBooking">
                         Cancel
                       </v-btn>
                       <v-btn
@@ -666,7 +666,7 @@ export default {
       selected: moment().format('YYYY-MM-DD'),
       headers: [
         { text: 'ID', value: 'id', sortable: false },
-        { text: 'Date', value: 'date' },
+        { text: 'Date', value: 'date' }, // TODO custom sort
         { text: 'Time', value: 'time', sortable: false },
         { text: 'Room', value: 'room', sortable: false },
         {
@@ -798,24 +798,27 @@ export default {
   },
   async mounted() {
     // await this.$store.dispatch()
-    this.sessionsLoading = true
-    let sessions = await this.$axios.$get(
-      'http://localhost:4000/sessions?type=consultation'
-    )
-    let newSessions = []
-    sessions.forEach(async session => {
-      let newSession = session
-      let bookings = await this.$axios.$get(
-        `http://localhost:4000/bookings?sessionId=${session.id}`
-      )
-      newSession.bookings = bookings.bookings
-      newSession.waitlist = bookings.waitlist
-      newSessions.push(newSession)
-    })
-    this.sessions = newSessions
-    this.sessionsLoading = false
+    this.getSessions()
   },
   methods: {
+    async getSessions() {
+      this.sessionsLoading = true
+      let sessions = await this.$axios.$get(
+        'http://localhost:4000/sessions?type=consultation'
+      )
+      let newSessions = []
+      sessions.forEach(async session => {
+        let newSession = session
+        let bookings = await this.$axios.$get(
+          `http://localhost:4000/bookings?sessionId=${session.id}`
+        )
+        newSession.bookings = bookings.bookings
+        newSession.waitlist = bookings.waitlist
+        newSessions.push(newSession)
+      })
+      this.sessions = newSessions
+      this.sessionsLoading = false
+    },
     getArrayLength(array) {
       return array.length
     },
@@ -935,7 +938,7 @@ export default {
         }
       }
     },
-    cancelSessionCreation() {
+    clearSessionCreation() {
       this.stepCount = 1
       this.dialogCreateSession.active = false
       this.dialogCreateSession.width = 800
@@ -944,7 +947,7 @@ export default {
       this.dialogCreateSession.stepTwo.calendarType = 'week'
       this.dialogCreateSession.stepTwo.selectedTimes = []
     },
-    cancelConsultationBooking() {
+    clearConsultationBooking() {
       this.stepCount = 1
       this.dialogBooking.active = false
       this.dialogBooking.session = {}
@@ -960,24 +963,46 @@ export default {
       this.dialogBooking.stepTwo.help5 = false
       this.dialogBooking.stepTwo.helpOther = ''
     },
-    submitConsultationSession() {
-      // this.$axios.$post('http://localhost:4000/sessions', {
-      //   id: sessionId,
-      //   startTime: req.body.startTime,
-      //   endTime: req.body.endTime,
-      //   sessionSize: req.body.sessionSize,
-      //   room: req.body.room,
-      //   type: req.body.type,
-      //   createdBy: req.body.createdBy
-      // })
+    async submitConsultationSession() {
+      this.dialogCreateSession.stepTwo.selectedTimes.forEach(async session => {
+        await this.$axios.$post('http://localhost:4000/sessions', {
+          workshopId: null,
+          startTime: session.startTime,
+          endTime: session.endTime,
+          size: '1',
+          room: 'CB11.00.201',
+          type: 'consultation',
+          createdBy: this.dialogCreateSession.stepOne.advisor,
+          cutoff: '24'
+        })
+      })
+      this.getSessions() // We just call for the new sessions
       this.snackbar.active = true
       this.snackbar.message = 'Session(s) Created!'
       this.dialogCreateSession.active = false
+      this.clearSessionCreation()
     },
-    submitConsultationBooking() {
+    async submitConsultationBooking() {
+      // Ideally this should be done in one call.
+      await this.$axios.$post('http://localhost:4000/bookings', {
+        studentId: this.dialogBooking.stepOne.studentIdName,
+        sessionId: this.dialogBooking.session.id,
+        bookingDetailsId: '123', // not real
+        booked: true,
+        attended: false
+      })
+      // No point in making this call. The id of the created booking is needed. It is not returned from the post. Should be done serverside.
+      // await this.$axios.$post('http://localhost:4000/booking-details', {
+      //   studentId: this.dialogBooking.stepOne.studentIdName,
+      //   sessionId: this.session.sessionId,
+      //   booked: true,
+      //   attended: false
+      // })
+      this.getSessions() // We just call for the new sessions
       this.snackbar.active = true
       this.snackbar.message = 'Booking Created!'
       this.dialogBooking.active = false
+      this.clearConsultationBooking()
     },
     activateBookingDialog(session) {
       this.dialogBooking.active = true
