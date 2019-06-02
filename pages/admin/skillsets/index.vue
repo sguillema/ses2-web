@@ -46,12 +46,8 @@
                 <v-card-text>
                   <v-form>
                     <div class="step-buttons">
-                      <v-btn
-                        color="primary"
-                        :disabled="!valid"
-                        @click="addSkillset"
-                      >
-                        Create Program
+                      <v-btn color="primary" @click="addSkillset">
+                        Create Skillset
                       </v-btn>
                     </div>
                   </v-form>
@@ -154,7 +150,6 @@ export default {
           required: value => !!value || 'Required.'
         }
       },
-      valid: true,
       dialog: false,
       dialog2: false
     }
@@ -178,6 +173,7 @@ export default {
         await this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
         this.addNew.title = ''
         this.addNew.shortTitle = ''
+        this.dialog = false
       } else {
         console.log(
           'You must enter a title and short title in order to add a skillset'
