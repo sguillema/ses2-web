@@ -10,6 +10,8 @@ const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
+const WORKSHOPS_ENDPOINT = '${ENDPOINT}/workshops'
+
 export class AuthApi {
   static setAuthorizationHeader(token) {
     axios.defaults.headers.common[AUTHORIZATION] = `Bearer ${token}`
@@ -135,6 +137,45 @@ export class ProgramsApi {
     return await axios({
       method: 'patch',
       url: `${PROGRAMS_ENDPOINT}/${data.id}`,
+      data: data
+    })
+  }
+
+  static async deleteProgram(id) {
+    return await axios({
+      method: 'delete',
+      url: `${PROGRAMS_ENDPOINT}/${id}`
+    })
+  }
+}
+
+export class WorkshopsApi {
+  static async getWorkshops() {
+    return await axios({
+      method: 'get',
+      url: WORKSHOPS_ENDPOINT
+    })
+  }
+
+  static async getWorkshop(id) {
+    return await axios({
+      method: 'get',
+      url: `${WORKSHOPS_ENDPOINT}/${id}`
+    })
+  }
+
+  static async createWorkshop(data) {
+    return await axios({
+      method: 'post',
+      url: WORKSHOPS_ENDPOINT,
+      data: data
+    })
+  }
+
+  static async updateWorkshop(data) {
+    return await axios({
+      method: 'patch',
+      url: `${WORKSHOPS_ENDPOINT}/${data.id}`,
       data: data
     })
   }
