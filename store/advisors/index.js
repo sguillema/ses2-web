@@ -17,9 +17,8 @@ export const mutations = {
     state.status = 'loading'
   },
 
-  [CREATE]: (state, advisor) => {
-    state.status = 'create'
-    state.advisors.push = advisor
+  [CREATE]: state => {
+    state.status = 'creating advisor'
   },
 
   [SUCCESS]: (state, { advisors }) => {
@@ -50,12 +49,12 @@ export const actions = {
       }
     }),
 
-  [CREATE]: ({ commit }, data) =>
+  [CREATE]: ({ commit, dispatch }, data) =>
     new Promise(async (resolve, reject) => {
       commit(CREATE)
       try {
         const response = await AdvisorApi.createAdvisor(data)
-        commit(SUCCESS, { advisor: response.data })
+        dispatch(REQUEST)
         resolve(response)
       } catch (e) {
         commit(ERROR)

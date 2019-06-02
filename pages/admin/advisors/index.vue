@@ -108,16 +108,13 @@ export default {
   computed: {
     advisors: {
       get() {
-        return this.$store.getters[advisorsModule(ADVISORS)] //this is fine
+        return this.$store.getters[advisorsModule(ADVISORS)]
       }
     }
   },
 
   async mounted() {
-    this.$store.dispatch(advisorsModule(REQUEST)) //this is fine
-    // this.loading = true
-    // this.advisors = await this.$axios.$get('http://localhost:4000/advisors')
-    // this.loading = false
+    this.$store.dispatch(advisorsModule(REQUEST))
   },
 
   methods: {
