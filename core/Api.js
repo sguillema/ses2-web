@@ -10,7 +10,7 @@ const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
-const WORKSHOPS_ENDPOINT = '${ENDPOINT}/workshops'
+const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -149,7 +149,7 @@ export class ProgramsApi {
   }
 }
 
-export class WorkshopsApi {
+export class WorkshopApi {
   static async getWorkshops() {
     return await axios({
       method: 'get',

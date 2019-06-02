@@ -1,4 +1,4 @@
-import { WorkshopsApi } from '../../core/Api.js'
+import { WorkshopApi } from '../../core/Api'
 import { REQUEST, SUCCESS, ERROR, WORKSHOPS, CLEAR, CREATE } from './methods'
 
 const emptyState = () => ({
@@ -36,8 +36,8 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
-        const response = await WorkshopsApi.getWorkshop(1)
-        commit(SUCCESS, { programs: response.data })
+        const response = await WorkshopApi.getWorkshops()
+        commit(SUCCESS, { workshops: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)
@@ -49,7 +49,7 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(CREATE)
       try {
-        const response = await WorkshopsApi.createWorkshop(data)
+        const response = await WorkshopApi.createWorkshop(data)
         commit(SUCCESS, { workshop: response.data })
         resolve(response)
       } catch (e) {
