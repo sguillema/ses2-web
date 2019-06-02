@@ -104,7 +104,7 @@
                           Session(s)
                         </h4>
                         <h4 v-else>
-                          Selected Sessions
+                          No Selected Sessions!
                         </h4>
                         <v-list class="selected-times">
                           <v-list-tile
@@ -129,7 +129,18 @@
                         </v-list>
                         <div class="step-buttons">
                           <v-btn text @click="stepCount = 1">Back</v-btn>
-                          <v-btn color="primary" @click="validateStep(3)">
+                          <v-btn
+                            color="primary"
+                            :disabled="
+                              getArrayLength(
+                                dialogCreateSession.stepTwo.selectedTimes
+                              ) < 1
+                            "
+                            @click="
+                              validateStep(3)
+                              dialogCreateSession.width = 800
+                            "
+                          >
                             Continue
                           </v-btn>
                         </div>
@@ -270,10 +281,69 @@
                     class="createSessionDialog step-container"
                   >
                     <div class="step-content step3">
-                      a
+                      <div class="step-review step-subcontainer">
+                        <div class="column-left">
+                          <h3>Consultation Form</h3>
+                          <v-text-field
+                            v-model="dialogCreateSession.stepOne.advisor"
+                            label="Advisor"
+                            disabled
+                          />
+                          <!-- <v-text-field
+                            v-model="dialogBooking.stepTwo.topic"
+                            label="Start Date"
+                            disabled
+                          />
+                          <v-text-field
+                            v-model="computedBookingDialogDate"
+                            label="End Date"
+                            disabled
+                          /> -->
+                        </div>
+                        <div class="column-right">
+                          <h4>
+                            Selected
+                            {{
+                              getArrayLength(
+                                dialogCreateSession.stepTwo.selectedTimes
+                              )
+                            }}
+                            Session(s)
+                          </h4>
+                          <v-list class="selected-times">
+                            <v-list-tile
+                              v-for="session in dialogCreateSession.stepTwo
+                                .selectedTimes"
+                              :key="session.startTime"
+                            >
+                              <v-list-tile-content class="time-item">
+                                <span>
+                                  {{
+                                    getSessionPeriod(
+                                      session.startTime,
+                                      session.endTime
+                                    )
+                                  }}
+                                </span>
+                                <span>
+                                  {{ getSessionDate(session.startTime) }}
+                                </span>
+                              </v-list-tile-content>
+                            </v-list-tile>
+                          </v-list>
+                        </div>
+                      </div>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="stepCount = 2">Back</v-btn>
+                      <v-btn
+                        text
+                        @click="
+                          stepCount = 2
+                          dialogCreateSession.width = 1200
+                        "
+                      >
+                        Back
+                      </v-btn>
                       <v-btn color="primary" @click="submitConsultationSession">
                         Create Consultation Session
                       </v-btn>
@@ -612,27 +682,19 @@ export default {
       sessions: [],
       sessionsLoading: true,
       dialogCreateSession: {
-        // active: false,
-        active: true, // change to false when done
-        // width: 800,
-        width: 1200, // change to 800 when done
+        active: false,
+        // active: true, // change to false when done
+        width: 800,
+        // width: 1200, // change to 800 when done
         stepOne: {
           advisor: '',
           advisorRules: [v => !!v || 'Advisor is required']
         },
         stepTwo: {
-          datePickerVisible: false,
           date: moment().format('YYYY-MM-DD'),
           valueDate: moment().format('YYYY-MM-DD'),
           calendarType: 'week',
-          selectedTimes: [],
-          room: '',
-          startTime: '',
-          endTime: '',
-          dateRules: [v => !!v || 'Date is required'],
-          roomRules: [v => !!v || 'Room is required'],
-          startTimeRules: [v => !!v || 'Start Time is required'],
-          endTimeRules: [v => !!v || 'End Time is required']
+          selectedTimes: []
         }
       },
       dialogBooking: {
@@ -659,8 +721,8 @@ export default {
           assignmentTypeRules: [v => !!v || 'Assignment Type is required']
         }
       },
-      // stepCount: 1,
-      stepCount: 2, // change to 1 when done
+      stepCount: 1,
+      // stepCount: 2, // change to 1 when done
       step1Valid: true,
       step2Valid: true,
       step3Valid: true
@@ -775,7 +837,7 @@ export default {
       return moment(date).format('YYYY-MM-DD')
     },
     validateStep(nextStep, form) {
-      if (this.$refs[form].validate() || !form) {
+      if (!form || this.$refs[form].validate()) {
         this.stepCount = nextStep
       }
     },
@@ -878,13 +940,9 @@ export default {
       this.dialogCreateSession.active = false
       this.dialogCreateSession.width = 800
       this.dialogCreateSession.stepOne.advisor = ''
-      // this.stepOne.topic = ''
-      // this.stepOne.description = ''
-      // this.stepOne.studentId = ''
-      // this.stepTwo.date = moment().format('YYYY-MM-DD')
-      // this.stepTwo.room = ''
-      // this.stepTwo.startTisme = ''
-      // this.stepTwo.endTime = ''
+      this.dialogCreateSession.stepTwo.valueDate = moment().format('YYYY-MM-DD')
+      this.dialogCreateSession.stepTwo.calendarType = 'week'
+      this.dialogCreateSession.stepTwo.selectedTimes = []
     },
     cancelConsultationBooking() {
       this.stepCount = 1
@@ -912,13 +970,11 @@ export default {
       //   type: req.body.type,
       //   createdBy: req.body.createdBy
       // })
-      // alert('Sent!')
       this.snackbar.active = true
-      this.snackbar.message = 'Session Created!'
-      this.dialog = false
+      this.snackbar.message = 'Session(s) Created!'
+      this.dialogCreateSession.active = false
     },
     submitConsultationBooking() {
-      // alert('Sent!')
       this.snackbar.active = true
       this.snackbar.message = 'Booking Created!'
       this.dialogBooking.active = false
@@ -1137,6 +1193,39 @@ export default {
               background-color: $color-red2;
               border-color: $color-red2;
               cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+    .step3 {
+      .step-subcontainer {
+        display: flex;
+        justify-content: space-between;
+        .column-left {
+          display: flex;
+          flex-direction: column;
+          flex: 0.5;
+          border-right: 1px solid $color-darkgray;
+        }
+        .column-right {
+          display: flex;
+          flex-direction: column;
+          flex: 0.5;
+          align-items: center;
+          .selected-times {
+            margin-top: 12px;
+            max-height: 430px;
+            overflow: scroll;
+            /deep/ .v-list__tile {
+              padding: 0 !important;
+            }
+            width: 250px;
+            .time-item {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              font-size: $font-regular;
             }
           }
         }
