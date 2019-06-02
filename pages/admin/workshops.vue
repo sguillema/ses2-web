@@ -80,14 +80,23 @@
             :items="workshops"
             :search="search"
             hide-actions
+            :expand="expand"
           >
             <template v-slot:items="props">
-              <td>{{ props.item.title }}</td>
-              <td>{{ props.item.staffId }}</td>
-              <td>{{ getProgramTitle(props.item.programId) }}</td>
-              <td>{{ props.item.description }}</td>
+              <tr @click="props.expanded = !props.expanded">
+                <td>{{ props.item.title }}</td>
+                <td>{{ props.item.staffId }}</td>
+                <td>{{ getProgramTitle(props.item.programId) }}</td>
+                <td>{{ props.item.description }}</td>
+              </tr>
+            </template>
+            <template v-slot:expand="props">
+              <v-card flat>
+                <v-card-text>{{ sessions }}</v-card-text>
+              </v-card>
             </template>
           </v-data-table>
+          <v-btn @click="test">test</v-btn>
         </Sheet>
       </div>
     </section>
@@ -100,6 +109,8 @@ import {
   workshopsModule,
   REQUEST,
   WORKSHOPS,
+  SESSIONS,
+  REQUEST_SESSIONS,
   CREATE
 } from '../../store/workshops/methods'
 import Sheet from '../../components/Sheet/Sheet'
@@ -120,15 +131,17 @@ export default {
       search: '',
       headers: [
         { text: 'Title', value: 'title' },
-        { text: 'Program', value: 'programId' },
         { text: 'Staff ID', value: 'skillsetId' },
+        { text: 'Program', value: 'programId' },
         { text: 'Description', value: 'description', sortable: false }
       ],
       workshopsLoading: false,
       dialog: false,
       programs: [],
       staff: [],
-      newWorkshop: emptyWorkshopForm()
+      newWorkshop: emptyWorkshopForm(),
+      expand: false,
+      workshopId: 1
     }
   },
   computed: {
@@ -136,10 +149,16 @@ export default {
       get() {
         return this.$store.getters[workshopsModule(WORKSHOPS)]
       }
+    },
+    sessions: {
+      get() {
+        return this.$store.getters[(workshopsModule(SESSIONS), this.workshopId)]
+      }
     }
   },
   async mounted() {
     this.$store.dispatch(workshopsModule(REQUEST))
+
     this.programs = await this.$axios.$get('http://localhost:4000/programs')
     this.staff = await this.$axios.$get('http://localhost:4000/staff')
   },
@@ -169,6 +188,13 @@ export default {
       await this.$store.dispatch(workshopsModule(CREATE), this.newWorkshop)
       this.dialog = false
       this.newWorkshop = emptyWorkshopForm()
+    },
+    async test() {
+      await this.$store.dispatch(
+        workshopsModule(REQUEST_SESSIONS),
+        this.workshopId
+      )
+      console.log(this.workshopId)
     }
   }
 }

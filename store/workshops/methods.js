@@ -7,5 +7,7 @@ export const ERROR = `error`
 export const WORKSHOPS = 'users'
 export const CLEAR = 'clear'
 export const CREATE = 'create'
+export const SESSIONS = 'sessions'
+export const REQUEST_SESSIONS = 'request sessions'
 
 export const workshopsModule = method => storeModule(MODULE, method)

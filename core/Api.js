@@ -12,6 +12,7 @@ const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
 const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
 const STAFF_ENDPOINT = `${ENDPOINT}/staff`
+const SESSION_ENDPOINT = `${ENDPOINT}/sessions`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -204,6 +205,14 @@ export class WorkshopApi {
     return await axios({
       method: 'delete',
       url: `${WORKSHOPS_ENDPOINT}/${id}`
+    })
+  }
+
+  static async getSessionsByWorkshopId(id) {
+    return await axios({
+      method: 'get',
+      url: `${SESSION_ENDPOINT}/?workshopId=${id}`,
+      data: id
     })
   }
 }
