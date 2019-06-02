@@ -5,7 +5,7 @@
       :key="index"
       class="selectable-item"
       :class="[selectedIndex === index && 'selected']"
-      @click="selectIndex(index)"
+      @click="select(index)"
     >
       <v-list-tile-content class="selectable-list-content">
         {{ item.title }}
@@ -18,18 +18,8 @@
 export default {
   props: {
     items: { type: Array, required: true },
-    select: { type: Function, required: true }
-  },
-  data() {
-    return {
-      selectedIndex: null
-    }
-  },
-  methods: {
-    selectIndex(index) {
-      this.selectedIndex = index
-      this.select(index)
-    }
+    select: { type: Function, required: true },
+    selectedIndex: { type: Number, required: true }
   }
 }
 </script>

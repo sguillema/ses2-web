@@ -92,10 +92,19 @@
                   you want to improve:
                 </b>
               </p>
-              <SelectableList :items="skillsets" :select="setSelectedSkillet" />
+              <SelectableList
+                :items="skillsets"
+                :select="setSelectedSkillet"
+                :selected-index="selectedSkillsetIndex"
+              />
             </div>
             <div class="step-buttons">
-              <v-btn color="primary" depressed @click="validateStep()">
+              <v-btn
+                color="primary"
+                :disabled="selectedSkillsetIndex === null"
+                depressed
+                @click="validateStep()"
+              >
                 Next
               </v-btn>
             </div>
@@ -162,7 +171,7 @@ export default {
       }
     },
     validateInitialStep() {
-      this.$store.dispatch(skillsetsModule(REQUEST))
+      this.$store.dispatch(skillsetsModule(REQUEST), { hideArchived: true })
       this.nextStep()
     },
     validateSkillsetsStep() {
@@ -177,6 +186,7 @@ export default {
     cancelRegistration() {
       this.dialog = false
       this.stepCount = 1
+      this.selectedSkillsetIndex = null
     },
     bookWorkshop() {
       console.log('hey you made it')
