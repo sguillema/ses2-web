@@ -1,69 +1,72 @@
 <template>
-  <div id="page-programs">
+  <div id="page-workshops">
     <section class="container">
       <div class="column-right">
-        <Sheet class="sheet" header=" Upcoming Programs">
+        <Sheet class="sheet" header="Upcoming Workshops">
           <v-toolbar flat color="white">
             <v-text-field
               v-model="search"
               class="input-spacing"
               append-icon="search"
-              placeholder="Search for Program"
+              placeholder="Search for Workshops"
             />
             <v-spacer />
             <v-dialog v-model="dialog" width="800">
               <template v-slot:activator="{ on }">
                 <v-btn color="primary" dark class="mb-2" v-on="on">
-                  Create Program
+                  Create Workshop
                 </v-btn>
               </template>
               <v-card class="dialog">
                 <v-card-title class="dialog-title-card">
-                  <h1 class="dialog-title">Program Form</h1>
+                  <h1 class="dialog-title">Create Workshop Information</h1>
+                </v-card-title>
+                <v-card-title class="dialog-title-card2">
+                  <h1 class="dialog-title2">Workshop Details Form</h1>
                 </v-card-title>
                 <v-divider />
-                <v-card-text>
+                <v-card-text class="form">
                   <v-form>
                     <div>
                       <v-text-field
-                        v-model="newProgram.title"
+                        v-model="newWorkshop.title"
                         class="input"
                         label="Title"
                         outline
-                        :rules="[newProgram.rules.required]"
+                        :rules="[required]"
                       />
                       <v-select
-                        v-model="newProgram.skillsetId"
-                        label="Skillset"
-                        :items="skillsets"
+                        v-model="newWorkshop.programId"
+                        label="Program"
+                        :items="programs"
                         item-value="id"
                         item-text="title"
                         outline
-                        :rules="[newProgram.rules.required]"
+                        :rules="[required]"
                       />
                       <v-select
-                        v-model="newProgram.targetGroup"
-                        :items="targetGroups"
-                        item-value="value"
-                        item-text="text"
-                        label="Target Group"
+                        v-model="newWorkshop.staffId"
+                        :items="staff"
+                        item-value="id"
+                        item-text="id"
+                        label="Staff ID"
                         outline
-                        :rules="[newProgram.rules.required]"
+                        :rules="[required]"
                       />
                       <v-textarea
-                        v-model="newProgram.description"
+                        v-model="newWorkshop.description"
                         class="input"
                         label="Description"
                         outline
                         rows="1"
                         auto-grow
                         box
-                        :rules="[newProgram.rules.required]"
+                        :rules="[required]"
                       />
                     </div>
                     <div class="step-buttons">
-                      <v-btn color="primary" @click="addProgram">
-                        Create Program
+                      <v-btn color="primary" @click="addWorkshop">
+                        Create Workshop
                       </v-btn>
                     </div>
                   </v-form>
@@ -74,16 +77,14 @@
           <v-data-table
             class="table-wrapper"
             :headers="headers"
-            :items="programs"
+            :items="workshops"
             :search="search"
             hide-actions
           >
             <template v-slot:items="props">
               <td>{{ props.item.title }}</td>
-              <td>
-                {{ getSkillsetTitle(props.item.skillsetId) }}
-              </td>
-              <td>{{ setTargetGroup(props.item.targetGroup) }}</td>
+              <td>{{ props.item.staffId }}</td>
+              <td>{{ getProgramTitle(props.item.programId) }}</td>
               <td>{{ props.item.description }}</td>
             </template>
           </v-data-table>
@@ -96,12 +97,19 @@
 <script>
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 import {
-  programsModule,
+  workshopsModule,
   REQUEST,
-  PROGRAMS,
+  WORKSHOPS,
   CREATE
-} from '../../store/programs/methods'
+} from '../../store/workshops/methods'
 import Sheet from '../../components/Sheet/Sheet'
+
+const emptyWorkshopForm = () => ({
+  title: '',
+  staffId: null,
+  programId: null,
+  description: ''
+})
 
 export default {
   components: { Sheet },
@@ -112,75 +120,55 @@ export default {
       search: '',
       headers: [
         { text: 'Title', value: 'title' },
-        { text: 'Skillset', value: 'skillsetId' },
-        { text: 'Target Group', value: 'targetGroup', sortable: false },
+        { text: 'Program', value: 'programId' },
+        { text: 'Staff ID', value: 'skillsetId' },
         { text: 'Description', value: 'description', sortable: false }
       ],
-      targetGroups: [
-        {
-          text: 'All Students',
-          value: 'all'
-        },
-        {
-          text: 'Undergraduate Student',
-          value: 'undergraduate'
-        },
-        {
-          text: 'Postgraduate Student',
-          value: 'postgraduate'
-        }
-      ],
-      programsLoading: false,
+      workshopsLoading: false,
       dialog: false,
-      skillsets: [],
-      newProgram: {
-        title: '',
-        skillsetId: null,
-        targetGroup: '',
-        description: '',
-        rules: {
-          required: value => !!value || 'Required.'
-        }
-      }
+      programs: [],
+      staff: [],
+      newWorkshop: emptyWorkshopForm()
     }
   },
   computed: {
-    programs: {
+    workshops: {
       get() {
-        return this.$store.getters[programsModule(PROGRAMS)]
+        return this.$store.getters[workshopsModule(WORKSHOPS)]
       }
     }
   },
   async mounted() {
-    this.$store.dispatch(programsModule(REQUEST))
-    this.skillsets = await this.$axios.$get('http://localhost:4000/skillsets')
+    this.$store.dispatch(workshopsModule(REQUEST))
+    this.programs = await this.$axios.$get('http://localhost:4000/programs')
+    this.staff = await this.$axios.$get('http://localhost:4000/staff')
   },
   methods: {
-    async addProgram() {
-      if (
-        this.newProgram.title === '' ||
-        this.newProgram.skillsetsId === null ||
-        this.newProgram.targetGroup === '' ||
-        this.newProgram.description === ''
-      ) {
-        return false
-      }
-      await this.$store.dispatch(programsModule(CREATE), this.newProgram)
-      this.dialog = false
+    required(value) {
+      return !!value || 'Required.'
     },
-    setTargetGroup(targetGroup) {
-      if (targetGroup === 'all') return 'All Students'
-      else if (targetGroup === 'undergraduate') return 'Undergraduate Students'
-      else if (targetGroup === 'postgraduate') return 'Postgraduate Students'
-    },
-    getSkillsetTitle(skillsetId) {
+    getProgramTitle(programId) {
       let result
-      this.skillsets.forEach(skillset => {
-        if (skillset.id === skillsetId) {
-          result = skillset.title
+      this.programs.forEach(program => {
+        if (program.id === programId) {
+          result = program.title
         }
       })
       return result
+    },
+    async addWorkshop() {
+      if (
+        this.newWorkshop.title === '' ||
+        this.newWorkshop.programId === null ||
+        this.newWorkshop.staffId === '' ||
+        this.newWorkshop.description === ''
+      ) {
+        return false
+      }
+      console.log(this.newWorkshop)
+      await this.$store.dispatch(workshopsModule(CREATE), this.newWorkshop)
+      this.dialog = false
+      this.newWorkshop = emptyWorkshopForm()
     }
   }
 }
@@ -239,14 +227,30 @@ export default {
     }
   }
 }
+.form {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 25px;
+}
 .dialog {
   .dialog-title {
-    margin-left: 14px;
-    margin-right: 40px;
+    margin: 0;
+    padding-left: 25px;
     color: #ffffff;
+    font-size: 20px;
+  }
+  .dialog-title2 {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 20px;
   }
   .dialog-title-card {
     background: #ff1818;
+    height: 70px;
+  }
+  .dialog-title-card2 {
+    background: #ffffff;
+    height: 70px;
   }
   .step-content {
     padding: 0 20px;
@@ -264,6 +268,8 @@ export default {
     }
     .input {
       width: 340px;
+      margin-left: 20px;
+      margin-right: 20px;
     }
   }
   .step-review {

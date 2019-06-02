@@ -10,6 +10,7 @@ const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
 const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 const SKILLSET_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
+const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
 const STAFF_ENDPOINT = `${ENDPOINT}/staff`
 
 export class AuthApi {
@@ -162,6 +163,44 @@ export class ProgramApi {
   }
 }
 
+export class WorkshopApi {
+  static async getWorkshops() {
+    return await axios({
+      method: 'get',
+      url: WORKSHOPS_ENDPOINT
+    })
+  }
+
+  static async getWorkshop(id) {
+    return await axios({
+      method: 'get',
+      url: `${WORKSHOPS_ENDPOINT}/${id}`
+    })
+  }
+
+  static async createWorkshop(data) {
+    return await axios({
+      method: 'post',
+      url: WORKSHOPS_ENDPOINT,
+      data: data
+    })
+  }
+
+  static async updateWorkshop(data) {
+    return await axios({
+      method: 'patch',
+      url: `${WORKSHOPS_ENDPOINT}/${data.id}`
+    })
+  }
+
+  static async deleteWorkshop(id) {
+    return await axios({
+      method: 'delete',
+      url: `${WORKSHOPS_ENDPOINT}/${id}`
+    })
+  }
+}
+
 //Advisors API
 export class AdvisorApi {
   static async getAdvisors() {
@@ -185,7 +224,6 @@ export class AdvisorApi {
       data: data
     })
   }
-
   static async updateAdvisor(data) {
     return await axios({
       method: 'patch',
@@ -193,7 +231,6 @@ export class AdvisorApi {
       data: data
     })
   }
-
   static async deleteAdvisor(id) {
     return await axios({
       method: 'delete',
