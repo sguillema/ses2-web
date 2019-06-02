@@ -37,7 +37,7 @@ export const mutations = {
 }
 
 export const actions = {
-  [REQUEST]: ({ commit }) =>
+  [REQUEST]: ({ commit }, { programId, skillsetId }) =>
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
