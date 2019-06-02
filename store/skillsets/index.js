@@ -50,7 +50,7 @@ export const mutations = {
 }
 
 export const actions = {
-  [REQUEST]: ({ commit }, { hideArchived = false }) =>
+  [REQUEST]: ({ commit }, { hideArchived }) =>
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
