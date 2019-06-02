@@ -60,6 +60,7 @@
         <v-data-table
           :headers="headers"
           :items="skillsets"
+          :search="search"
           item-key="name"
           class="elevation-1"
         >
@@ -74,14 +75,6 @@
                   edit
                 </v-icon>
               </router-link>
-              <!-- <v-dialog v-model="dialog2" max-width="290">
-                <template v-slot:activator="{ on }">
-                  <v-icon small @click="archiveSkillset(props.item)">
-                    delete
-                  </v-icon>
-                </template>
-                <v-card>wow</v-card>
-              </v-dialog> -->
               <v-dialog v-model="dialog2" max-width="290">
                 <template v-slot:activator="{ on }">
                   <v-icon small v-on="on">
