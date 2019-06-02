@@ -69,7 +69,6 @@
 <script>
 import { authModule, TYPE } from '~/store/auth/methods'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
-import { SkillsetsApi } from '../../core/Api'
 import WorkshopRegisterDialog from '../../components/WorkshopRegisterDialog/WorkshopRegisterDialog'
 
 export default {
