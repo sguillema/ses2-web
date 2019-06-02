@@ -107,7 +107,6 @@ export default {
 
   methods: {
     async addStudent() {
-      console.log(this.addNew)
       await this.$store.dispatch(studentsModule(CREATE, this.addNew))
     }
   }

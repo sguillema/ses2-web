@@ -119,7 +119,6 @@ export default {
 
   methods: {
     async addAdvisor() {
-      console.log(this.addNew)
       const { id, name, email } = this.addNew
       if (id !== '' && name !== '' && email !== '') {
         await this.$store.dispatch(advisorsModule(CREATE), this.addNew)

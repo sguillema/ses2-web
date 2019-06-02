@@ -2,9 +2,14 @@
   <div id="page-consultations">
     <section class="container">
       <div class="column-right">
-        <Sheet class="sheet">
+        <Sheet class="sheet" header=" Upcoming Programs">
           <v-toolbar flat color="white">
-            <v-toolbar-title>Upcoming Programs</v-toolbar-title>
+            <v-text-field
+              v-model="search"
+              class="input-spacing"
+              append-icon="search"
+              placeholder="Search for Program"
+            />
             <v-spacer />
             <v-dialog v-model="dialog" width="800">
               <template v-slot:activator="{ on }">
@@ -21,41 +26,43 @@
                   <v-form>
                     <div>
                       <v-text-field
-                        v-model="program.title"
+                        v-model="newProgram.title"
                         class="input"
                         label="Title"
                         outline
-                        required
+                        :rules="[newProgram.rules.required]"
                       />
                       <v-select
-                        v-model="program.skillsetId"
+                        v-model="newProgram.skillsetId"
                         label="Skillset"
                         :items="skillsets"
                         item-value="id"
                         item-text="title"
                         outline
+                        :rules="[newProgram.rules.required]"
                       />
                       <v-select
-                        v-model="program.targetGroup"
+                        v-model="newProgram.targetGroup"
                         :items="targetGroups"
                         item-value="value"
                         item-text="text"
                         label="Target Group"
                         outline
+                        :rules="[newProgram.rules.required]"
                       />
                       <v-textarea
-                        v-model="program.description"
+                        v-model="newProgram.description"
                         class="input"
                         label="Description"
                         outline
                         rows="1"
                         auto-grow
                         box
-                        required
+                        :rules="[newProgram.rules.required]"
                       />
                     </div>
                     <div class="step-buttons">
-                      <v-btn color="primary" @click="submitProgram">
+                      <v-btn color="primary" @click="addProgram">
                         Create Program
                       </v-btn>
                     </div>
@@ -64,11 +71,13 @@
               </v-card>
             </v-dialog>
           </v-toolbar>
+
           <v-data-table
             class="table-wrapper"
             :headers="headers"
             :items="programs"
             :search="search"
+            hide-actions
           >
             <template v-slot:items="props">
               <td>{{ props.item.title }}</td>
@@ -86,8 +95,13 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+import {
+  programsModule,
+  REQUEST,
+  PROGRAMS,
+  CREATE
+} from '../../store/programs/methods'
 import Sheet from '../../components/Sheet/Sheet'
 
 export default {
@@ -117,37 +131,43 @@ export default {
           value: 'postgraduate'
         }
       ],
-      programs: [],
-      skillsets: [],
       programsLoading: false,
       dialog: false,
-      program: {
+      skillsets: [],
+      newProgram: {
         title: '',
         skillsetId: null,
         targetGroup: '',
-        description: ''
+        description: '',
+        rules: {
+          required: value => !!value || 'Required.'
+        }
       }
     }
   },
-  computed: {},
+  computed: {
+    programs: {
+      get() {
+        return this.$store.getters[programsModule(PROGRAMS)]
+      }
+    }
+  },
   async mounted() {
-    // await this.$store.dispatch()
-    this.loading = true
-    this.programs = await this.$axios.$get('http://localhost:4000/programs')
+    this.$store.dispatch(programsModule(REQUEST))
     this.skillsets = await this.$axios.$get('http://localhost:4000/skillsets')
-    this.loading = false
   },
   methods: {
-    getSessionDate(date) {
-      return moment(date).format('DD/MM/YYYY')
-    },
-    getSessionPeriod(start, end) {
-      return `${moment(start).format('kk:mm')} - ${moment(end).format('kk:mm')}`
-    },
-    validateStep(nextStep) {
-      if (this.$refs[`stepForm${nextStep - 1}`].validate()) {
-        this.stepCount = nextStep
+    async addProgram() {
+      if (
+        this.newProgram.title === '' ||
+        this.newProgram.skillsetsId === null ||
+        this.newProgram.targetGroup === '' ||
+        this.newProgram.description === ''
+      ) {
+        return false
       }
+      await this.$store.dispatch(programsModule(CREATE), this.newProgram)
+      this.dialog = false
     },
     setTargetGroup(targetGroup) {
       if (targetGroup === 'all') return 'All Students'
@@ -162,16 +182,6 @@ export default {
         }
       })
       return result
-    },
-    submitProgram() {
-      this.$axios.$post('http://localhost:4000/programs', {
-        skillsetId: this.program.skillsetId,
-        title: this.program.title,
-        targetGroup: this.program.targetGroup,
-        description: this.program.description
-      })
-      this.dialog = false
-      location.reload()
     }
   }
 }

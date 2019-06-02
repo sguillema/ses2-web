@@ -115,7 +115,6 @@ export class SkillsetApi {
   }
 
   static async addSkillset(data) {
-    console.log(data)
     return await axios({
       method: 'post',
       url: `${SKILLSET_ENDPOINT}`,
@@ -124,8 +123,7 @@ export class SkillsetApi {
   }
 }
 
-//Programs API
-export class ProgramsApi {
+export class ProgramApi {
   static async getPrograms() {
     return await axios({
       method: 'get',
