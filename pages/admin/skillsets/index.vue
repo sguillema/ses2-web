@@ -9,33 +9,52 @@
             append-icon="search"
             placeholder="Search for skill-set"
           />
-          <!--
-            <v-btn depressed color="primary" @click="archiveSkillset">
-            Archive
-          </v-btn>
-          <v-btn depressed color="primary" @click="viewOldSkillset">
-            View Archive
-          </v-btn>
-          -->
         </div>
 
         <v-data-table
-          v-model="selected"
           :headers="headers"
           :items="skillsets"
           item-key="name"
           class="elevation-1"
         >
           <template v-slot:items="props">
-            <td>
-              <v-checkbox v-model="props.selected" primary hide-details />
-            </td>
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
-              <router-link :to="`/skillset/${props.item.id}`">Edit</router-link>
+              <router-link :to="`/skillsets/${props.item.id}`">
+                <v-icon small @click="editItem(props.item)">
+                  edit
+                </v-icon>
+              </router-link>
+              <v-dialog v-model="dialog" max-width="290">
+                <template v-slot:activator="{ on }">
+                  <v-icon small v-on="on">
+                    delete
+                  </v-icon>
+                </template>
+                <v-card>
+                  <v-card-title class="headline">
+                    Are you sure you want to archive this skillset?
+                  </v-card-title>
+                  <v-card-text>
+                    Agree will archive the skillset.
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="green darken-1" flat @click="dialog = false">
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                      color="green darken-1"
+                      flat
+                      @click="archiveSkillset(props.item)"
+                    >
+                      Agree
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </td>
           </template>
         </v-data-table>
@@ -44,24 +63,22 @@
           <p class="title">
             <b>Add new skillset</b>
           </p>
-          <div class="inputs">
-            <v-form ref="form" v-model="valid" lazy-validation>
-              <v-flex>
-                <v-text-field
-                  v-model="addNew.title"
-                  :rules="[addNew.rules.required]"
-                  label="Title"
-                  class="input-spacing"
-                />
-                <v-text-field
-                  v-model="addNew.shortTitle"
-                  :rules="[addNew.rules.required]"
-                  label="Short Title"
-                  class="input-spacing"
-                />
-              </v-flex>
-            </v-form>
-          </div>
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <div class="inputs">
+              <v-text-field
+                v-model="addNew.title"
+                :rules="[addNew.rules.required]"
+                label="Title"
+                class="input-spacing"
+              />
+              <v-text-field
+                v-model="addNew.shortTitle"
+                :rules="[addNew.rules.required]"
+                label="Short Title"
+                class="input-spacing"
+              />
+            </div>
+          </v-form>
           <div>
             <v-btn
               :disabled="!valid"
@@ -70,9 +87,6 @@
               @click="addSkillset"
             >
               Add
-            </v-btn>
-            <v-btn depressed color="primary" @click="archiveSkillset">
-              Archive
             </v-btn>
           </div>
         </section>
@@ -102,7 +116,6 @@ export default {
     return {
       search: '',
       headers: [
-        { text: '', value: '' },
         { text: 'ID', value: 'id' },
         { text: 'Title', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
@@ -115,7 +128,8 @@ export default {
           required: value => !!value || 'Required.'
         }
       },
-      valid: true
+      valid: true,
+      dialog: false
     }
   },
   computed: {
@@ -145,15 +159,10 @@ export default {
         )
       }
     },
-    async archiveSkillset() {
-      let selectedId = []
-      for (let index in this.selected) {
-        if (this.selected[index].id) {
-          selectedId.push(this.selected[0].id)
-        }
-      }
-      this.selected = []
-      await this.$store.dispatch(skillsetsModule(ARCHIVE), selectedId)
+    async archiveSkillset(skill) {
+      console.log(skill.id)
+      this.dialog = false
+      await this.$store.dispatch(skillsetsModule(ARCHIVE), skill.id)
     }
   }
 }
@@ -195,6 +204,7 @@ export default {
 }
 
 .title {
+  padding: 15px;
 }
 
 a {
