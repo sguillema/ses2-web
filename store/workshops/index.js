@@ -9,7 +9,7 @@ const emptyState = () => ({
 export const state = () => emptyState()
 
 export const getters = {
-  [WORKSHOPS]: state => state.workshop
+  [WORKSHOPS]: state => state.workshops
 }
 
 export const mutations = {
@@ -45,12 +45,12 @@ export const actions = {
       }
     }),
 
-  [CREATE]: ({ commit }, data) =>
+  [CREATE]: ({ commit, dispatch }, data) =>
     new Promise(async (resolve, reject) => {
       commit(CREATE)
       try {
         const response = await WorkshopApi.createWorkshop(data)
-        commit(SUCCESS, { workshop: response.data })
+        dispatch(REQUEST)
         resolve(response)
       } catch (e) {
         commit(ERROR)

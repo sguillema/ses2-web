@@ -2,9 +2,14 @@
   <div id="page-workshops">
     <section class="container">
       <div class="column-right">
-        <Sheet class="sheet">
+        <Sheet class="sheet" header="Upcoming Workshops">
           <v-toolbar flat color="white">
-            <v-toolbar-title>Upcoming Workshops</v-toolbar-title>
+            <v-text-field
+              v-model="search"
+              class="input-spacing"
+              append-icon="search"
+              placeholder="Search for Workshops"
+            />
             <v-spacer />
             <v-dialog v-model="dialog" width="800">
               <template v-slot:activator="{ on }">
@@ -14,10 +19,13 @@
               </template>
               <v-card class="dialog">
                 <v-card-title class="dialog-title-card">
-                  <h1 class="dialog-title">Workshop Form</h1>
+                  <h1 class="dialog-title">Create Workshop Information</h1>
+                </v-card-title>
+                <v-card-title class="dialog-title-card2">
+                  <h1 class="dialog-title2">Workshop Details Form</h1>
                 </v-card-title>
                 <v-divider />
-                <v-card-text>
+                <v-card-text class="form">
                   <v-form>
                     <div>
                       <v-text-field
@@ -25,7 +33,7 @@
                         class="input"
                         label="Title"
                         outline
-                        required
+                        :rules="[required]"
                       />
                       <v-select
                         v-model="newWorkshop.programId"
@@ -34,6 +42,7 @@
                         item-value="id"
                         item-text="title"
                         outline
+                        :rules="[required]"
                       />
                       <v-select
                         v-model="newWorkshop.staffId"
@@ -42,6 +51,7 @@
                         item-text="id"
                         label="Staff ID"
                         outline
+                        :rules="[required]"
                       />
                       <v-textarea
                         v-model="newWorkshop.description"
@@ -51,11 +61,11 @@
                         rows="1"
                         auto-grow
                         box
-                        required
+                        :rules="[required]"
                       />
                     </div>
                     <div class="step-buttons">
-                      <v-btn color="primary" @click="submitWorkshop">
+                      <v-btn color="primary" @click="addWorkshop">
                         Create Workshop
                       </v-btn>
                     </div>
@@ -69,11 +79,12 @@
             :headers="headers"
             :items="workshops"
             :search="search"
+            hide-actions
           >
             <template v-slot:items="props">
               <td>{{ props.item.title }}</td>
               <td>{{ props.item.staffId }}</td>
-              <td>{{ props.item.programId }}</td>
+              <td>{{ getProgramTitle(props.item.programId) }}</td>
               <td>{{ props.item.description }}</td>
             </template>
           </v-data-table>
@@ -93,6 +104,13 @@ import {
 } from '../../store/workshops/methods'
 import Sheet from '../../components/Sheet/Sheet'
 
+const emptyWorkshopForm = () => ({
+  title: '',
+  staffId: null,
+  programId: null,
+  description: ''
+})
+
 export default {
   components: { Sheet },
   middleware: adminAuthenticated,
@@ -106,13 +124,11 @@ export default {
         { text: 'Staff ID', value: 'skillsetId' },
         { text: 'Description', value: 'description', sortable: false }
       ],
+      workshopsLoading: false,
       dialog: false,
-      newWorkshop: {
-        title: '',
-        staffId: null,
-        programId: null,
-        description: ''
-      }
+      programs: [],
+      staff: [],
+      newWorkshop: emptyWorkshopForm()
     }
   },
   computed: {
@@ -122,22 +138,37 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
     this.$store.dispatch(workshopsModule(REQUEST))
+    this.programs = await this.$axios.$get('http://localhost:4000/programs')
+    this.staff = await this.$axios.$get('http://localhost:4000/staff')
   },
   methods: {
-    getSkillsetTitle(skillsetId) {
+    required(value) {
+      return !!value || 'Required.'
+    },
+    getProgramTitle(programId) {
       let result
-      this.skillsets.forEach(skillset => {
-        if (skillset.id === skillsetId) {
-          result = skillset.title
+      this.programs.forEach(program => {
+        if (program.id === programId) {
+          result = program.title
         }
       })
       return result
     },
     async addWorkshop() {
+      if (
+        this.newWorkshop.title === '' ||
+        this.newWorkshop.programId === null ||
+        this.newWorkshop.staffId === '' ||
+        this.newWorkshop.description === ''
+      ) {
+        return false
+      }
       console.log(this.newWorkshop)
-      await this.$store.dispatch(workshopsModule(CREATE, this.newWorkshop))
+      await this.$store.dispatch(workshopsModule(CREATE), this.newWorkshop)
+      this.dialog = false
+      this.newWorkshop = emptyWorkshopForm()
     }
   }
 }
@@ -196,14 +227,30 @@ export default {
     }
   }
 }
+.form {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 25px;
+}
 .dialog {
   .dialog-title {
-    margin-left: 14px;
-    margin-right: 40px;
+    margin: 0;
+    padding-left: 25px;
     color: #ffffff;
+    font-size: 20px;
+  }
+  .dialog-title2 {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 20px;
   }
   .dialog-title-card {
     background: #ff1818;
+    height: 70px;
+  }
+  .dialog-title-card2 {
+    background: #ffffff;
+    height: 70px;
   }
   .step-content {
     padding: 0 20px;
@@ -221,6 +268,8 @@ export default {
     }
     .input {
       width: 340px;
+      margin-left: 20px;
+      margin-right: 20px;
     }
   }
   .step-review {
