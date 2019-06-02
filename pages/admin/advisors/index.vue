@@ -1,7 +1,13 @@
 <template>
-  <div id="page-students">
+  <div id="page-advisors">
     <section class="container">
-      <Sheet header="Registered Students">
+      <!-- <v-snackbar v-model="snackbar.active" :timeout="3000" top>
+        {{ snackbar.message }}
+        <v-btn color="primary" flat @click="snackbar.active = false">
+          Close
+        </v-btn>
+      </v-snackbar> -->
+      <Sheet header="Available Advisors">
         <v-text-field
           v-model="search"
           class="input-spacing"
@@ -11,7 +17,7 @@
         <v-data-table
           class="table-wrapper"
           :headers="headers"
-          :items="students"
+          :items="advisors"
           :search="search"
         >
           <template v-slot:items="props">
@@ -19,45 +25,48 @@
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.email }}</td>
             <td>
-              <router-link :to="`students/${props.item.id}`">
+              <router-link :to="`/advisors/${props.item.id}`">
                 Edit
               </router-link>
-              <router-link :to="`students/${props.item.id}/history`">
+              <router-link :to="`/advisors/${props.item.id}/history`">
                 View History
               </router-link>
             </td>
           </template>
         </v-data-table>
-        <!-- <section class="add-student-section">
+        <section class="add-advisors-section">
           <p>
-            To enter more students, please enter their details below and click
+            To enter more advisors, please enter their details below and click
             ‘Add’.
             <br />
             <strong>Please note:</strong>
-            All the fields are compulsory, otherwise that student will not be
+            All the fields are compulsory, otherwise that advisor will not be
             added.
           </p>
           <div class="inputs">
             <v-text-field
               v-model="addNew.id"
-              label="Student ID"
+              label="Advisor ID"
               class="input-spacing"
+              :rules="[addNew.rules.required]"
             />
             <v-text-field
               v-model="addNew.name"
               label="Name"
               class="input-spacing"
+              :rules="[addNew.rules.required]"
             />
             <v-text-field
               v-model="addNew.email"
               label="Email"
               class="input-spacing"
+              :rules="[addNew.rules.required]"
             />
           </div>
-          <v-btn depressed color="primary" @click="addStudent">
+          <v-btn depressed color="primary" @click="addAdvisor">
             Add
           </v-btn>
-        </section> -->
+        </section>
       </Sheet>
     </section>
   </div>
@@ -66,11 +75,11 @@
 <script>
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import {
-  studentsModule,
+  advisorsModule,
   REQUEST,
-  STUDENTS,
+  ADVISORS,
   CREATE
-} from '../../../store/students/methods'
+} from '../../../store/advisors/methods'
 import Sheet from '../../../components/Sheet/Sheet'
 
 export default {
@@ -81,7 +90,7 @@ export default {
     return {
       search: '',
       headers: [
-        { text: 'StudentID', value: 'id' },
+        { text: 'Staff ID', value: 'id' },
         { text: 'Name', value: 'name' },
         { text: 'Email', value: 'email' },
         { text: '', value: '' }
@@ -89,25 +98,35 @@ export default {
       addNew: {
         id: '',
         name: '',
-        email: ''
+        email: '',
+        rules: {
+          required: value => !!value || 'Required.'
+        }
       }
     }
   },
   computed: {
-    students: {
+    advisors: {
       get() {
-        return this.$store.getters[studentsModule(STUDENTS)]
+        return this.$store.getters[advisorsModule(ADVISORS)]
       }
     }
   },
 
-  mounted() {
-    this.$store.dispatch(studentsModule(REQUEST))
+  async mounted() {
+    this.$store.dispatch(advisorsModule(REQUEST))
   },
 
   methods: {
-    async addStudent() {
-      await this.$store.dispatch(studentsModule(CREATE, this.addNew))
+    async addAdvisor() {
+      const { id, name, email } = this.addNew
+      if (id !== '' && name !== '' && email !== '') {
+        await this.$store.dispatch(advisorsModule(CREATE), this.addNew)
+      } else {
+        console.log(
+          'You must enter an id, fullname and email in order to add an advisor'
+        )
+      }
     }
   }
 }
@@ -134,7 +153,7 @@ export default {
   }
 }
 
-.add-student-section {
+.add-advisors-section {
   display: flex;
   flex-direction: column;
   align-items: center;
