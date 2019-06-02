@@ -19,6 +19,6 @@ export const SKILLSET = 'skillset'
 
 // methods
 export const ADD_SKILLSET = 'addSkillset'
-// export const REMOVE_SKILLSET = 'removeSkillset'
+export const REMOVE_SKILLSET = 'removeSkillset'
 
 export const skillsetsModule = method => storeModule(MODULE, method)

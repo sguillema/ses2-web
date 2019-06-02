@@ -7,7 +7,8 @@ import {
   SKILLSETS,
   CLEAR,
   DELETE,
-  ADD_SKILLSET
+  ADD_SKILLSET,
+  REMOVE_SKILLSET
 } from './methods'
 
 const emptyState = () => ({
@@ -28,6 +29,9 @@ export const mutations = {
 
   [ADD_SKILLSET]: state => {
     state.status = 'adding skillset'
+  },
+  [REMOVE_SKILLSET]: state => {
+    state.status = 'deleting skillset'
   },
 
   [SUCCESS]: (state, { skillsets }) => {
@@ -58,12 +62,12 @@ export const actions = {
       }
     }),
 
-  [DELETE]: ({ commit, state }) =>
+  [REMOVE_SKILLSET]: ({ commit, dispatch }, skillsetId) =>
     new Promise(async (resolve, reject) => {
-      commit(REQUEST)
+      commit(REMOVE_SKILLSET)
       try {
-        const response = await SkillsetApi.deleteSkillset(state.skillsets)
-        commit(SUCCESS, { skillsets: response.data })
+        const response = await SkillsetApi.deleteSkillset(skillsetId)
+        dispatch(REQUEST)
         resolve(response)
       } catch (e) {
         commit(ERROR)

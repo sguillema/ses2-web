@@ -19,21 +19,43 @@
           -->
         </div>
 
-        <v-data-table
+        <!-- <v-data-table
           class="table-wrapper"
           :headers="headers"
           :items="skillsets"
           :search="search"
+          item-key="name"
+          select-all
         >
-          <template v-slot:items="props">
-            <td>{{ props.item.no }}</td>
-            <td>{{ props.item.id }}</td>
+          <template v-slot:items="props"> -->
+        <!-- <td>{{ props.item.no }}</td> -->
+        <!-- <td>{{ props.item.id }}</td>
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
               <router-link :to="`/skillset/${props.item.id}`">Edit</router-link>
             </td>
+          </template>
+        </v-data-table> -->
+
+        <v-data-table
+          v-model="selected"
+          :headers="headers"
+          :items="skillsets"
+          item-key="name"
+          select-all
+          class="elevation-1"
+        >
+          <template v-slot:items="props">
+            <td>
+              <v-checkbox v-model="props.selected" primary hide-details />
+            </td>
+            <td>{{ props.item.name }}</td>
+            <td class="text-xs-left">{{ props.item.id }}</td>
+            <td class="text-xs-left">{{ props.item.title }}</td>
+            <td class="text-xs-left">{{ props.item.shortTitle }}</td>
+            <td class="text-xs-left">{{ props.item.noWorkshop }}</td>
           </template>
         </v-data-table>
         <section class="add-skillset-section">
@@ -75,7 +97,8 @@ import {
   skillsetsModule,
   REQUEST,
   SKILLSETS,
-  ADD_SKILLSET
+  ADD_SKILLSET,
+  REMOVE_SKILLSET
 } from '../../../store/skillsets/methods'
 import Sheet from '../../../components/Sheet/Sheet'
 
@@ -87,7 +110,7 @@ export default {
     return {
       search: '',
       headers: [
-        { text: 'No', value: 'no' },
+        // { text: 'No', value: 'no' },
         { text: 'ID', value: 'id' },
         { text: 'Title', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
@@ -99,7 +122,8 @@ export default {
         rules: {
           required: value => !!value || 'Required.'
         }
-      }
+      },
+      deleteId: ''
     }
   },
   computed: {
@@ -126,7 +150,11 @@ export default {
       }
     },
     async deleteSkillset() {
-      // console.log(this.delete)
+      await this.$store.dispatch(
+        skillsetsModule(REMOVE_SKILLSET),
+        this.deleteId
+      )
+      console.log(this.name)
     }
   }
 }
