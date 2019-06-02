@@ -4,7 +4,7 @@
       <Sheet header="Registered Students">
         <v-text-field
           v-model="search"
-          class="inputa-spacing"
+          class="input-spacing"
           append-icon="search"
           placeholder="Search"
         />
