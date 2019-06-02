@@ -2,9 +2,14 @@
   <div id="page-consultations">
     <section class="container">
       <div class="column-right">
-        <Sheet class="sheet">
+        <Sheet class="sheet" header=" Upcoming Programs">
           <v-toolbar flat color="white">
-            <v-toolbar-title>Upcoming Programs</v-toolbar-title>
+            <v-text-field
+              v-model="search"
+              class="input-spacing"
+              append-icon="search"
+              placeholder="Search for Program"
+            />
             <v-spacer />
             <v-dialog v-model="dialog" width="800">
               <template v-slot:activator="{ on }">
@@ -25,7 +30,7 @@
                         class="input"
                         label="Title"
                         outline
-                        required
+                        :rules="[newProgram.rules.required]"
                       />
                       <v-select
                         v-model="newProgram.skillsetId"
@@ -34,7 +39,7 @@
                         item-value="id"
                         item-text="title"
                         outline
-                        required
+                        :rules="[newProgram.rules.required]"
                       />
                       <v-select
                         v-model="newProgram.targetGroup"
@@ -43,7 +48,7 @@
                         item-text="text"
                         label="Target Group"
                         outline
-                        required
+                        :rules="[newProgram.rules.required]"
                       />
                       <v-textarea
                         v-model="newProgram.description"
@@ -53,7 +58,7 @@
                         rows="1"
                         auto-grow
                         box
-                        required
+                        :rules="[newProgram.rules.required]"
                       />
                     </div>
                     <div class="step-buttons">
@@ -66,16 +71,18 @@
               </v-card>
             </v-dialog>
           </v-toolbar>
+
           <v-data-table
             class="table-wrapper"
             :headers="headers"
             :items="programs"
             :search="search"
+            hide-actions
           >
             <template v-slot:items="props">
               <td>{{ props.item.title }}</td>
               <td>
-                {{ props.item.skillsetId }}
+                {{ getSkillsetTitle(props.item.skillsetId) }}
               </td>
               <td>{{ setTargetGroup(props.item.targetGroup) }}</td>
               <td>{{ props.item.description }}</td>
@@ -88,7 +95,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 import {
   programsModule,
@@ -127,11 +133,15 @@ export default {
       ],
       programsLoading: false,
       dialog: false,
+      skillsets: [],
       newProgram: {
         title: '',
         skillsetId: null,
         targetGroup: '',
-        description: ''
+        description: '',
+        rules: {
+          required: value => !!value || 'Required.'
+        }
       }
     }
   },
@@ -142,13 +152,23 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
     this.$store.dispatch(programsModule(REQUEST))
+    this.skillsets = await this.$axios.$get('http://localhost:4000/skillsets')
   },
   methods: {
     async addProgram() {
+      if (
+        this.newProgram.title === '' ||
+        this.newProgram.skillsetsId === null ||
+        this.newProgram.targetGroup === '' ||
+        this.newProgram.description === ''
+      ) {
+        return false
+      }
       console.log(this.newProgram)
-      await this.$store.dispatch(programsModule(CREATE, this.newProgram))
+      await this.$store.dispatch(programsModule(CREATE), this.newProgram)
+      this.dialog = false
     },
     setTargetGroup(targetGroup) {
       if (targetGroup === 'all') return 'All Students'
