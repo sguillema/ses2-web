@@ -12,7 +12,6 @@
 <script>
 import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
-import { ConsultationApi } from '../../core/Api'
 
 export default {
   middleware: adminAuthenticated,
@@ -27,10 +26,6 @@ export default {
   methods: {
     onClick() {
       this.$store.dispatch(authModule(LOGOUT))
-    },
-    async mounted() {
-      const response = await ConsultationApi.getBookings(this.user.id)
-      this.ConsultationApi = response.data
     }
   }
 }
