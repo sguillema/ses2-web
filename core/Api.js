@@ -12,12 +12,8 @@ const SKILLSETS_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
 const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
 const STAFF_ENDPOINT = `${ENDPOINT}/staff`
-<<<<<<< HEAD
-const SESSION_ENDPOINT = `${ENDPOINT}/sessions`
-=======
 const SESSIONS_ENDPOINT = `${ENDPOINT}/sessions`
 const BOOKINGDETAIL_ENDPOINT = `${ENDPOINT}/booking-details`
->>>>>>> master
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
