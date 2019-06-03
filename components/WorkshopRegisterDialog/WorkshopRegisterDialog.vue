@@ -30,7 +30,15 @@
             Programs
           </v-stepper-step>
           <v-divider />
-          <v-stepper-step :step="4">Step 3</v-stepper-step>
+          <v-stepper-step
+            :complete="stepCount > 4"
+            :editable="stepCount > 4"
+            :step="4"
+          >
+            Workshops
+          </v-stepper-step>
+          <v-divider />
+          <v-stepper-step :step="5">Confirm</v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content :step="1" class="step-container">
@@ -111,17 +119,23 @@
           </v-stepper-content>
           <v-stepper-content :step="3" class="step-container">
             <div class="step-content">
+              <p>
+                <b>
+                  To avoid a timetable clash, please check the date, time and
+                  location of each session carefully For additional session
+                  information and click on the session to register.
+                </b>
+              </p>
               <v-data-table
-                id="program-table"
+                class="selectable-table"
                 :headers="programsHeaders"
                 :items="programs"
                 item-key="id"
                 hide-actions
-                class="program-table"
               >
                 <template v-slot:items="props">
                   <tr
-                    class="program-row"
+                    class="table-row"
                     :class="[
                       selectedProgramIndex === props.index && 'selected'
                     ]"
@@ -153,13 +167,102 @@
           </v-stepper-content>
           <v-stepper-content :step="4" class="step-container">
             <div class="step-content">
-              Test
+              <p>
+                <b>
+                  To avoid a timetable clash, please check the date, time and
+                  location of each session carefully For additional session
+                  information and click on the session to register.
+                </b>
+              </p>
+              <v-data-table
+                class="selectable-table"
+                :headers="workshopsHeaders"
+                :items="workshops"
+                item-key="id"
+                hide-actions
+              >
+                <template v-slot:items="props">
+                  <tr
+                    class="table-row"
+                    :class="[
+                      selectedWorkshopIndex === props.index && 'selected'
+                    ]"
+                    @click="setSelectedWorkshop(props.index)"
+                  >
+                    <td>{{ props.item.title }}</td>
+                    <td>{{ props.item.description }}</td>
+                    <td>{{ getSessionsStartDate(props.item.sessions) }}</td>
+                    <td>{{ getSessionsFinishDate(props.item.sessions) }}</td>
+                    <td>
+                      {{ props.item.sessions && props.item.sessions.length }}
+                    </td>
+                    <td>{{ getSessionsSize(props.item.sessions) }}</td>
+                  </tr>
+                </template>
+              </v-data-table>
             </div>
             <div class="step-buttons">
-              <v-btn color="primary" depressed @click="bookWorkshop">
+              <v-btn
+                color="primary"
+                :disabled="
+                  selectedWorkshopIndex === null ||
+                    selectedWorkshopIndex >= workshops.length
+                "
+                depressed
+                @click="validateStep"
+              >
+                Next
+              </v-btn>
+            </div>
+          </v-stepper-content>
+          <v-stepper-content :step="5" class="step-container">
+            <h3>Confirmation of your booking.</h3>
+            <div
+              v-if="!!selectedWorkshop && !!selectedProgram"
+              class="confirm-workshop-details"
+            >
+              <label>Program</label>
+              <div>{{ selectedProgram.title }}</div>
+              <label>Workshop</label>
+              <div>{{ selectedWorkshop.title }}</div>
+              <label>Description</label>
+              <div>{{ selectedWorkshop.description }}</div>
+              <label>Date Start</label>
+              <div>{{ getSessionsStartDate(selectedSessions) }}</div>
+              <label>Date End</label>
+              <div>{{ getSessionsFinishDate(selectedSessions) }}</div>
+              <label>No. Sessions</label>
+              <div>{{ selectedSessions.length }}</div>
+              <label>Places Available</label>
+              <div>{{ getSessionsSize(selectedSessions) }}</div>
+            </div>
+            <v-data-table
+              class="selectable-table"
+              :headers="sessionsHeaders"
+              :items="selectedSessions"
+              item-key="id"
+              hide-actions
+            >
+              <template v-slot:items="props">
+                <tr class="table-row">
+                  <td>{{ getMomentDateFormat(props.item.startTime) }}</td>
+                  <td>{{ getMomentTimeFormat(props.item.startTime) }}</td>
+                  <td>{{ getMomentTimeFormat(props.item.endTime) }}</td>
+                  <td>{{ props.item.room }}</td>
+                </tr>
+              </template>
+            </v-data-table>
+            <div class="step-buttons">
+              <v-btn color="primary" depressed @click="validateStep">
                 Book Workshop
               </v-btn>
             </div>
+            <v-alert :value="!!successMessage" outline type="success">
+              {{ successMessage }}
+            </v-alert>
+            <v-alert :value="!!errorMessage" outline type="error">
+              {{ errorMessage }}
+            </v-alert>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -168,30 +271,53 @@
 </template>
 
 <script>
+import moment from 'moment'
 import SelectableList from '../SelectableList/SelectableList'
 import {
   skillsetsModule,
   REQUEST,
   SKILLSETS
 } from '../../store/skillsets/methods'
-
 import { programsModule, PROGRAMS } from '../../store/programs/methods'
+import { workshopsModule, WORKSHOPS } from '../../store/workshops/methods'
+import { authModule, USER } from '../../store/auth/methods'
+import { BookingApi } from '../../core/Api'
 
 export default {
   components: { SelectableList },
   data() {
     return {
+      user: this.$store.getters[authModule(USER)],
       stepCount: 1,
       dialog: false,
       selectedSkillsetIndex: null,
       selectedSkillset: null,
       selectedProgramIndex: null,
       selectedProgram: null,
+      selectedWorkshopIndex: null,
+      selectedWorkshop: null,
+      selectedSessions: [],
+      successMessage: '',
+      errorMessage: '',
       programsHeaders: [
         { text: 'Programs', value: 'program', sortable: false },
         { text: 'Skillset', value: 'skillset', sortable: false },
         { text: 'Target Group', value: 'targetGroup', sortable: false },
         { text: 'Description', value: 'description', sortable: false }
+      ],
+      workshopsHeaders: [
+        { text: 'Title', value: 'title', sortable: false },
+        { text: 'Description', value: 'description', sortable: false },
+        { text: 'Start Date', value: 'startdate', sortable: false },
+        { text: 'Finish Date', value: 'finishdate', sortable: false },
+        { text: 'No. Sessions', value: 'size', sortable: false },
+        { text: 'Places Available', value: 'size', sortable: false }
+      ],
+      sessionsHeaders: [
+        { text: 'Date', value: 'date', sortable: false },
+        { text: 'Start Time', value: 'startTime', sortable: false },
+        { text: 'Finish Time', value: 'finishTime', sortable: false },
+        { text: 'Room', value: 'room', sortable: false }
       ]
     }
   },
@@ -201,6 +327,9 @@ export default {
     },
     programs() {
       return this.$store.getters[programsModule(PROGRAMS)]
+    },
+    workshops() {
+      return this.$store.getters[workshopsModule(WORKSHOPS)]
     }
   },
   methods: {
@@ -214,6 +343,12 @@ export default {
           break
         case 3:
           this.validateProgramStep()
+          break
+        case 4:
+          this.validateWorkshopStep()
+          break
+        case 5:
+          this.validateConfirmStep()
           break
         default:
           break
@@ -232,9 +367,16 @@ export default {
     validateProgramStep() {
       this.selectedProgram = this.programs[this.selectedProgramIndex]
       const programId = this.selectedProgram.id
-      console.log(this.selectedProgram)
-      // this.$store.dispatch(programsModule(REQUEST), { programId })
+      this.$store.dispatch(workshopsModule(REQUEST), { programId })
       this.nextStep()
+    },
+    validateWorkshopStep() {
+      this.selectedWorkshop = this.workshops[this.selectedWorkshopIndex]
+      this.selectedSessions = this.selectedWorkshop.sessions
+      this.nextStep()
+    },
+    async validateConfirmStep() {
+      await this.bookWorkshop()
     },
     nextStep() {
       this.stepCount = this.stepCount + 1
@@ -245,22 +387,75 @@ export default {
     setSelectedProgram(index) {
       this.selectedProgramIndex = index
     },
+    setSelectedWorkshop(index) {
+      this.selectedWorkshopIndex = index
+    },
     cancelRegistration() {
       this.dialog = false
+      this.resetRegistrationData()
+    },
+    resetRegistrationData() {
       this.stepCount = 1
       this.selectedSkillsetIndex = null
       this.selectedSkillset = null
       this.selectedProgramIndex = null
       this.selectedProgram = null
+      this.selectedWorkshopIndex = null
+      this.selectedWorkshop = null
+      this.selectedSessions = []
+      this.successMessage = ''
+      this.errorMessage = ''
     },
-    bookWorkshop() {
-      console.log('hey you made it')
+    async bookWorkshop() {
+      const studentId = this.user.id
+      const booked = true
+      const attended = false
+      const bookingDetailsId = null
+
+      const promises = this.selectedSessions.map(async session => {
+        return await BookingApi.createBooking({
+          studentId,
+          booked,
+          attended,
+          bookingDetailsId,
+          sessionId: session.id
+        })
+      })
+      let flag = false
+      const responses = await Promise.all(promises)
+      responses.forEach(response => {
+        if (!flag && response.status !== 200) flag = true
+      })
+      if (flag)
+        this.errorMessage =
+          'An error occured. Please try again in a short while'
+      else this.successMessage = 'Registered Successfully!'
     },
     getTargetGroup(targetGroup) {
       if (targetGroup === 'all') return 'All Students'
       if (targetGroup === 'undergraduate') return 'Undergraduate Students'
       if (targetGroup === 'postgraduate') return 'Postgraduate Students'
       return targetGroup
+    },
+    getSessionsSize(sessions) {
+      return sessions ? sessions[0].size : 0
+    },
+    getSessionsStartDate(sessions) {
+      const dates = this.getDatesArray(sessions)
+      return this.getMomentDateFormat(moment.min(dates))
+    },
+    getSessionsFinishDate(sessions) {
+      const dates = this.getDatesArray(sessions)
+      return this.getMomentDateFormat(moment.max(dates))
+    },
+    getDatesArray(sessions) {
+      return sessions ? sessions.map(session => moment(session.startTime)) : []
+    },
+    getMomentDateFormat(date) {
+      return moment(date).format('DD/MM/YYYY')
+    },
+    getMomentTimeFormat(date) {
+      return moment(date).format('h:mm a')
     }
   }
 }
@@ -268,6 +463,20 @@ export default {
 
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
+
+label {
+  font-weight: $fontweight-bold;
+}
+
+.confirm-workshop-details {
+  border: 1px solid;
+  padding: 15px;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+  div {
+    margin-bottom: 10px;
+  }
+}
 
 .dialog {
   .dialog-title {
@@ -305,14 +514,14 @@ export default {
 
 <style lang="scss">
 @import '~assets/styles/variables';
-#program-table {
+.selectable-table {
   .v-table {
     background-color: $color-divider;
   }
   tr {
-    border-bottom: none;
+    border-bottom: none !important;
   }
-  .program-row {
+  .table-row {
     cursor: pointer;
     background-color: $color-gray;
     margin: 2px;
@@ -325,7 +534,7 @@ export default {
       background-color: $color-primary;
       color: $color-white;
       &:hover {
-        background-color: $color-primary;
+        background-color: $color-primary !important;
       }
     }
   }

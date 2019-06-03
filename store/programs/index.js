@@ -37,14 +37,18 @@ export const mutations = {
 }
 
 export const actions = {
-  [REQUEST]: ({ commit }, { skillsetId }) =>
+  [REQUEST]: ({ commit }, filters) =>
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
         let response
-        if (skillsetId)
-          response = await ProgramApi.getProgramsBySkillsetId(skillsetId)
-        else response = await ProgramApi.getPrograms()
+        if (filters) {
+          const { skillsetId } = filters
+          if (skillsetId)
+            response = await ProgramApi.getProgramsBySkillsetId(skillsetId)
+        } else {
+          response = await ProgramApi.getPrograms()
+        }
         commit(SUCCESS, { programs: response.data })
         resolve(response)
       } catch (e) {
