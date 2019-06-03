@@ -32,11 +32,18 @@ export const mutations = {
 }
 
 export const actions = {
-  [REQUEST]: ({ commit }) =>
+  [REQUEST]: ({ commit }, filters) =>
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
-        const response = await WorkshopApi.getWorkshops()
+        let response
+        if (filters) {
+          const { programId } = filters
+          if (programId)
+            response = await WorkshopApi.getWorkshopsByProgramId(programId)
+        } else {
+          response = await WorkshopApi.getWorkshops()
+        }
         commit(SUCCESS, { workshops: response.data })
         resolve(response)
       } catch (e) {

@@ -74,6 +74,14 @@ export class BookingApi {
       url: `${BOOKINGS_ENDPOINT}?studentId=${studentId}`
     })
   }
+
+  static async createBooking(booking) {
+    return await axios({
+      method: 'post',
+      url: `${BOOKINGS_ENDPOINT}`,
+      data: booking
+    })
+  }
 }
 //Booking details API
 export class BookingDetailsApi {
@@ -209,6 +217,13 @@ export class WorkshopApi {
     return await axios({
       method: 'get',
       url: WORKSHOPS_ENDPOINT
+    })
+  }
+
+  static async getWorkshopsByProgramId(programId) {
+    return await axios({
+      method: 'get',
+      url: `${WORKSHOPS_ENDPOINT}?programId=${programId}`
     })
   }
 
