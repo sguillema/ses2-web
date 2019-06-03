@@ -166,6 +166,13 @@ export class ProgramApi {
     })
   }
 
+  static async getProgramsBySkillsetId(skillsetId) {
+    return await axios({
+      method: 'get',
+      url: `${PROGRAMS_ENDPOINT}?skillsetId=${skillsetId}`
+    })
+  }
+
   static async getProgram(id) {
     return await axios({
       method: 'get',

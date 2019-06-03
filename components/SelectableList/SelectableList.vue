@@ -19,7 +19,7 @@ export default {
   props: {
     items: { type: Array, required: true },
     select: { type: Function, required: true },
-    selectedIndex: { type: Number, required: true }
+    selectedIndex: { type: Number, required: false, default: null }
   }
 }
 </script>

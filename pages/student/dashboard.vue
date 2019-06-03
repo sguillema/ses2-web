@@ -1,7 +1,7 @@
 <template>
   <div id="page-authenticated">
     <section class="container">
-      <h1>Welcome to UTS:HELPS Bookeing System</h1>
+      <h1>Welcome to UTS:HELPS Booking System</h1>
       <v-toolbar flat color="white">
         <v-toolbar-title>Your Bookings</v-toolbar-title>
       </v-toolbar>
