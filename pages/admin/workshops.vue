@@ -92,11 +92,27 @@
             </template>
             <template v-slot:expand="props">
               <v-card flat>
-                <v-card-text>{{ sessions }}</v-card-text>
+                <v-data-table
+                  :headers="sessionsHeaders"
+                  :items="props.item.sessions"
+                  hide-actions
+                >
+                  <template v-slot:items="props">
+                    <tr>
+                      <!-- <td>{{ props.item.room }}</td> -->
+                      <td style="padding:22px">
+                        {{ getMomentDateFormat(props.item.startTime) }}
+                      </td>
+                      <td>{{ getMomentTimeFormat(props.item.startTime) }}</td>
+                      <td>{{ getMomentTimeFormat(props.item.endTime) }}</td>
+                      <td>{{ props.item.room }}</td>
+                    </tr>
+                  </template>
+                </v-data-table>
+                <!-- <v-btn depressed class="primary">Add Session</v-btn> -->
               </v-card>
             </template>
           </v-data-table>
-          <v-btn @click="test">test</v-btn>
         </Sheet>
       </div>
     </section>
@@ -104,13 +120,12 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 import {
   workshopsModule,
   REQUEST,
   WORKSHOPS,
-  SESSIONS,
-  REQUEST_SESSIONS,
   CREATE
 } from '../../store/workshops/methods'
 import Sheet from '../../components/Sheet/Sheet'
@@ -135,6 +150,13 @@ export default {
         { text: 'Program', value: 'programId' },
         { text: 'Description', value: 'description', sortable: false }
       ],
+      sessionsHeaders: [
+        { text: 'Date', value: 'date', sortable: false },
+        { text: 'Start Time', value: 'startTime', sortable: false },
+        { text: 'Finish Time', value: 'finishTime', sortable: false },
+        { text: 'Room', value: 'room', sortable: false }
+      ],
+      sessions: [],
       workshopsLoading: false,
       dialog: false,
       programs: [],
@@ -149,16 +171,10 @@ export default {
       get() {
         return this.$store.getters[workshopsModule(WORKSHOPS)]
       }
-    },
-    sessions: {
-      get() {
-        return this.$store.getters[(workshopsModule(SESSIONS), this.workshopId)]
-      }
     }
   },
   async mounted() {
     this.$store.dispatch(workshopsModule(REQUEST))
-
     this.programs = await this.$axios.$get('http://localhost:4000/programs')
     this.staff = await this.$axios.$get('http://localhost:4000/staff')
   },
@@ -189,12 +205,11 @@ export default {
       this.dialog = false
       this.newWorkshop = emptyWorkshopForm()
     },
-    async test() {
-      await this.$store.dispatch(
-        workshopsModule(REQUEST_SESSIONS),
-        this.workshopId
-      )
-      console.log(this.workshopId)
+    getMomentDateFormat(date) {
+      return moment(date).format('DD/MM/YYYY')
+    },
+    getMomentTimeFormat(date) {
+      return moment(date).format('h:mm a')
     }
   }
 }

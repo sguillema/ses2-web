@@ -259,7 +259,7 @@ export class WorkshopApi {
   static async getSessionsByWorkshopId(id) {
     return await axios({
       method: 'get',
-      url: `${SESSION_ENDPOINT}/?workshopId=${id}`,
+      url: `${SESSIONS_ENDPOINT}/?workshopId=${id}`,
       data: id
     })
   }
