@@ -13,7 +13,7 @@
             <v-spacer />
             <v-dialog v-model="dialog" width="800">
               <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark class="mb-2" v-on="on">
+                <v-btn depressed color="primary" dark class="mb-2" v-on="on">
                   Create Skillset
                 </v-btn>
               </template>
@@ -46,7 +46,7 @@
                 <v-card-text>
                   <v-form>
                     <div class="step-buttons">
-                      <v-btn color="primary" @click="addSkillset">
+                      <v-btn depressed color="primary" @click="addSkillset">
                         Create Skillset
                       </v-btn>
                     </div>
@@ -70,7 +70,7 @@
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
-              <router-link :to="`/skillsets/${props.item.id}`">
+              <router-link :to="`/admin/skillsets/${props.item.id}`">
                 <v-icon small @click="editItem(props.item)">
                   edit
                 </v-icon>
@@ -134,7 +134,8 @@ export default {
         { text: 'ID', value: 'id' },
         { text: 'Title', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
-        { text: 'No. of Workshops', value: 'noWorkshops' }
+        { text: 'No. of Workshops', value: 'noWorkshops' },
+        { text: 'Actions', value: 'actions' }
       ],
       addNew: {
         title: '',
@@ -156,7 +157,7 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch(skillsetsModule(REQUEST))
+    this.$store.dispatch(skillsetsModule(REQUEST), { hideArchived: true })
   },
 
   methods: {
