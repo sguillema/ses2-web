@@ -1,67 +1,12 @@
 <template>
   <div id="page-dataTable">
     <section class="container">
-      <section class="container">
-        <h1>
-          My Bookings
-          <v-spacer />
-          <WorkshopRegisterDialog />
-        </h1>
-
-        <v-toolbar flat color="white">
-          <v-toolbar-title>Your Bookings</v-toolbar-title>
-        </v-toolbar>
-        <v-data-table
-          :headers="headers"
-          :items="bookings"
-          class="elevation-1"
-          item-key="name"
-        >
-          <template v-slot:items="props">
-            <td>{{ props.item.name }}</td>
-            <td class="text-xs-left">{{ props.item.type }}</td>
-            <td class="text-xs-left">{{ props.item.time }}</td>
-            <td class="text-xs-left">{{ props.item.room }}</td>
-            <td class="text-xs-left">{{ props.item.advisor }}</td>
-            <td class="text-xs-left">{{ props.item.type2 }}</td>
-            <td class="text-xs-left">{{ props.item.icon }}</td>
-            <td>
-              <v-checkbox v-model="props.selected" />
-            </td>
-            <td>
-              <i class="fa fa-angle-down" style="font-size:20px"></i>
-            </td>
-          </template>
-        </v-data-table>
-      </section>
-
-      <section class="container">
-        <v-toolbar flat color="white">
-          <v-toolbar-title>Past Bookings</v-toolbar-title>
-        </v-toolbar>
-        <v-data-table
-          :headers="headers"
-          :items="bookings"
-          class="elevation-1"
-          item-key="name"
-        >
-          <template v-slot:items="props">
-            <td>{{ props.item.name }}</td>
-            <td class="text-xs-left">{{ props.item.type }}</td>
-            <td class="text-xs-left">{{ props.item.time }}</td>
-            <td class="text-xs-left">{{ props.item.room }}</td>
-            <td class="text-xs-left">{{ props.item.advisor }}</td>
-            <td class="text-xs-left">{{ props.item.type2 }}</td>
-            <td class="text-xs-left">{{ props.item.icon }}</td>
-            <td>
-              <v-checkbox v-model="props.selected" />
-            </td>
-            <td>
-              <i class="fa fa-angle-down" style="font-size:20px"></i>
-            </td>
-          </template>
-        </v-data-table>
-      </section>
+      <h1>
+        My Bookings
+        <v-spacer />
+        <WorkshopRegisterDialog />
+      </h1>
+      <ViewBookings />
     </section>
   </div>
 </template>
@@ -70,9 +15,10 @@
 import { authModule, TYPE } from '~/store/auth/methods'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import WorkshopRegisterDialog from '../../components/WorkshopRegisterDialog/WorkshopRegisterDialog'
+import ViewBookings from '../../components/ViewBookings/ViewBookings'
 
 export default {
-  components: { WorkshopRegisterDialog },
+  components: { WorkshopRegisterDialog, ViewBookings },
   middleware: studentAuthenticated,
   layout: 'student',
   data() {
@@ -140,7 +86,6 @@ ul {
   margin: 10px;
 }
 h1 {
-  margin: 30px;
   display: flex;
   align-items: center;
 }

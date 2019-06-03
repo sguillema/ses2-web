@@ -24,7 +24,7 @@ export default {
       links: [
         { to: '/student/dashboard', title: 'Home' },
         { to: '/student/bookings', title: 'My Bookings' },
-        { to: '/student/messages', title: 'Messages' },
+        { to: '/student/myinformation', title: 'My Information' },
         { to: '/student/faq', title: 'FAQ' }
       ],
       routePath: this.$router.currentRoute.path

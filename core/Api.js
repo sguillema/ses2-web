@@ -1,5 +1,5 @@
+import querystring from 'querystring'
 import axios from 'axios'
-
 // useful: https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
 const ENDPOINT = 'http://localhost:4000'
 
@@ -7,7 +7,6 @@ const AUTHORIZATION = 'Authorization'
 const AUTH_ENDPOINT = `${ENDPOINT}/users/auth`
 const STUDENT_ENDPOINT = `${ENDPOINT}/students`
 const BOOKINGS_ENDPOINT = `${ENDPOINT}/bookings`
-const CONSULTATIONS_ENDPOINT = `${ENDPOINT}/consultations`
 const SKILLSETS_ENDPOINT = `${ENDPOINT}/skillsets`
 const PROGRAMS_ENDPOINT = `${ENDPOINT}/programs`
 const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
@@ -68,10 +67,18 @@ export class StudentApi {
 
 //Booking API
 export class BookingApi {
-  static async getBookings(studentId) {
+  static async getBooking(bookingId) {
     return await axios({
       method: 'get',
-      url: `${BOOKINGS_ENDPOINT}?studentId=${studentId}`
+      url: `${BOOKINGS_ENDPOINT}/${bookingId}`
+    })
+  }
+
+  static async getBookings(params) {
+    const query = querystring.stringify(params)
+    return await axios({
+      method: 'get',
+      url: `${BOOKINGS_ENDPOINT}?${query}`
     })
   }
 
@@ -105,16 +112,6 @@ export class SessionApi {
     return await axios({
       method: 'get',
       url: `${SESSIONS_ENDPOINT}/${sessionId}`
-    })
-  }
-}
-
-//Booking API
-export class ConsultationApi {
-  static async getConsultations(studentId) {
-    return await axios({
-      method: 'get',
-      url: `${CONSULTATIONS_ENDPOINT}?studentId=${studentId}`
     })
   }
 }
