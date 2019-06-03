@@ -407,7 +407,7 @@
               <td>
                 <router-link
                   v-if="getArrayLength(props.item.bookings) > 0"
-                  :to="`/students/${props.item.bookings[0].studentId}`"
+                  :to="`/admin/students/${props.item.bookings[0].studentId}`"
                 >
                   {{ props.item.bookings[0].studentId }}
                 </router-link>
@@ -419,7 +419,7 @@
                 {{ getArrayLength(props.item.waitlist) }}
               </td>
               <td>
-                <router-link :to="`/consultations/${props.item.id}`">
+                <router-link :to="`/admin/consultations/${props.item.id}`">
                   View
                 </router-link>
               </td>
