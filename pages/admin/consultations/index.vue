@@ -68,11 +68,12 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="clearSessionCreation">
+                      <v-btn text depressed @click="clearSessionCreation">
                         Cancel
                       </v-btn>
                       <v-btn
                         color="primary"
+                        depressed
                         @click="
                           validateStep(2, 'SessionCreateStepForm1')
                           dialogCreateSession.width = 1200
@@ -128,9 +129,12 @@
                           </v-list-tile>
                         </v-list>
                         <div class="step-buttons">
-                          <v-btn text @click="stepCount = 1">Back</v-btn>
+                          <v-btn text depressed @click="stepCount = 1">
+                            Back
+                          </v-btn>
                           <v-btn
                             color="primary"
+                            depressed
                             :disabled="
                               getArrayLength(
                                 dialogCreateSession.stepTwo.selectedTimes
@@ -337,6 +341,7 @@
                     <div class="step-buttons">
                       <v-btn
                         text
+                        depressed
                         @click="
                           stepCount = 2
                           dialogCreateSession.width = 1200
@@ -344,7 +349,11 @@
                       >
                         Back
                       </v-btn>
-                      <v-btn color="primary" @click="submitConsultationSession">
+                      <v-btn
+                        color="primary"
+                        depressed
+                        @click="submitConsultationSession"
+                      >
                         Create Consultation Session
                       </v-btn>
                     </div>
@@ -370,6 +379,8 @@
             class="calendar"
             :min="calendarMinDate"
             :max="calendarMaxDate"
+            :events="calendarEvents"
+            event-color="primary"
             header-color="black"
             color="red"
             width="290"
@@ -393,7 +404,7 @@
           <v-data-table
             class="table-wrapper"
             :headers="headers"
-            :items="sessions"
+            :items="filteredSessions"
             :search="search"
             :loading="sessionsLoading"
           >
@@ -411,7 +422,11 @@
                 >
                   {{ props.item.bookings[0].studentId }}
                 </router-link>
-                <a v-else @click="activateBookingDialog(props.item)">
+                <a
+                  v-else
+                  class="book-link"
+                  @click="activateBookingDialog(props.item)"
+                >
                   Book now
                 </a>
               </td>
@@ -487,11 +502,12 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="clearConsultationBooking">
+                      <v-btn text depressed @click="clearConsultationBooking">
                         Cancel
                       </v-btn>
                       <v-btn
                         color="primary"
+                        depressed
                         @click="validateStep(2, 'BookingStepForm1')"
                       >
                         Continue
@@ -582,9 +598,10 @@
                       </v-form>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="stepCount = 1">Back</v-btn>
+                      <v-btn text depressed @click="stepCount = 1">Back</v-btn>
                       <v-btn
                         color="primary"
+                        depressed
                         @click="validateStep(3, 'BookingStepForm2')"
                       >
                         Continue
@@ -625,8 +642,12 @@
                       </div>
                     </div>
                     <div class="step-buttons">
-                      <v-btn text @click="stepCount = 2">Back</v-btn>
-                      <v-btn color="primary" @click="submitConsultationBooking">
+                      <v-btn text depressed @click="stepCount = 2">Back</v-btn>
+                      <v-btn
+                        color="primary"
+                        depressed
+                        @click="submitConsultationBooking"
+                      >
                         Submit Consultation Booking
                       </v-btn>
                     </div>
@@ -663,7 +684,6 @@ export default {
       calendarToggle: false,
       today: moment().format('YYYY-MM-DD'),
       value: moment().format('YYYY-MM'),
-      selected: moment().format('YYYY-MM-DD'),
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Date', value: 'date' }, // TODO custom sort
@@ -729,6 +749,37 @@ export default {
     }
   },
   computed: {
+    filteredSessions() {
+      let filteredSessions = this.sessions.filter(session => {
+        switch (this.calendarType) {
+          case 'date': {
+            if (moment(session.startTime).isSame(this.value, 'day')) {
+              return true
+            } else {
+              return false
+            }
+          }
+          case 'month': {
+            if (moment(session.startTime).isSame(this.value, 'month')) {
+              return true
+            } else {
+              return false
+            }
+          }
+        }
+      })
+      return filteredSessions
+    },
+    calendarEvents() {
+      let calendarEvents = []
+      this.sessions.forEach(session => {
+        let date = this.getFormattedDate(session.startTime)
+        if (!calendarEvents.includes(date)) {
+          calendarEvents.push(date)
+        }
+      })
+      return calendarEvents
+    },
     calendarMinDate() {
       return moment(this.today)
         .subtract(1, 'year')
@@ -1065,6 +1116,9 @@ export default {
         a {
           color: $color-secondary;
           padding-right: 25px;
+          &.book-link {
+            color: $color-primary;
+          }
           &:hover {
             text-decoration: underline;
           }
