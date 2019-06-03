@@ -80,12 +80,37 @@
             :items="workshops"
             :search="search"
             hide-actions
+            :expand="expand"
           >
             <template v-slot:items="props">
-              <td>{{ props.item.title }}</td>
-              <td>{{ props.item.staffId }}</td>
-              <td>{{ getProgramTitle(props.item.programId) }}</td>
-              <td>{{ props.item.description }}</td>
+              <tr @click="props.expanded = !props.expanded">
+                <td>{{ props.item.title }}</td>
+                <td>{{ props.item.staffId }}</td>
+                <td>{{ getProgramTitle(props.item.programId) }}</td>
+                <td>{{ props.item.description }}</td>
+              </tr>
+            </template>
+            <template v-slot:expand="props">
+              <v-card flat>
+                <v-data-table
+                  :headers="sessionsHeaders"
+                  :items="props.item.sessions"
+                  hide-actions
+                >
+                  <template v-slot:items="props">
+                    <tr>
+                      <!-- <td>{{ props.item.room }}</td> -->
+                      <td style="padding:22px">
+                        {{ getMomentDateFormat(props.item.startTime) }}
+                      </td>
+                      <td>{{ getMomentTimeFormat(props.item.startTime) }}</td>
+                      <td>{{ getMomentTimeFormat(props.item.endTime) }}</td>
+                      <td>{{ props.item.room }}</td>
+                    </tr>
+                  </template>
+                </v-data-table>
+                <!-- <v-btn depressed class="primary">Add Session</v-btn> -->
+              </v-card>
             </template>
           </v-data-table>
         </Sheet>
@@ -95,6 +120,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 import {
   workshopsModule,
@@ -120,15 +146,24 @@ export default {
       search: '',
       headers: [
         { text: 'Title', value: 'title' },
-        { text: 'Program', value: 'programId' },
         { text: 'Staff ID', value: 'skillsetId' },
+        { text: 'Program', value: 'programId' },
         { text: 'Description', value: 'description', sortable: false }
       ],
+      sessionsHeaders: [
+        { text: 'Date', value: 'date', sortable: false },
+        { text: 'Start Time', value: 'startTime', sortable: false },
+        { text: 'Finish Time', value: 'finishTime', sortable: false },
+        { text: 'Room', value: 'room', sortable: false }
+      ],
+      sessions: [],
       workshopsLoading: false,
       dialog: false,
       programs: [],
       staff: [],
-      newWorkshop: emptyWorkshopForm()
+      newWorkshop: emptyWorkshopForm(),
+      expand: false,
+      workshopId: 1
     }
   },
   computed: {
@@ -169,6 +204,12 @@ export default {
       await this.$store.dispatch(workshopsModule(CREATE), this.newWorkshop)
       this.dialog = false
       this.newWorkshop = emptyWorkshopForm()
+    },
+    getMomentDateFormat(date) {
+      return moment(date).format('DD/MM/YYYY')
+    },
+    getMomentTimeFormat(date) {
+      return moment(date).format('h:mm a')
     }
   }
 }

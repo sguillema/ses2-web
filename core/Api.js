@@ -255,6 +255,14 @@ export class WorkshopApi {
       url: `${WORKSHOPS_ENDPOINT}/${id}`
     })
   }
+
+  static async getSessionsByWorkshopId(id) {
+    return await axios({
+      method: 'get',
+      url: `${SESSIONS_ENDPOINT}/?workshopId=${id}`,
+      data: id
+    })
+  }
 }
 
 //Advisors API
