@@ -25,10 +25,10 @@
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.email }}</td>
             <td>
-              <router-link :to="`/advisors/${props.item.id}`">
+              <router-link :to="`/admin/advisors/${props.item.id}`">
                 Edit
               </router-link>
-              <router-link :to="`/advisors/${props.item.id}/history`">
+              <router-link :to="`/admin/advisors/${props.item.id}/history`">
                 View History
               </router-link>
             </td>

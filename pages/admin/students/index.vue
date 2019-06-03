@@ -19,10 +19,10 @@
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.email }}</td>
             <td>
-              <router-link :to="`students/${props.item.id}`">
+              <router-link :to="`/admin/students/${props.item.id}`">
                 Edit
               </router-link>
-              <router-link :to="`students/${props.item.id}/history`">
+              <router-link :to="`/admin/students/${props.item.id}/history`">
                 View History
               </router-link>
             </td>

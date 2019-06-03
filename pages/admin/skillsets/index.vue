@@ -70,7 +70,7 @@
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
-              <router-link :to="`/skillsets/${props.item.id}`">
+              <router-link :to="`/admin/skillsets/${props.item.id}`">
                 <v-icon small @click="editItem(props.item)">
                   edit
                 </v-icon>
