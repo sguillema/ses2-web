@@ -111,10 +111,42 @@
           </v-stepper-content>
           <v-stepper-content :step="3" class="step-container">
             <div class="step-content">
-              Test
+              <v-data-table
+                id="program-table"
+                :headers="programsHeaders"
+                :items="programs"
+                item-key="id"
+                hide-actions
+                class="program-table"
+              >
+                <template v-slot:items="props">
+                  <tr
+                    class="program-row"
+                    :class="[
+                      selectedProgramIndex === props.index && 'selected'
+                    ]"
+                    @click="setSelectedProgram(props.index)"
+                  >
+                    <td>{{ props.item.title }}</td>
+                    <td>
+                      {{ selectedSkillset && selectedSkillset.title }}
+                    </td>
+                    <td>{{ getTargetGroup(props.item.targetGroup) }}</td>
+                    <td>{{ props.item.description }}</td>
+                  </tr>
+                </template>
+              </v-data-table>
             </div>
             <div class="step-buttons">
-              <v-btn color="primary" depressed @click="validateStep">
+              <v-btn
+                color="primary"
+                depressed
+                :disabled="
+                  selectedProgramIndex === null ||
+                    selectedProgramIndex >= programs.length
+                "
+                @click="validateStep"
+              >
                 Next
               </v-btn>
             </div>
@@ -143,18 +175,32 @@ import {
   SKILLSETS
 } from '../../store/skillsets/methods'
 
+import { programsModule, PROGRAMS } from '../../store/programs/methods'
+
 export default {
   components: { SelectableList },
   data() {
     return {
       stepCount: 1,
       dialog: false,
-      selectedSkillsetIndex: null
+      selectedSkillsetIndex: null,
+      selectedSkillset: null,
+      selectedProgramIndex: null,
+      selectedProgram: null,
+      programsHeaders: [
+        { text: 'Programs', value: 'program', sortable: false },
+        { text: 'Skillset', value: 'skillset', sortable: false },
+        { text: 'Target Group', value: 'targetGroup', sortable: false },
+        { text: 'Description', value: 'description', sortable: false }
+      ]
     }
   },
   computed: {
     skillsets() {
       return this.$store.getters[skillsetsModule(SKILLSETS)]
+    },
+    programs() {
+      return this.$store.getters[programsModule(PROGRAMS)]
     }
   },
   methods: {
@@ -166,6 +212,9 @@ export default {
         case 2:
           this.validateSkillsetsStep()
           break
+        case 3:
+          this.validateProgramStep()
+          break
         default:
           break
       }
@@ -175,6 +224,16 @@ export default {
       this.nextStep()
     },
     validateSkillsetsStep() {
+      this.selectedSkillset = this.skillsets[this.selectedSkillsetIndex]
+      const skillsetId = this.selectedSkillset.id
+      this.$store.dispatch(programsModule(REQUEST), { skillsetId })
+      this.nextStep()
+    },
+    validateProgramStep() {
+      this.selectedProgram = this.programs[this.selectedProgramIndex]
+      const programId = this.selectedProgram.id
+      console.log(this.selectedProgram)
+      // this.$store.dispatch(programsModule(REQUEST), { programId })
       this.nextStep()
     },
     nextStep() {
@@ -183,13 +242,25 @@ export default {
     setSelectedSkillet(index) {
       this.selectedSkillsetIndex = index
     },
+    setSelectedProgram(index) {
+      this.selectedProgramIndex = index
+    },
     cancelRegistration() {
       this.dialog = false
       this.stepCount = 1
       this.selectedSkillsetIndex = null
+      this.selectedSkillset = null
+      this.selectedProgramIndex = null
+      this.selectedProgram = null
     },
     bookWorkshop() {
       console.log('hey you made it')
+    },
+    getTargetGroup(targetGroup) {
+      if (targetGroup === 'all') return 'All Students'
+      if (targetGroup === 'undergraduate') return 'Undergraduate Students'
+      if (targetGroup === 'postgraduate') return 'Postgraduate Students'
+      return targetGroup
     }
   }
 }
@@ -210,24 +281,10 @@ export default {
   h3 {
     margin-bottom: 10px;
   }
-  .skillset-list {
+  .program-table {
     margin-bottom: 10px;
-    .skillset-item {
-      background-color: #ececec;
-      margin: 2px;
-      .skillset-list-content {
-        color: $color-darkgray;
-        font-size: $font-regular;
-        font-weight: $fontweight-bold;
-      }
-      &.selected {
-        background-color: $color-primary;
-        .skillset-list-content {
-          color: $color-white;
-        }
-      }
-    }
   }
+
   .step-buttons {
     display: flex;
   }
@@ -237,16 +294,40 @@ export default {
   margin: 0;
 }
 
-.header {
-  // background: $color-primary;
-  // color: $color-white;
-}
-
 .actions {
   padding: 0px 0 20px;
 }
 
 .center-button {
   margin: 0 auto;
+}
+</style>
+
+<style lang="scss">
+@import '~assets/styles/variables';
+#program-table {
+  .v-table {
+    background-color: $color-divider;
+  }
+  tr {
+    border-bottom: none;
+  }
+  .program-row {
+    cursor: pointer;
+    background-color: $color-gray;
+    margin: 2px;
+    color: $color-darkgray;
+    font-size: $font-regular;
+    td {
+      font-weight: $fontweight-bold;
+    }
+    &.selected {
+      background-color: $color-primary;
+      color: $color-white;
+      &:hover {
+        background-color: $color-primary;
+      }
+    }
+  }
 }
 </style>
