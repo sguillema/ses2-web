@@ -14,9 +14,18 @@
             <v-dialog v-model="dialog" width="800">
               <template v-slot:activator="{ on }">
                 <v-btn depressed color="primary" dark class="mb-2" v-on="on">
-                  Create Skillset
+                  Add
                 </v-btn>
+                <v-btn depressed color="#0F4BEB" dark class="mb-2" v-on="on">
+                  Archive
+                </v-btn>
+                <router-link :to="`/admin/skillsets/archiveSkillset`">
+                  <v-btn depressed color="#E0E0E0">
+                    View Archive
+                  </v-btn>
+                </router-link>
               </template>
+
               <v-card class="dialog">
                 <v-card-title class="dialog-title-card">
                   <h1 class="dialog-title">Create Skillset Information</h1>
@@ -42,16 +51,12 @@
                       outline
                     />
                   </div>
+                  <v-card-actions class="step-buttons">
+                    <v-btn depressed color="primary" @click="addSkillset()">
+                      Create Skillset
+                    </v-btn>
+                  </v-card-actions>
                 </v-form>
-                <v-card-text>
-                  <v-form>
-                    <div class="step-buttons">
-                      <v-btn depressed color="primary" @click="addSkillset">
-                        Create Skillset
-                      </v-btn>
-                    </div>
-                  </v-form>
-                </v-card-text>
               </v-card>
             </v-dialog>
           </v-toolbar>
@@ -164,15 +169,16 @@ export default {
     async addSkillset() {
       let { title, shortTitle } = this.addNew
       if (title !== '' && shortTitle !== '') {
-        await this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
+        this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
         this.addNew.title = ''
         this.addNew.shortTitle = ''
         this.dialog = false
-      } else {
-        console.log(
-          'You must enter a title and short title in order to add a skillset'
-        )
       }
+      // else {
+      //   console.log(
+      //     'You must enter a title and short title in order to add a skillset'
+      //   )
+      // }
     },
     async archiveSkillset(skill) {
       console.log(skill.id)
