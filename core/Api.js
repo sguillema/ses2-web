@@ -13,6 +13,7 @@ const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
 const STAFF_ENDPOINT = `${ENDPOINT}/staff`
 const SESSIONS_ENDPOINT = `${ENDPOINT}/sessions`
 const BOOKINGDETAIL_ENDPOINT = `${ENDPOINT}/booking-details`
+const ROOMS_ENDPOINT = `${ENDPOINT}/rooms`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -296,6 +297,38 @@ export class AdvisorApi {
     return await axios({
       method: 'delete',
       url: `${STAFF_ENDPOINT}/${id}`
+    })
+  }
+}
+
+//Rooms API
+export class RoomApi {
+  static async getRooms() {
+    return await axios({
+      method: 'get',
+      url: ROOMS_ENDPOINT
+    })
+  }
+
+  static async getRoom(id) {
+    return await axios({
+      method: 'get',
+      url: `${ROOMS_ENDPOINT}/${id}`
+    })
+  }
+
+  static async updateRoom(room) {
+    return await axios({
+      method: 'patch',
+      url: `${ROOMS_ENDPOINT}/${room.id}`
+    })
+  }
+
+  static async createRoom(room) {
+    return await axios({
+      method: 'post',
+      url: `${ROOMS_ENDPOINT}`,
+      data: room
     })
   }
 }
