@@ -87,7 +87,7 @@ export const actions = {
         const response = await SkillsetApi.updateSkillset(skillsetId, {
           active: false
         })
-        dispatch(REQUEST)
+        dispatch(REQUEST, { hideArchived: true })
         resolve(response)
       } catch (e) {
         commit(ERROR)
@@ -100,7 +100,7 @@ export const actions = {
       commit(ADD_SKILLSET)
       try {
         const response = await SkillsetApi.addSkillset(skillset)
-        dispatch(REQUEST)
+        dispatch(REQUEST, { hideArchived: true })
         resolve(response)
       } catch (e) {
         commit(ERROR)
