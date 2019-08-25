@@ -21,7 +21,17 @@
           </div>
           <div v-else>
             <h3>{{ selectedEmail.title }}</h3>
-            <section class="editor"></section>
+            <Editor v-model="selectedEmail.template" />
+            <div class="options">
+              <div class="last-action-date">
+                Last updated on {{ selectedEmail.lastUpdatedDate }}
+              </div>
+              <div class="buttons">
+                <v-btn depressed>Update</v-btn>
+                <v-btn depressed>Send Test Email</v-btn>
+                <v-btn class="primary" depressed>Publish</v-btn>
+              </div>
+            </div>
             <hr />
             <section class="instructions">
               <h4>Instructions</h4>
@@ -56,15 +66,25 @@
 // import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
 import Sheet from '~/components/Sheet/Sheet'
+import Editor from '~/components/Editor/Editor'
 
 export default {
-  components: { Sheet },
+  components: { Sheet, Editor },
   middleware: adminAuthenticated,
   layout: 'admin',
   data() {
     return {
       selectedEmail: '',
-      emails: [{ id: 1, title: '1 - Confirmation of booking (to student)' }]
+      emails: [
+        {
+          id: 1,
+          title: '1 - Confirmation of booking (to student)',
+          template: `<h1>Hello World!</h1><p>It is I, mr Email Template man</p>`,
+          lastUpdatedDate: new Date().toISOString(),
+          publishedTemplate: '<h1>Hello i am real live email >:)</h1>',
+          lastPublishedDate: new Date().toISOString()
+        }
+      ]
     }
   },
 
@@ -101,7 +121,18 @@ h3 {
 }
 
 .editor {
-  height: 500px;
+  margin: 20px 0 10px;
+}
+
+.options {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  .last-action-date {
+    margin-right: 10px;
+  }
 }
 
 .instructions {
