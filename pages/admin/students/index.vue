@@ -8,6 +8,7 @@
           append-icon="search"
           placeholder="Search"
         />
+
         <v-data-table
           class="table-wrapper"
           :headers="headers"
@@ -65,6 +66,7 @@
 
 <script>
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
+
 import {
   studentsModule,
   REQUEST,
