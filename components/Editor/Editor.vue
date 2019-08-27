@@ -86,9 +86,18 @@
         >
           Heading 3
         </button>
+
+        <v-select
+          v-model="selected"
+          :items="fieldData"
+          dense
+          height="24"
+          placeholder="Insert field..."
+          class="field-select"
+          @change="e => onFieldSelect(e, commands.code_field)"
+        />
       </div>
     </editor-menu-bar>
-
     <editor-content class="editor__content" :editor="editor" />
   </div>
 </template>
@@ -109,18 +118,24 @@ import {
   Link,
   Strike,
   Underline,
-  History
+  History,
+  Code
 } from 'tiptap-extensions'
+import { CodeField } from './extensions'
 
 export default {
   components: {
     EditorContent,
     EditorMenuBar
   },
-  props: { value: { type: String, required: true } },
+  props: {
+    value: { type: String, required: true },
+    fieldData: { type: Array, default: () => [] }
+  },
   data() {
     return {
-      editor: null
+      editor: null,
+      selected: null
     }
   },
   watch: {
@@ -147,14 +162,27 @@ export default {
         new Italic(),
         new Strike(),
         new Underline(),
-        new History()
+        new History(),
+        new CodeField(),
+        new Code()
       ],
       content: this.value,
-      onUpdate: ({ getHTML }) => this.$emit('input', getHTML())
+      onUpdate: ({ getHTML }) => this.$emit('input', getHTML()),
+      onTransaction: ({ state }) => {
+        const { anchor, from, to } = state.selection
+        // console.log(anchor, from, to)
+        // console.log(state.selection)
+      }
     })
   },
   beforeDestroy() {
     this.editor.destroy()
+  },
+  methods: {
+    onFieldSelect(e, command) {
+      command({ content: e })
+      this.$nextTick(() => (this.selected = null))
+    }
   }
 }
 </script>
@@ -178,6 +206,7 @@ $button-height: 24px;
     padding: 0px 6px;
     &.is-active {
       background-color: darken($color-divider, 20%);
+      border-radius: 5px;
     }
     &:hover {
       .theme--light.v-icon {
@@ -197,5 +226,14 @@ $button-height: 24px;
 }
 .editor__content .ProseMirror {
   outline: none;
+}
+.field-select.v-input {
+  font-size: 14px;
+}
+.field-select.v-text-field {
+  padding-top: 4px;
+}
+.field-select .v-input__slot {
+  margin-bottom: 0;
 }
 </style>

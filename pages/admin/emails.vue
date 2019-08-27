@@ -21,7 +21,10 @@
           </div>
           <div v-else>
             <h3>{{ selectedEmail.title }}</h3>
-            <Editor v-model="selectedEmail.template" />
+            <Editor
+              v-model="selectedEmail.template"
+              :field-data="placeholders.consultation"
+            />
             <div class="options">
               <div class="last-action-date">
                 Last updated on {{ selectedEmail.lastUpdatedDate }}
@@ -84,7 +87,21 @@ export default {
           publishedTemplate: '<h1>Hello i am real live email >:)</h1>',
           lastPublishedDate: new Date().toISOString()
         }
-      ]
+      ],
+      placeholders: {
+        consultation: [
+          { text: 'Student Given Name', value: 'student_firstName' },
+          { text: 'Student Surname', value: 'student_lastName' },
+          { text: 'Date and Time', value: 'booking_dateTime' },
+          { text: 'Date', value: 'booking_date' },
+          { text: 'Start Time', value: 'booking_startTime' },
+          { text: 'End Time', value: 'booking_endTime' },
+          { text: 'Room', value: 'booking_room' },
+          { text: 'Advisor Given Name', value: 'advisor_firstName' },
+          { text: 'Advisor Surname', value: 'advisor_lastName' },
+          { text: 'Advisor Email', value: 'advisor_email' }
+        ]
+      }
     }
   },
 
