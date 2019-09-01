@@ -88,6 +88,11 @@
               </td>
               <td>{{ setTargetGroup(props.item.targetGroup) }}</td>
               <td>{{ props.item.description }}</td>
+              <td>
+                <router-link :to="`/admin/programs/`">
+                  Edit
+                </router-link>
+              </td>
             </template>
           </v-data-table>
         </Sheet>
