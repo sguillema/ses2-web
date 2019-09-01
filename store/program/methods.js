@@ -16,7 +16,7 @@ export const SUCCESS = 'success'
 export const ERROR = 'error'
 
 // methods
-export const ADD_BACKGROUND = 'addBackground'
-export const REMOVE_BACKGROUND = 'removeBackground'
+// export const ADD_BACKGROUND = 'addBackground'
+// export const REMOVE_BACKGROUND = 'removeBackground'
 
 export const programModule = method => storeModule(MODULE, method)

@@ -4,10 +4,7 @@ import {
   SUCCESS,
   ERROR,
   REQUEST,
-  SUBMIT,
-  ADD_BACKGROUND,
-  EDUCATIONAL_BACKGROUND,
-  REMOVE_BACKGROUND
+  SUBMIT //,
 } from './methods'
 
 const emptyState = () => ({
@@ -29,10 +26,6 @@ export const getters = {
 
 export const mutations = {
   updateField,
-
-  [EDUCATIONAL_BACKGROUND]: (state, value) => {
-    state.program.educationalBackground = value
-  },
 
   [REQUEST]: state => {
     state = emptyState()
@@ -75,17 +68,5 @@ export const actions = {
         commit(ERROR)
         reject(e)
       }
-    }),
-
-  [ADD_BACKGROUND]: ({ commit, state }, { education }) => {
-    const shallowCopy = [...state.program.educationalBackground] //student
-    shallowCopy.push(education)
-    commit(EDUCATIONAL_BACKGROUND, shallowCopy)
-  },
-
-  [REMOVE_BACKGROUND]: ({ commit, state }, { education }) => {
-    const shallowCopy = [...state.program.educationalBackground] //student
-    shallowCopy.splice(shallowCopy.indexOf(education), 1)
-    commit(EDUCATIONAL_BACKGROUND, shallowCopy)
-  }
+    }) //,
 }
