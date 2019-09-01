@@ -8,7 +8,7 @@ import {
 } from './methods'
 
 const emptyState = () => ({
-  status: '',
+  //status: '',
   program: {
     id: '',
     skillsetId: '',

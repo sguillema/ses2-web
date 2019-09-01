@@ -89,7 +89,7 @@
               <td>{{ setTargetGroup(props.item.targetGroup) }}</td>
               <td>{{ props.item.description }}</td>
               <td>
-                <router-link :to="`/admin/programs/`">
+                <router-link :to="`/admin/programs/${props.item.id}`">
                   Edit
                 </router-link>
               </td>
