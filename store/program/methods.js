@@ -6,7 +6,7 @@ const MODULE = 'program'
 export const ID = 'program.id'
 export const SKILLSETID = 'program.skillsetId'
 export const TITLE = 'program.title'
-export const TRAGETGROUP= 'program.targetGroup'
+export const TRAGETGROUP = 'program.targetGroup'
 export const DESCRIPTION = 'program.description'
 
 // fetching states
@@ -19,4 +19,4 @@ export const ERROR = 'error'
 export const ADD_BACKGROUND = 'addBackground'
 export const REMOVE_BACKGROUND = 'removeBackground'
 
-export const studentModule = method => storeModule(MODULE, method)
+export const programModule = method => storeModule(MODULE, method)

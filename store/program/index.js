@@ -17,10 +17,9 @@ const emptyState = () => ({
     skillsetId: '',
     title: '',
     targetGroup: '',
-    description: '',
+    description: ''
   }
 })
-
 
 export const state = () => emptyState()
 
@@ -32,16 +31,16 @@ export const mutations = {
   updateField,
 
   [EDUCATIONAL_BACKGROUND]: (state, value) => {
-    state.student.educationalBackground = value
+    state.program.educationalBackground = value
   },
 
   [REQUEST]: state => {
     state = emptyState()
     state.status = 'loading'
   },
-  [SUCCESS]: (state, student) => {
+  [SUCCESS]: (state, program) => {
     state.status = 'success'
-    state.student = student
+    state.program = program
   },
   [ERROR]: state => {
     state.status = 'error'
@@ -56,7 +55,7 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
-        const response = await ProgramApi.getStudent(id)
+        const response = await ProgramApi.getProgram(id)
         commit(SUCCESS, response.data)
         resolve(response)
       } catch (e) {
@@ -69,8 +68,8 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(SUBMIT)
       try {
-        const response = await ProgramApi.updateStudent(state.student)
-        commit(SUCCESS, state.student)
+        const response = await ProgramApi.updateProgram(state.program)
+        commit(SUCCESS, state.program)
         resolve(response)
       } catch (e) {
         commit(ERROR)
