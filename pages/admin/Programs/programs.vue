@@ -102,14 +102,14 @@
 </template>
 
 <script>
-import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import {
   programsModule,
   REQUEST,
   PROGRAMS,
   CREATE
-} from '../../store/programs/methods'
-import Sheet from '../../components/Sheet/Sheet'
+} from '../../../store/programs/methods'
+import Sheet from '../../../components/Sheet/Sheet'
 
 export default {
   components: { Sheet },

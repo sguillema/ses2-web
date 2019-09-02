@@ -1,8 +1,8 @@
 <template>
   <div id="page-program">
     <section class="container">
-      <h1>Student {{ this.$route.params.id }}</h1>
-      <UpdateStudentForm :id="this.$route.params.id" />
+      <h1>Program {{ this.$route.params.id }}</h1>
+      <UpdateProgramForm :id="this.$route.params.id" />
     </section>
   </div>
 </template>

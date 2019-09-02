@@ -5,11 +5,7 @@
       <div class="fields">
         <v-layout row wrap>
           <v-flex sm12 md4>
-            <v-text-field
-              v-model="TITLE"
-              label="Title"
-              outline
-            />
+            <v-text-field v-model="TITLE" label="Title" outline />
           </v-flex>
           <v-flex sm12 md4>
             <v-text-field v-model="DESCRIPTION" label="Description" outline />
@@ -18,10 +14,8 @@
             <v-text-field v-model="SKILLSETID" label="Skill-set" outline />
           </v-flex>
         </v-layout>
-    
       </div>
     </Sheet>
-    
     <v-btn color="primary" depressed @click="handleSubmit">Save</v-btn>
     <v-alert :value="!!message" outline type="success">
       {{ message }}
@@ -37,7 +31,6 @@ import { createHelpers } from 'vuex-map-fields'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import EdBackgroundDialog from '../../components/EdBackgroundDialog/EdBackgroundDialog'
 import Sheet from '../Sheet/Sheet'
-import DatePicker from '~/components/DatePicker/DatePicker'
 import countries from '../../core/data/countries'
 import languages from '../../core/data/languages'
 import genders from '../../core/data/genders'
@@ -45,6 +38,7 @@ import degreeTypes from '../../core/data/degreeTypes'
 import residencyStatuses from '../../core/data/residencyStatuses'
 
 import {
+  programModule,
   ID,
   SKILLSETID,
   TITLE,
@@ -54,10 +48,12 @@ import {
   SUBMIT
 } from '../../store/program/methods'
 
-
+const { mapFields } = createHelpers({
+  getterType: programModule('getField'),
+  mutationType: programModule('updateField')
+})
 
 export default {
-  components: { DatePicker, EdBackgroundDialog, Sheet },
   props: {
     id: { type: String, required: true }
   },
@@ -87,7 +83,7 @@ export default {
   },
 
   async mounted() {
-    await this.$store.dispatch(studentModule(REQUEST), { id: this.id })
+    await this.$store.dispatch(programModule(REQUEST), { id: this.id })
   },
 
   methods: {
@@ -95,14 +91,12 @@ export default {
       try {
         this.message = ''
         this.errorMessage = ''
-        await this.$store.dispatch(studentModule(SUBMIT))
+        await this.$store.dispatch(programModule(SUBMIT))
         this.message = 'Student Successfully Updated'
       } catch (e) {
         this.errorMessage = e.toString()
       }
-    },
-
-
+    }
   }
 }
 </script>
