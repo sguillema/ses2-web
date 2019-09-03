@@ -46,6 +46,9 @@ export const mutations = {
 
   [CLEAR]: state => {
     state = emptyState()
+  },
+  [DELETE]: state => {
+    state.status = 'deleted'
   }
 }
 

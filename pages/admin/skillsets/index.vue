@@ -175,7 +175,7 @@ export default {
     async addSkillset() {
       let { title, shortTitle } = this.addNew
       if (title !== '' && shortTitle !== '') {
-        this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
+        await this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
         this.addNew.title = ''
         this.addNew.shortTitle = ''
         this.dialog = false
