@@ -118,4 +118,3 @@
   position: center;
 }
 </style>
-}
