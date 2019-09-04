@@ -104,9 +104,7 @@
                           }}
                           Session(s)
                         </h4>
-                        <h4 v-else>
-                          No Selected Sessions!
-                        </h4>
+                        <h4 v-else>No Selected Sessions!</h4>
                         <v-list class="selected-times">
                           <v-list-tile
                             v-for="session in dialogCreateSession.stepTwo
@@ -163,9 +161,7 @@
                               color="accent"
                               @click="createSessionCalendarChangePeriod(-1)"
                             >
-                              <v-icon class="icon">
-                                arrow_back_ios
-                              </v-icon>
+                              <v-icon class="icon">arrow_back_ios</v-icon>
                             </v-btn>
                             <span class="calendar-selection">
                               {{ createSessionCalendarNavigationDate }}
@@ -176,9 +172,7 @@
                               color="accent"
                               @click="createSessionCalendarChangePeriod(1)"
                             >
-                              <v-icon class="icon">
-                                arrow_forward_ios
-                              </v-icon>
+                              <v-icon class="icon">arrow_forward_ios</v-icon>
                             </v-btn>
                           </div>
                           <div class="calendar-type">
@@ -302,7 +296,7 @@
                             v-model="computedBookingDialogDate"
                             label="End Date"
                             disabled
-                          /> -->
+                          />-->
                         </div>
                         <div class="column-right">
                           <h4>
@@ -430,9 +424,7 @@
                   Book now
                 </a>
               </td>
-              <td>
-                {{ getArrayLength(props.item.waitlist) }}
-              </td>
+              <td>{{ getArrayLength(props.item.waitlist) }}</td>
               <td>
                 <router-link :to="`/admin/consultations/${props.item.id}`">
                   View
