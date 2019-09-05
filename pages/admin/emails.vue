@@ -70,6 +70,7 @@
 import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
 import Sheet from '~/components/Sheet/Sheet'
 import Editor from '~/components/Editor/Editor'
+import { REQUEST, EMAILS, emailsModule } from '../../store/emails/methods'
 
 export default {
   components: { Sheet, Editor },
@@ -78,16 +79,6 @@ export default {
   data() {
     return {
       selectedEmail: '',
-      emails: [
-        {
-          id: 1,
-          title: '1 - Confirmation of booking (to student)',
-          template: `<h1>Hello World!</h1><p>It is I, mr Email Template man</p>`,
-          lastUpdatedDate: new Date().toISOString(),
-          publishedTemplate: '<h1>Hello i am real live email >:)</h1>',
-          lastPublishedDate: new Date().toISOString()
-        }
-      ],
       placeholders: {
         consultation: [
           { text: 'Student Given Name', value: 'student_firstName' },
@@ -104,7 +95,16 @@ export default {
       }
     }
   },
-
+  computed: {
+    emails: {
+      get() {
+        return this.$store.getters[emailsModule(EMAILS)]
+      }
+    }
+  },
+  mounted() {
+    this.$store.dispatch(emailsModule(REQUEST))
+  },
   methods: {
     onClick() {
       //   this.$store.dispatch(authModule(LOGOUT))
