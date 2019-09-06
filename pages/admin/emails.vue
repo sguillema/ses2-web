@@ -70,6 +70,12 @@
           </div>
         </div>
       </Sheet>
+      <v-snackbar v-model="snackbar.active" top color="blue" timeout="3000">
+        {{ snackbar.text }}
+        <v-btn class="v-btn--flat b-btn--text" @click="snackbar.active = false">
+          Close
+        </v-btn>
+      </v-snackbar>
     </section>
   </div>
 </template>
@@ -94,6 +100,10 @@ export default {
   data() {
     return {
       selectedEmail: '',
+      snackbar: {
+        active: false,
+        text: ''
+      },
       placeholders: {
         consultation: [
           { text: 'Student Given Name', value: 'student_firstName' },
@@ -135,14 +145,22 @@ export default {
     selectEmail(email) {
       this.selectedEmail = { ...email }
     },
-    handleUpdateClick() {
-      this.$store.dispatch(emailsModule(UPDATE), this.selectedEmail)
+    async handleUpdateClick() {
+      await this.$store.dispatch(emailsModule(UPDATE), this.selectedEmail)
+      this.snackbar = {
+        active: true,
+        text: 'Template Updated Successfully!'
+      }
     },
-    handleTestEmailClick() {
+    async handleTestEmailClick() {
       console.log('test email')
     },
-    handlePublishClick() {
-      this.$store.dispatch(emailsModule(PUBLISH), this.selectedEmail.id)
+    async handlePublishClick() {
+      await this.$store.dispatch(emailsModule(PUBLISH), this.selectedEmail.id)
+      this.snackbar = {
+        active: true,
+        text: 'Published Successfully!'
+      }
     }
   }
 }

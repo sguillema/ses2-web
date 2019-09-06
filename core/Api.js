@@ -321,6 +321,7 @@ export class EmailsApi {
   }
 
   static async publishEmail(emailId) {
+    console.log(emailId)
     return await axios({
       method: 'post',
       url: `${EMAILS_ENDPOINT}/${emailId}/publish`

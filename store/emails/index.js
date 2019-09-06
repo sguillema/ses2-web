@@ -63,7 +63,7 @@ export const actions = {
       }
     }),
 
-  [PUBLISH]: ({ commit, dispatch }, { emailId }) =>
+  [PUBLISH]: ({ commit, dispatch }, emailId) =>
     new Promise(async (resolve, reject) => {
       commit(UPDATE)
       try {
