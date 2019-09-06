@@ -6,23 +6,30 @@ export default class CodeField extends Mark {
   }
 
   get schema() {
-    return {
-      excludes: '_',
-      parseDOM: [{ tag: 'code' }],
-      toDOM: () => ['code', 0]
-    }
+    return {}
   }
 
   commands({ type, schema }) {
     return attrs => async (state, dispatch) => {
       const { content } = attrs
       const { from, to } = state.selection
-      const node = type.create({})
       const transaction = state.tr
-      transaction.insertText(content, from, to)
-      const newTo = to + content.length
-      transaction.addMark(from, newTo, node)
-      transaction.insertText(' ', newTo, newTo + 1)
+      // const node = type.create({})
+      // transaction.insertText(content, from, to)
+      // const newTo = to + content.length
+      // transaction.addMark(from, newTo, node)
+      // transaction.insertText(' ', newTo, newTo + 1)
+      let updatedFrom = from
+      let updatedTo = to
+      const startBlock = '$['
+      const endBlock = ']'
+      transaction.insertText(startBlock, updatedFrom, updatedTo)
+      updatedFrom += startBlock.length
+      updatedTo += startBlock.length
+      transaction.insertText(content, updatedFrom, updatedTo)
+      updatedTo += content.length
+      updatedFrom = updatedTo
+      transaction.insertText(endBlock, updatedFrom, updatedTo)
       dispatch(transaction)
     }
   }
