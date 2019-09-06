@@ -135,13 +135,14 @@ export default {
   data() {
     return {
       editor: null,
-      selected: null
+      selected: null,
+      currentHTML: null
     }
   },
   watch: {
     value(val) {
       // so cursor doesn't jump to start on typing
-      if (this.editor && val !== this.value) {
+      if (this.editor && val !== this.currentHTML) {
         this.editor.setContent(val, true)
       }
     }
@@ -167,7 +168,11 @@ export default {
         new Code()
       ],
       content: this.value,
-      onUpdate: ({ getHTML }) => this.$emit('input', getHTML()),
+      onUpdate: ({ getHTML }) => {
+        const html = getHTML()
+        this.currentHTML = html
+        this.$emit('input', html)
+      },
       onTransaction: ({ state }) => {
         const { anchor, from, to } = state.selection
         // console.log(anchor, from, to)
