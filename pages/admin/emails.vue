@@ -4,13 +4,14 @@
       <Sheet class="sheet" header="Select Email Template">
         <div class="sheet-content">
           <v-select
-            v-model="selectedEmail"
             :items="emails"
             return-object
             item-text="title"
             item-value="id"
             label="Email"
             class="email-select"
+            :value="selectedEmail"
+            @change="selectEmail"
           />
         </div>
       </Sheet>
@@ -27,12 +28,20 @@
             />
             <div class="options">
               <div class="last-action-date">
-                Last updated on {{ selectedEmail.lastUpdatedDate }}
+                {{
+                  moment(selectedEmail.lastUpdatedDate).format(
+                    '[Last updated on] DD MMMM YYYY [at] h:mm:ss a'
+                  )
+                }}
               </div>
               <div class="buttons">
-                <v-btn depressed>Update</v-btn>
-                <v-btn depressed>Send Test Email</v-btn>
-                <v-btn class="primary" depressed>Publish</v-btn>
+                <v-btn depressed @click="handleUpdateClick">Update</v-btn>
+                <v-btn depressed @click="handleTestEmailClick">
+                  Send Test Email
+                </v-btn>
+                <v-btn class="primary" depressed @click="handlePublishClick">
+                  Publish
+                </v-btn>
               </div>
             </div>
             <hr />
@@ -66,11 +75,17 @@
 </template>
 
 <script>
-// import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
+import moment from 'moment'
 import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
 import Sheet from '~/components/Sheet/Sheet'
 import Editor from '~/components/Editor/Editor'
-import { REQUEST, EMAILS, emailsModule } from '../../store/emails/methods'
+import {
+  REQUEST,
+  EMAILS,
+  UPDATE,
+  PUBLISH,
+  emailsModule
+} from '../../store/emails/methods'
 
 export default {
   components: { Sheet, Editor },
@@ -106,8 +121,19 @@ export default {
     this.$store.dispatch(emailsModule(REQUEST))
   },
   methods: {
-    onClick() {
-      //   this.$store.dispatch(authModule(LOGOUT))
+    moment,
+    selectEmail(email) {
+      this.selectedEmail = { ...email }
+    },
+    handleUpdateClick() {
+      this.$store.dispatch(emailsModule(UPDATE), this.selectedEmail)
+      this.selectedEmail = null
+    },
+    handleTestEmailClick() {
+      console.log('test email')
+    },
+    handlePublishClick() {
+      this.$store.dispatch(emailsModule(PUBLISH), this.selectedEmail.id)
     }
   }
 }

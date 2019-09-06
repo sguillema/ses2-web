@@ -37,7 +37,6 @@ export const actions = {
       commit(REQUEST)
       try {
         const response = await EmailsApi.getEmails()
-        console.log(response)
         commit(SUCCESS, { emails: response.data })
         resolve(response)
       } catch (e) {
@@ -46,7 +45,7 @@ export const actions = {
       }
     }),
 
-  [UPDATE]: ({ commit, dispatch }, { email }) =>
+  [UPDATE]: ({ commit, dispatch }, email) =>
     new Promise(async (resolve, reject) => {
       commit(UPDATE)
       try {
