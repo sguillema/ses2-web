@@ -117,6 +117,16 @@ export default {
       }
     }
   },
+  watch: {
+    emails(val) {
+      if (this.selectedEmail) {
+        const email = this.emails.find(
+          email => email.id === this.selectedEmail.id
+        )
+        if (email !== undefined) this.selectEmail(email)
+      }
+    }
+  },
   mounted() {
     this.$store.dispatch(emailsModule(REQUEST))
   },
@@ -127,7 +137,6 @@ export default {
     },
     handleUpdateClick() {
       this.$store.dispatch(emailsModule(UPDATE), this.selectedEmail)
-      this.selectedEmail = null
     },
     handleTestEmailClick() {
       console.log('test email')
