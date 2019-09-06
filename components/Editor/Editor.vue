@@ -234,6 +234,7 @@ $button-height: 24px;
 }
 .field-select.v-input {
   font-size: 14px;
+  max-width: 300px;
 }
 .field-select.v-text-field {
   padding-top: 4px;

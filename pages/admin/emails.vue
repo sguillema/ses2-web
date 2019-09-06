@@ -24,7 +24,7 @@
             <h3>{{ selectedEmail.title }}</h3>
             <Editor
               v-model="selectedEmail.template"
-              :field-data="placeholders.consultation"
+              :field-data="placeholders"
             />
             <div class="options">
               <div class="last-action-date">
@@ -82,6 +82,7 @@
 
 <script>
 import moment from 'moment'
+import { EmailsApi } from '../../core/Api'
 import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
 import Sheet from '~/components/Sheet/Sheet'
 import Editor from '~/components/Editor/Editor'
@@ -104,20 +105,7 @@ export default {
         active: false,
         text: ''
       },
-      placeholders: {
-        consultation: [
-          { text: 'Student Given Name', value: 'student_firstName' },
-          { text: 'Student Surname', value: 'student_lastName' },
-          { text: 'Date and Time', value: 'booking_dateTime' },
-          { text: 'Date', value: 'booking_date' },
-          { text: 'Start Time', value: 'booking_startTime' },
-          { text: 'End Time', value: 'booking_endTime' },
-          { text: 'Room', value: 'booking_room' },
-          { text: 'Advisor Given Name', value: 'advisor_firstName' },
-          { text: 'Advisor Surname', value: 'advisor_lastName' },
-          { text: 'Advisor Email', value: 'advisor_email' }
-        ]
-      }
+      placeholders: null
     }
   },
   computed: {
@@ -142,7 +130,9 @@ export default {
   },
   methods: {
     moment,
-    selectEmail(email) {
+    async selectEmail(email) {
+      const res = await EmailsApi.getEmailPlaceholders(email.type)
+      this.placeholders = res.data
       this.selectedEmail = { ...email }
     },
     async handleUpdateClick() {

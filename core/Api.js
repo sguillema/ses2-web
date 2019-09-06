@@ -14,6 +14,7 @@ const STAFF_ENDPOINT = `${ENDPOINT}/staff`
 const SESSIONS_ENDPOINT = `${ENDPOINT}/sessions`
 const BOOKINGDETAIL_ENDPOINT = `${ENDPOINT}/booking-details`
 const EMAILS_ENDPOINT = `${ENDPOINT}/emails`
+const EMAILPLACEHOLDERS_ENDPOINT = `${ENDPOINT}/email-placeholders`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -321,10 +322,16 @@ export class EmailsApi {
   }
 
   static async publishEmail(emailId) {
-    console.log(emailId)
     return await axios({
       method: 'post',
       url: `${EMAILS_ENDPOINT}/${emailId}/publish`
+    })
+  }
+
+  static async getEmailPlaceholders(type) {
+    return await axios({
+      method: 'get',
+      url: `${EMAILPLACEHOLDERS_ENDPOINT}?type=${type}`
     })
   }
 }
