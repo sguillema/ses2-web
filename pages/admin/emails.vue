@@ -4,13 +4,14 @@
       <Sheet class="sheet" header="Select Email Template">
         <div class="sheet-content">
           <v-select
-            v-model="selectedEmail"
             :items="emails"
             return-object
             item-text="title"
             item-value="id"
             label="Email"
             class="email-select"
+            :value="selectedEmail"
+            @change="selectEmail"
           />
         </div>
       </Sheet>
@@ -21,7 +22,28 @@
           </div>
           <div v-else>
             <h3>{{ selectedEmail.title }}</h3>
-            <section class="editor"></section>
+            <Editor
+              v-model="selectedEmail.template"
+              :field-data="placeholders"
+            />
+            <div class="options">
+              <div class="last-action-date">
+                {{
+                  moment(selectedEmail.lastUpdatedDate).format(
+                    '[Last updated on] DD MMMM YYYY [at] h:mm:ss a'
+                  )
+                }}
+              </div>
+              <div class="buttons">
+                <v-btn depressed @click="handleUpdateClick">Update</v-btn>
+                <v-btn depressed @click="handleTestEmailClick">
+                  Send Test Email
+                </v-btn>
+                <v-btn class="primary" depressed @click="handlePublishClick">
+                  Publish
+                </v-btn>
+              </div>
+            </div>
             <hr />
             <section class="instructions">
               <h4>Instructions</h4>
@@ -48,29 +70,87 @@
           </div>
         </div>
       </Sheet>
+      <v-snackbar v-model="snackbar.active" top color="blue" timeout="3000">
+        {{ snackbar.text }}
+        <v-btn class="v-btn--flat b-btn--text" @click="snackbar.active = false">
+          Close
+        </v-btn>
+      </v-snackbar>
     </section>
   </div>
 </template>
 
 <script>
-// import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
+import moment from 'moment'
+import { EmailsApi } from '../../core/Api'
 import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
 import Sheet from '~/components/Sheet/Sheet'
+import Editor from '~/components/Editor/Editor'
+import {
+  REQUEST,
+  EMAILS,
+  UPDATE,
+  PUBLISH,
+  emailsModule
+} from '../../store/emails/methods'
 
 export default {
-  components: { Sheet },
+  components: { Sheet, Editor },
   middleware: adminAuthenticated,
   layout: 'admin',
   data() {
     return {
       selectedEmail: '',
-      emails: [{ id: 1, title: '1 - Confirmation of booking (to student)' }]
+      snackbar: {
+        active: false,
+        text: ''
+      },
+      placeholders: null
     }
   },
-
+  computed: {
+    emails: {
+      get() {
+        return this.$store.getters[emailsModule(EMAILS)]
+      }
+    }
+  },
+  watch: {
+    emails(val) {
+      if (this.selectedEmail) {
+        const email = this.emails.find(
+          email => email.id === this.selectedEmail.id
+        )
+        if (email !== undefined) this.selectEmail(email)
+      }
+    }
+  },
+  mounted() {
+    this.$store.dispatch(emailsModule(REQUEST))
+  },
   methods: {
-    onClick() {
-      //   this.$store.dispatch(authModule(LOGOUT))
+    moment,
+    async selectEmail(email) {
+      const res = await EmailsApi.getEmailPlaceholders(email.type)
+      this.placeholders = res.data
+      this.selectedEmail = { ...email }
+    },
+    async handleUpdateClick() {
+      await this.$store.dispatch(emailsModule(UPDATE), this.selectedEmail)
+      this.snackbar = {
+        active: true,
+        text: 'Template Updated Successfully!'
+      }
+    },
+    async handleTestEmailClick() {
+      console.log('test email')
+    },
+    async handlePublishClick() {
+      await this.$store.dispatch(emailsModule(PUBLISH), this.selectedEmail.id)
+      this.snackbar = {
+        active: true,
+        text: 'Published Successfully!'
+      }
     }
   }
 }
@@ -101,7 +181,18 @@ h3 {
 }
 
 .editor {
-  height: 500px;
+  margin: 20px 0 10px;
+}
+
+.options {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  .last-action-date {
+    margin-right: 10px;
+  }
 }
 
 .instructions {
