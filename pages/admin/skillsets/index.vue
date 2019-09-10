@@ -168,7 +168,10 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch(skillsetsModule(REQUEST), { hideArchived: true })
+    this.$store.dispatch(skillsetsModule(REQUEST), {
+      // hideArchived: true,
+      showArchive: true
+    })
   },
 
   methods: {

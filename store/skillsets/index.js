@@ -53,13 +53,14 @@ export const mutations = {
 }
 
 export const actions = {
-  [REQUEST]: ({ commit }, { hideArchived }) =>
+  [REQUEST]: ({ commit }, { hideArchived, showArchive }) =>
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
         let response
-        if (hideArchived) response = await SkillsetApi.getActiveSkillsets()
-        else response = await SkillsetApi.getSkillsets()
+        // if (hideArchived) response = await SkillsetApi.getActiveSkillsets()
+        // else response = await SkillsetApi.getSkillsets()
+        if (showArchive) response = await SkillsetApi.getArchiveSkillsets()
         commit(SUCCESS, { skillsets: response.data })
         resolve(response)
       } catch (e) {

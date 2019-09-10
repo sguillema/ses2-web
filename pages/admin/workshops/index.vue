@@ -100,6 +100,11 @@
                   <template v-slot:items="props">
                     <tr>
                       <!-- <td>{{ props.item.room }}</td> -->
+                      <td>
+                        <router-link :to="`/admin/workshops/${props.item.id}`">
+                          {{ props.item.id }}
+                        </router-link>
+                      </td>
                       <td style="padding:22px">
                         {{ getMomentDateFormat(props.item.startTime) }}
                       </td>
@@ -121,14 +126,14 @@
 
 <script>
 import moment from 'moment'
-import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import {
   workshopsModule,
   REQUEST,
   WORKSHOPS,
   CREATE
-} from '../../store/workshops/methods'
-import Sheet from '../../components/Sheet/Sheet'
+} from '../../../store/workshops/methods'
+import Sheet from '../../../components/Sheet/Sheet'
 
 const emptyWorkshopForm = () => ({
   title: '',
@@ -151,6 +156,7 @@ export default {
         { text: 'Description', value: 'description', sortable: false }
       ],
       sessionsHeaders: [
+        { text: 'ID', value: 'id', sortable: false },
         { text: 'Date', value: 'date', sortable: false },
         { text: 'Start Time', value: 'startTime', sortable: false },
         { text: 'Finish Time', value: 'finishTime', sortable: false },

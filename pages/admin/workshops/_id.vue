@@ -1,18 +1,15 @@
 <template>
-  <div id="page-skillset">
+  <div id="page-workshops">
     <section class="container">
-      <h1>Archived Skillsets</h1>
-      <ViewArchive />
+      <h1>Workshops {{ this.$route.params.id }}</h1>
     </section>
   </div>
 </template>
 
 <script>
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
-import ViewArchive from '../../../components/ViewArchive/ViewArchive'
-export default {
-  components: { ViewArchive },
 
+export default {
   middleware: adminAuthenticated,
   layout: 'admin'
 }
