@@ -1,7 +1,7 @@
 <template>
   <div id="page-skillset">
     <section class="container">
-      <h1>Archived Skillsets</h1>
+      <!-- <h1>Archived Skillsets</h1> -->
       <ViewArchive />
     </section>
   </div>

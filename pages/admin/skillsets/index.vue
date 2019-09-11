@@ -1,14 +1,14 @@
 <template>
   <div id="page-skillset">
     <section class="container">
-      <Sheet header="Skill-set">
+      <Sheet header="All Active Skill-sets" alt>
         <div>
           <v-toolbar flat color="white">
             <v-text-field
               v-model="search"
               class="input-spacing"
               append-icon="search"
-              placeholder="Search for Skillsets"
+              placeholder="Search for a skill-set"
             />
             <v-spacer />
             <v-dialog v-model="dialog" width="800">
@@ -147,7 +147,7 @@ export default {
       search: '',
       headers: [
         { text: 'ID', value: 'id' },
-        { text: 'Title', value: 'title' },
+        { text: 'Skill-set', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
         { text: 'No. of Workshops', value: 'noWorkshops' },
         { text: 'Actions', value: 'actions' }

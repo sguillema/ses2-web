@@ -26,7 +26,6 @@
 <script>
 import _ from 'lodash'
 import moment from 'moment'
-import { authModule, TYPE, USER } from '~/store/auth/methods'
 import {
   BookingApi,
   SessionApi,
@@ -35,6 +34,7 @@ import {
 } from '../../core/Api'
 
 import Sheet from '../../components/Sheet/Sheet'
+import { authModule, TYPE, USER } from '~/store/auth/methods'
 
 export default {
   components: { Sheet },

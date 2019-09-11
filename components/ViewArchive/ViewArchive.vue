@@ -1,8 +1,61 @@
 <template>
   <div id="page-viewarchive">
     <section class="container">
-      <Sheet header="Skill-set">
-        <h1>Need to add the archived skillsets in this page</h1>
+      <Sheet header="All Archived Skill-sets" alt>
+        <v-text-field
+          v-model="search"
+          class="input-spacing"
+          append-icon="search"
+          placeholder="Search sessions"
+        />
+        <v-data-table
+          :headers="headers"
+          :items="skillsets"
+          :search="search"
+          item-key="name"
+          class="elevation-1"
+        >
+          <template v-slot:items="props">
+            <td>{{ props.item.id }}</td>
+            <td>{{ props.item.title }}</td>
+            <td>{{ props.item.shortTitle }}</td>
+            <td>{{ props.item.noWorkshop }}</td>
+            <td>
+              <router-link :to="`/admin/skillsets/${props.item.id}`">
+                <v-icon small @click="editItem(props.item)">
+                  edit
+                </v-icon>
+              </router-link>
+              <v-dialog v-model="dialog2" max-width="290">
+                <template v-slot:activator="{ on }">
+                  <v-icon small v-on="on">
+                    delete
+                  </v-icon>
+                </template>
+                <v-card>
+                  <v-card-title class="headline">
+                    Are you sure you want to archive this skillset?
+                  </v-card-title>
+                  <v-card-text>
+                    Agree will archive the skillset.
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="#ff0000" flat @click="dialog2 = false">
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                      color="#ff0000"
+                      flat
+                      @click="archiveSkillset(props.item)"
+                    >
+                      Agree
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </td>
+          </template>
+        </v-data-table>
       </Sheet>
     </section>
   </div>
@@ -12,13 +65,30 @@
 import Sheet from '../../components/Sheet/Sheet'
 export default {
   components: { Sheet },
-  layout: 'admin'
+  layout: 'admin',
+  data() {
+    return {
+      search: '',
+      headers: [
+        { text: 'No.', value: 'no' },
+        { text: 'ID', value: 'id' },
+        { text: 'Skill-set', value: 'title' },
+        { text: 'Short Title', value: 'shortTitle' },
+        { text: '#', value: 'noWorkshops' },
+        { text: 'Actions', value: 'actions' }
+      ]
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 #page-consultations {
+  .header {
+    color: black;
+  }
+
   .container {
     display: flex;
     .column-left {

@@ -83,9 +83,6 @@
 <script>
 import moment from 'moment'
 import { EmailsApi } from '../../core/Api'
-import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
-import Sheet from '~/components/Sheet/Sheet'
-import Editor from '~/components/Editor/Editor'
 import {
   REQUEST,
   EMAILS,
@@ -93,6 +90,9 @@ import {
   PUBLISH,
   emailsModule
 } from '../../store/emails/methods'
+import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
+import Sheet from '~/components/Sheet/Sheet'
+import Editor from '~/components/Editor/Editor'
 
 export default {
   components: { Sheet, Editor },
