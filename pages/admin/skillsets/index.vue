@@ -16,6 +16,10 @@
                 <v-btn depressed color="primary" dark class="mb-2" v-on="on">
                   Add
                 </v-btn>
+                <v-btn depressed color="primary" dark class="mb-2" v-on="on">
+                  Test
+                </v-btn>
+
                 <v-btn
                   depressed
                   color="#0F4BEB"
