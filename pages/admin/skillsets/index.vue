@@ -16,19 +16,7 @@
                 <v-btn depressed color="primary" dark class="mb-2" v-on="on">
                   Add
                 </v-btn>
-                <v-btn depressed color="primary" dark class="mb-2" v-on="on">
-                  Test
-                </v-btn>
 
-                <v-btn
-                  depressed
-                  color="#0F4BEB"
-                  dark
-                  class="mb-2 archive-btn"
-                  v-on="on"
-                >
-                  Archive
-                </v-btn>
                 <router-link :to="`/admin/skillsets/archiveSkillset`">
                   <v-btn depressed color="#E0E0E0">
                     View Archive
@@ -80,16 +68,19 @@
           class="elevation-1"
         >
           <template v-slot:items="props">
+            <td>{{ props.item.no }}</td>
+
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
-              <router-link :to="`/admin/skillsets/${props.item.id}`">
-                <v-icon small @click="editItem(props.item)">
-                  edit
-                </v-icon>
-              </router-link>
+              <!-- <router-link :to="`/admin/skillsets/${props.item.id}`"> -->
+              <v-icon small>
+                archive
+              </v-icon>
+              <!-- </router-link> -->
+
               <v-dialog v-model="dialog2" max-width="290">
                 <template v-slot:activator="{ on }">
                   <v-icon small v-on="on">
@@ -117,6 +108,11 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+              <router-link :to="`/admin/skillsets/${props.item.id}`">
+                <v-icon small @click="editItem(props.item)">
+                  edit
+                </v-icon>
+              </router-link>
             </td>
           </template>
         </v-data-table>
@@ -146,10 +142,12 @@ export default {
     return {
       search: '',
       headers: [
+        { text: 'No.', value: 'no' },
+
         { text: 'ID', value: 'id' },
         { text: 'Skill-set', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
-        { text: 'No. of Workshops', value: 'noWorkshops' },
+        { text: '#', value: 'noWorkshops' },
         { text: 'Actions', value: 'actions' }
       ],
       addNew: {
@@ -173,7 +171,7 @@ export default {
 
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
-      // hideArchived: true,
+      hideArchived: false,
       showArchive: true
     })
   },
@@ -186,12 +184,11 @@ export default {
         this.addNew.title = ''
         this.addNew.shortTitle = ''
         this.dialog = false
+      } else {
+        console.log(
+          'You must enter a title and short title in order to add a skillset'
+        )
       }
-      // else {
-      //   console.log(
-      //     'You must enter a title and short title in order to add a skillset'
-      //   )
-      // }
     },
     async archiveSkillset(skill) {
       console.log(skill.id)
