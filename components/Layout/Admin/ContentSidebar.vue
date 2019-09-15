@@ -33,7 +33,7 @@ export default {
     return {
       listSections: [
         {
-          title: 'Bookings',
+          title: 'Make a Booking',
           links: [
             {
               title: 'Consultations',
@@ -42,11 +42,11 @@ export default {
             },
             { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
             { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
-            { title: 'Skill Sets', icon: 'receipt', to: '/admin/skillsets' }
+            { title: 'Skill Sets', icon: 'extension', to: '/admin/skillsets' }
           ]
         },
         {
-          title: 'Users',
+          title: 'Find a User',
           links: [
             {
               title: 'Advisors',
@@ -56,18 +56,18 @@ export default {
             { title: 'Students', icon: 'recent_actors', to: '/admin/students' },
             {
               title: 'Waiting Lists',
-              icon: 'list',
+              icon: 'timeline',
               to: '/admin/waitinglists'
             }
           ]
         },
         {
-          title: 'Miscellaneous',
+          title: 'Others',
           links: [
             { title: 'Emails', icon: 'email', to: '/admin/emails' },
             { title: 'Reports', icon: 'book', to: '/admin/reports' },
             { title: 'Rooms', icon: 'home', to: '/admin/rooms' },
-            { title: 'Messages', icon: 'chat', to: '/admin/messages' }
+            { title: 'Annoucements', icon: 'chat', to: '/admin/messages' }
           ]
         }
       ]
