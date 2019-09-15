@@ -69,14 +69,14 @@
         >
           <template v-slot:items="props">
             <td>{{ props.item.no }}</td>
-
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.shortTitle }}</td>
-            <td>{{ props.item.noWorkshop }}</td>
+            <td>{{ props.item.noOfWorkshops }}</td>
             <td>
+              <!-- <router-link :to="`/admin/skillsets/archiveSkillset`"> -->
               <!-- <router-link :to="`/admin/skillsets/${props.item.id}`"> -->
-              <v-icon small>
+              <v-icon small @click="archiveSkillset(props.item)">
                 archive
               </v-icon>
               <!-- </router-link> -->
@@ -131,6 +131,7 @@ import {
   ADD_SKILLSET,
   REMOVE_SKILLSET,
   ARCHIVE
+  // NO_OF_ID
 } from '../../../store/skillsets/methods'
 import Sheet from '../../../components/Sheet/Sheet'
 
@@ -143,11 +144,10 @@ export default {
       search: '',
       headers: [
         { text: 'No.', value: 'no' },
-
         { text: 'ID', value: 'id' },
         { text: 'Skill-set', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
-        { text: '#', value: 'noWorkshops' },
+        { text: '#', value: 'noOfWorkshops' },
         { text: 'Actions', value: 'actions' }
       ],
       addNew: {
@@ -171,8 +171,8 @@ export default {
 
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
-      hideArchived: false,
-      showArchive: true
+      hideArchived: true
+      // showArchive: true
     })
   },
 
@@ -181,6 +181,7 @@ export default {
       let { title, shortTitle } = this.addNew
       if (title !== '' && shortTitle !== '') {
         await this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
+
         this.addNew.title = ''
         this.addNew.shortTitle = ''
         this.dialog = false

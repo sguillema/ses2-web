@@ -26,15 +26,39 @@
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
-              <v-icon small>
+              <v-dialog v-model="dialog2" max-width="290">
+                <template v-slot:activator="{ on }">
+                  <v-icon small v-on="on">
+                    delete
+                  </v-icon>
+                </template>
+                <v-card>
+                  <v-card-title class="headline">
+                    Are you sure you want to delete this skillset?
+                  </v-card-title>
+                  <v-card-text>
+                    Yes will delete the skillset.
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn color="#ff0000" flat @click="dialog2 = false">
+                      Cancel
+                    </v-btn>
+                    <v-btn color="#ff0000" flat @click="deleteSnackbar">
+                      Yes
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <!-- <v-icon small>
                 archive
-              </v-icon>
-              <v-icon small @click="deleteSnackbar">
+              </v-icon> -->
+              <v-icon small @click="deleteSkillset(skillsetId)">
                 delete
               </v-icon>
-              <v-icon small @click="editSnackbar">
+              <!-- @click="deleteItem(item)" -->
+              <!-- <v-icon small @click="editSnackbar">
                 edit
-              </v-icon>
+              </v-icon> -->
             </td>
           </template>
         </v-data-table>
@@ -99,7 +123,6 @@ export default {
 
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
-      hideArchived: false,
       showArchive: true
     })
   },
@@ -129,7 +152,13 @@ export default {
     },
     async editSnackbar() {
       this.snackbar.active = true
-      this.snackbar.message = 'Archived 9 items'
+      this.snackbar.message = 'Archived ## items'
+    },
+    async deleteSkillset(skillsetId) {
+      console.log('test test')
+      // if (skillsetId === null) return false
+      // await skillsetId.splice(skillsetId, 1)
+      // return true
     }
   }
 }

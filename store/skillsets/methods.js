@@ -16,6 +16,7 @@ export const SKILLSETS = 'skillsets'
 export const SKILLSET = 'skillset'
 export const TITLE = 'skillset.title'
 export const SHORT_TITLE = 'skillset.shortTitle'
+// export const NO_OF_ID = 'skillset.no'
 // export const NO_OF_WORKSHOPS = 'skillset.noOfWorkshops'
 
 // methods

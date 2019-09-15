@@ -58,8 +58,8 @@ export const actions = {
       commit(REQUEST)
       try {
         let response
-        // if (hideArchived) response = await SkillsetApi.getActiveSkillsets()
-        // else response = await SkillsetApi.getSkillsets()
+        if (hideArchived) response = await SkillsetApi.getActiveSkillsets()
+        else response = await SkillsetApi.getSkillsets()
         if (showArchive) response = await SkillsetApi.getArchiveSkillsets()
         commit(SUCCESS, { skillsets: response.data })
         resolve(response)
