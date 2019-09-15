@@ -2,16 +2,58 @@
   <div id="page-workshops">
     <section class="container">
       <h1>workshops {{ this.$route.params.id }}</h1>
+      <Sheet class="sheet" header="Workshop Session Details">
+        <label>Topic:</label>
+        <br />
+        <label>Target Audience:</label>
+        <br />
+        <label>Description:</label>
+        <br />
+        <label>Cut-off:</label>
+        <br />
+        <label>Maximum:</label>
+        <br />
+        <label>When:</label>
+        <br />
+        <label>Room:</label>
+        <br />
+        <v-btn color="primary" depressed:disabled>
+          Edit
+        </v-btn>
+        <v-btn text depressed @click="stepCount = 1">
+          Cancel
+        </v-btn>
+      </Sheet>
+      <Sheet class="sheet" header="Student list">
+        <v-container>
+          <v-row justify="center">
+            <h2>Add Student to the Attendence List</h2>
+          </v-row>
+        </v-container>
+        <br />
+        <v-text-field
+          v-model="studentList"
+          label="Enter Student ID/Name"
+          type="number"
+          outline
+        />
+
+        <v-btn color="primary" depressed:disabled>
+          Add
+        </v-btn>
+      </Sheet>
     </section>
   </div>
 </template>
 
 <script>
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
+import Sheet from '../../../components/Sheet/Sheet'
 
 export default {
   middleware: adminAuthenticated,
-  layout: 'admin'
+  layout: 'admin',
+  components: { Sheet }
 }
 </script>
 

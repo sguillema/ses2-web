@@ -255,6 +255,7 @@ export default {
         @include input-spacing();
         max-width: 300px;
       }
+
       .section-header {
         display: flex;
         justify-content: space-between;
