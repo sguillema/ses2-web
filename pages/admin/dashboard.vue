@@ -4,7 +4,7 @@
     <section class="container">
       <div class="column-left">
         <p>
-          hidari
+          hidari これはひだりです。
         </p>
         <div class="section-heading">
           Your Shortcuts
@@ -15,18 +15,53 @@
         <v-btn class="header-button" depressed v-on="on">
           Create Booking
         </v-btn>
-        <!---<button type="button" class="v-btn v-btn-- di" --->
-      </div>
-      <div class="section-heading">
-        Your Shortcuts
-      </div>
-      <div class="section-heading">
-        Your Shortcuts
+        <div class="section-heading">
+          Your Statistics
+          <i aria-hidden="true" class="v-icon material icons theme--light">
+            add
+          </i>
+        </div>
+        <div class="box">
+          <p>5</p>
+          <p>No. Sessions this week</p>
+          <div class="sub-box">
+            <div class="column">
+              <p>Consultations</p>
+              <p>Workshops</p>
+            </div>
+          </div>
+        </div>
+        <div class="section-heading">
+          Annoucements
+          <i aria-hidden="true" class="v-icon material icons theme--light">
+            add
+          </i>
+        </div>
+        <div class="box">
+          <p>
+            Occaecat labore excepteur magna exercitation sint ipsum nisi ex eu
+            eiusmod nostrud.
+          </p>
+        </div>
       </div>
       <div class="column-right">
-        <p>
-          migi
-        </p>
+        migiこれはみぎです。
+        <div class="section-heading">
+          Your HELPS News
+          <i aria-hidden="true" class="v-icon material icons theme--light">
+            add
+          </i>
+        </div>
+        <div class="advertisement">
+          hello
+        </div>
+        <div class="section-heading">
+          Your Schedule
+          <i aria-hidden="true" class="v-icon material icons theme--light">
+            add
+          </i>
+        </div>
+        <!--- Below this is the Consultation Form -->
       </div>
     </section>
     <v-btn @click="onClick">Logout</v-btn>
@@ -69,25 +104,54 @@ export default {
     //height: inherit;
     display: flex;
     > .column-left {
-      min-width: 290px;
+      min-width: 80px;
       width: 290px;
-      margin-right: 27px;
+      margin-right: 25px;
       //justify-content: center;
       //align-items: center;
       .header-button {
         width: 100%;
-        //This is for a solid colour
-        //background: $color-red2;
         background-image: linear-gradient($color-red2, $color-darkred);
         color: $color-white;
-        //Standard button height is going to be 80px
         height: 80px;
         font-size: $font-subheading;
+        margin-bottom: 25px;
+      }
+      .box {
+        background: #ffffff;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 20px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        margin-bottom: 25px;
+      }
+      .sub-box {
+        display: flex;
+        background-image: linear-gradient($color-red2, $color-darkred);
+        color: #ffffff;
+        font-size: 12px;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 20px;
+        padding-bottom: 5px;
+        .column {
+          display: flex;
+        }
       }
     }
     > .column-right {
       width: 100%;
       max-width: 970px;
+      .advertisement {
+        background: white;
+        background-image: linear-gradient($color-blue, $color-darkblue);
+        height: 180px;
+        color: white;
+        padding: 20px;
+        margin-bottom: 25px;
+      }
     }
     .section-heading {
       font-size: 18px;
