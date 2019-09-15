@@ -38,9 +38,28 @@
           outline
         />
 
-        <v-btn color="primary" depressed:disabled>
+        <v-btn block color="primary" depressed:disabled>
           Add
         </v-btn>
+        <v-data-table
+          :headers="headers"
+          :items="workshopsItems"
+          :search="search"
+          item-key="name"
+          class="elevation-1"
+        >
+          <template v-slot:items="props">
+            <td>{{ props.item.id }}</td>
+            <td>{{ props.item.title }}</td>
+            <td>{{ props.item.shortTitle }}</td>
+            <td>{{ props.item.noWorkshop }}</td>
+            <td>
+              <v-btn block color="primary">
+                delete
+              </v-btn>
+            </td>
+          </template>
+        </v-data-table>
       </Sheet>
     </section>
   </div>
@@ -53,7 +72,20 @@ import Sheet from '../../../components/Sheet/Sheet'
 export default {
   middleware: adminAuthenticated,
   layout: 'admin',
-  components: { Sheet }
+  components: { Sheet },
+
+  data() {
+    return {
+      search: '',
+      headers: [
+        { text: 'Attendence', value: 'id' },
+        { text: 'Title', value: 'title' },
+        { text: 'Short Title', value: 'shortTitle' },
+        { text: 'No. of Workshops', value: 'noWorkshops' },
+        { text: 'Actions', value: 'actions' }
+      ]
+    }
+  }
 }
 </script>
 
