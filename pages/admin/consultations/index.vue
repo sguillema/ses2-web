@@ -667,6 +667,7 @@
 import moment from 'moment'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
+import ViewConsultation from '../../../components/ViewConsultation/ViewConsultation'
 
 export default {
   components: { Sheet },
