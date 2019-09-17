@@ -44,16 +44,63 @@
     <section class="container">
       <div class="column-left">
         <div>
-          <Sheet header="Student List" />
+          <Sheet header="Student List">
+            <h3 align="center">Add student to the Attendance list</h3>
+            <div class="section-header">
+              <v-text-field
+                v-model="search"
+                class="input-spacing"
+                label="Student ID/Name"
+                placeholder="Enter Student ID/Name"
+                outline
+              />
+              <div align="center">
+                <v-btn depressed large disabled>Add</v-btn>
+              </div>
+              <div>
+                <v-data-table
+                  class="table-wrapper"
+                  :headers="headers"
+                  :items="advisors"
+                  :search="search"
+                >
+                  <template v-slot:items="props">
+                    <td>{{ props.item.id }}</td>
+                    <td>{{ props.item.name }}</td>
+                    <td>{{ props.item.email }}</td>
+                    <td>
+                      <router-link :to="`/admin/advisors/${props.item.id}`">
+                        Edit
+                      </router-link>
+                      <router-link
+                        :to="`/admin/advisors/${props.item.id}/history`"
+                      >
+                        View History
+                      </router-link>
+                    </td>
+                  </template>
+                </v-data-table>
+              </div>
+            </div>
+          </Sheet>
         </div>
       </div>
+    </section>
+
+    <section class="container">
+      <v-sheet class="column-left" elevation="3">
+        <div>
+          <Sheet header="Consultation Attachments">
+            <label>Topic:</label>
+          </Sheet>
+        </div>
+      </v-sheet>
     </section>
   </div>
 </template>
 
 <script>
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
-
 import Sheet from '../../../components/Sheet/Sheet'
 
 export default {
@@ -62,6 +109,26 @@ export default {
   layout: 'admin',
   data() {
     return {
+      search: '',
+      headers: [
+        { text: 'Attendance', value: 'attendance' },
+        { text: 'StudentID', value: 'id' },
+        { text: 'Booked Date', value: 'bookeddate' },
+        { text: 'Last Name', value: 'lastname' },
+        { text: 'First Name', value: 'firstname' },
+        { text: '', value: '' }
+      ],
+      addNew: {
+        attendance: '',
+        id: '',
+        bookeddate: '',
+        lastname: '',
+        firstname: '',
+        rules: {
+          required: value => !!value || 'Required.'
+        }
+      },
+
       session: {}
     }
   },
@@ -126,11 +193,15 @@ export default {
         justify-content: space-between;
       }
       .table-wrapper {
-        a {
-          color: $color-secondary;
-          padding-right: 25px;
-          &:hover {
-            text-decoration: underline;
+        border-bottom: 2px solid $color-divider;
+        margin-bottom: 12px;
+
+        thead {
+          background: black;
+          tr {
+            &:first-child {
+              border-bottom: 2px solid $color-divider;
+            }
           }
         }
       }
