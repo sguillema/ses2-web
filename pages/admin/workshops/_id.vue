@@ -24,6 +24,8 @@
           Cancel
         </v-btn>
       </Sheet>
+    </section>
+    <section class="container">
       <Sheet class="sheet" header="Student list">
         <v-container>
           <v-row justify="center">
