@@ -9,9 +9,9 @@
         <div class="section-heading">
           Your Shortcuts
           <span class="right">
-            <i aria-hidden="true" class="v-icon material icons theme--light">
+            <v-icon @click="editItem(props.item)">
               add
-            </i>
+            </v-icon>
           </span>
         </div>
         <v-btn class="header-button" depressed v-on="on">
@@ -20,9 +20,9 @@
         <div class="section-heading">
           Your Statistics
           <span class="right">
-            <i aria-hidden="true" class="v-icon material icons theme--light">
+            <v-icon @click="editItem(props.item)">
               add
-            </i>
+            </v-icon>
           </span>
         </div>
         <div class="box">
@@ -52,9 +52,9 @@
         <div class="section-heading">
           Annoucements
           <span class="right">
-            <i aria-hidden="true" class="v-icon material icons theme--light">
+            <v-icon @click="editItem(props.item)">
               add
-            </i>
+            </v-icon>
           </span>
         </div>
         <div class="annoucement">
@@ -81,9 +81,70 @@
           <div class="header">
             Upcoming All Sessions
           </div>
-          helps me
+          <div>
+            <v-toolbar flat color="white">
+              <v-text-field
+                v-model="search"
+                class="input-spacing"
+                append-icon="search"
+                placeholder="Search for Sessions"
+              />
+            </v-toolbar>
+          </div>
+          <div>
+            <div class="calendar-toolbar">
+              <div class="left-toolbar">
+                <v-icon class="icon">
+                  view_headline
+                </v-icon>
+                <v-icon class="icon">
+                  view_week
+                </v-icon>
+              </div>
+              <div class="middle-toolbar">
+                <v-icon class="icon">
+                  arrow_back_ios
+                </v-icon>
+                <div class="date">
+                  {date}
+                </div>
+                <v-icon class="icon">
+                  arrow_forward_ios
+                </v-icon>
+              </div>
+              <div class="right-toolbar">
+                <div class="display">
+                  Monthly
+                </div>
+                <div class="display">
+                  Weekly
+                </div>
+                <div class="display">
+                  Daily
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <v-data-table
+              :headers="headers"
+              :items="sessions"
+              :search="search"
+              item-key="name"
+              class="elevation-1"
+            >
+              <template v-slot:items="props">
+                <td>{{ props.item.date }}</td>
+                <td>{{ props.item.id }}</td>
+                <td>{{ props.item.type }}</td>
+                <td>{{ props.item.time }}</td>
+                <td>{{ props.item.room }}</td>
+                <td>{{ props.item.topic }}</td>
+                <td>{{ props.item.status }}</td>
+              </template>
+            </v-data-table>
+          </div>
         </div>
-        <!--- Below this is the Consultation Form -->
       </div>
     </section>
     <v-btn @click="onClick">Logout</v-btn>
@@ -106,7 +167,17 @@ export default {
         // active: true, // change to false when done
         width: 800
         // width: 1200, // change to 800 when done
-      }
+      },
+      search: '',
+      headers: [
+        { text: 'Date', value: 'date' },
+        { text: 'ID', value: 'id' },
+        { text: 'Type', value: 'type' },
+        { text: 'Time', value: 'time' },
+        { text: 'Room', value: 'room' },
+        { text: 'topic', value: 'topic' },
+        { text: 'status', value: 'status' }
+      ]
     }
   },
 
@@ -225,30 +296,69 @@ export default {
         padding: 20px;
         margin-bottom: 25px;
       }
-    }
-    .section-heading {
-      font-size: 18px;
-      color: #707070;
-      font-weight: 500;
-      margin-left: 20px;
-    }
-    .form {
-      background: white;
-      padding: 20px;
-      height: 250px;
-      max-height: 500px;
-      margin-top: 25px;
-      .header {
-        background: black;
-        color: white;
-        padding-left: 20px;
-        padding-top: 5px;
-        margin-left: 5px;
-        margin-right: 5px;
-        height: 38px;
-        margin-top: -40px;
+      .section-heading {
         font-size: 18px;
+        color: #707070;
         font-weight: 500;
+        margin-left: 20px;
+      }
+      .form {
+        background: white;
+        padding: 20px;
+        height: auto;
+        max-height: 500px;
+        margin-top: 25px;
+        .header {
+          background: black;
+          color: white;
+          padding-left: 20px;
+          padding-top: 5px;
+          margin-left: 5px;
+          margin-right: 5px;
+          height: 38px;
+          margin-top: -40px;
+          font-size: 18px;
+          font-weight: 500;
+        }
+        .calendar-toolbar {
+          display: flex;
+          //background: red;
+          margin-bottom: 25px;
+          .icon {
+            padding: 5px;
+          }
+          .left-toolbar {
+            display: flex;
+            float: left;
+            width: auto;
+          }
+          .middle-toolbar {
+            display: flex;
+            margin: 0 auto;
+            width: auto;
+            .date {
+              display: inline-block;
+              padding: 5px;
+              width: 200px;
+              margin: 0 auto;
+              text-align: center;
+              font-size: 15px;
+              font-weight: medium;
+            }
+          }
+          .right-toolbar {
+            display: flex;
+            float: right;
+            width: auto;
+            .display {
+              display: inline-block;
+              width: 100px;
+              padding: 5px;
+              margin: 0 auto;
+              text-align: center;
+            }
+          }
+        }
       }
     }
   }
