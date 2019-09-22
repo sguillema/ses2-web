@@ -123,6 +123,8 @@ export default {
   data() {
     return {
       search: '',
+      advisorsInput: '',
+      roomsInput: '',
       headers: [
         { text: 'Attendance', value: 'attendance' },
         { text: 'StudentID', value: 'id' },
@@ -177,6 +179,195 @@ export default {
       })
       this.sessions = newSessions
       this.sessionsLoading = false
+    },
+    getArrayLength(array) {
+      return array.length
+    },
+    getSessionDate(date) {
+      return moment(date).format('DD/MM/YYYY')
+    },
+    getFormattedSessionTime(start) {
+      return moment(start).format('kk:mm')
+    },
+    getSessionPeriod(start, end) {
+      return `${this.getFormattedSessionTime(
+        start
+      )} - ${this.getFormattedSessionTime(end)}`
+    },
+    getSessionDuration(start, end) {
+      return moment(end).diff(moment(start), 'minutes')
+    },
+    getFormattedDate(date) {
+      return moment(date).format('YYYY-MM-DD')
+    },
+    validateStep(nextStep, form) {
+      if (!form || this.$refs[form].validate()) {
+        this.stepCount = nextStep
+      }
+    },
+    createSessionCalendarSelectTime({ date, time }) {
+      let timeFull = moment(`${date} ${time}`, 'YYYY-MM-DD kk:mm').format()
+      let timePadded = moment(timeFull)
+        .add(30, 'minutes')
+        .format()
+      let timeMin = moment(timeFull)
+        .startOf('hour')
+        .format()
+      let timeMax = moment(timeFull)
+        .endOf('hour')
+        .format()
+      let timeMid = moment(timeMin)
+        .add(30, 'minutes')
+        .format()
+      let session = {
+        startTime: '',
+        endTime: ''
+      }
+      if (moment(timePadded).isBefore(timeMax)) {
+        session.startTime = timeMin
+        session.endTime = moment(timeMin)
+          .add(30, 'minutes')
+          .format()
+      } else {
+        session.startTime = timeMid
+        session.endTime = moment(timeMid)
+          .add(30, 'minutes')
+          .format()
+      }
+
+      if (moment(session.startTime).isAfter(moment())) {
+        let alreadyExists = undefined // equiv to false for our case
+        this.dialogCreateSession.stepTwo.selectedTimes.find(
+          (selectedTime, i) => {
+            if (
+              selectedTime.startTime == session.startTime &&
+              selectedTime.endTime == session.endTime
+            ) {
+              alreadyExists = i
+            }
+          }
+        )
+        if (alreadyExists != undefined) {
+          this.dialogCreateSession.stepTwo.selectedTimes.splice(
+            alreadyExists,
+            1
+          )
+        } else if (alreadyExists == undefined) {
+          alreadyExists = this.sessions.find(storedSession => {
+            return (
+              storedSession.startTime == session.startTime ||
+              storedSession.endTime == session.endTime
+            )
+          })
+          if (alreadyExists == undefined) {
+            this.dialogCreateSession.stepTwo.selectedTimes.push(session)
+          }
+        }
+      } else {
+        this.snackbar.active = true
+        this.snackbar.message =
+          'You cannot create a session before the current time.'
+      }
+    },
+    createSessionCalendarChangePeriod(direction) {
+      let date = this.dialogCreateSession.stepTwo.valueDate
+      switch (direction) {
+        case -1: {
+          // Go back
+          if (this.dialogCreateSession.stepTwo.calendarType == 'week') {
+            this.dialogCreateSession.stepTwo.valueDate = moment(date)
+              .subtract(1, 'week')
+              .format('YYYY-MM-DD')
+          } else if (this.dialogCreateSession.stepTwo.calendarType == 'day') {
+            this.dialogCreateSession.stepTwo.valueDate = moment(date)
+              .subtract(1, 'day')
+              .format('YYYY-MM-DD')
+          }
+          break
+        }
+        case 1: {
+          // Go forward
+          if (this.dialogCreateSession.stepTwo.calendarType == 'week') {
+            this.dialogCreateSession.stepTwo.valueDate = moment(date)
+              .add(1, 'week')
+              .format('YYYY-MM-DD')
+          } else if (this.dialogCreateSession.stepTwo.calendarType == 'day') {
+            this.dialogCreateSession.stepTwo.valueDate = moment(date)
+              .add(1, 'day')
+              .format('YYYY-MM-DD')
+          }
+        }
+      }
+    },
+    clearSessionCreation() {
+      this.stepCount = 1
+      this.dialogCreateSession.active = false
+      this.dialogCreateSession.width = 800
+      this.dialogCreateSession.stepOne.advisor = ''
+      this.dialogCreateSession.stepTwo.valueDate = moment().format('YYYY-MM-DD')
+      this.dialogCreateSession.stepTwo.calendarType = 'week'
+      this.dialogCreateSession.stepTwo.selectedTimes = []
+    },
+    clearConsultationBooking() {
+      this.stepCount = 1
+      this.dialogBooking.active = false
+      this.dialogBooking.session = {}
+      this.dialogBooking.stepOne.studentIdName = ''
+      this.dialogBooking.stepTwo.topic = ''
+      this.dialogBooking.stepTwo.subjectName = ''
+      this.dialogBooking.stepTwo.assignmentType = ''
+      this.dialogBooking.stepTwo.help0 = false
+      this.dialogBooking.stepTwo.help1 = false
+      this.dialogBooking.stepTwo.help2 = false
+      this.dialogBooking.stepTwo.help3 = false
+      this.dialogBooking.stepTwo.help4 = false
+      this.dialogBooking.stepTwo.help5 = false
+      this.dialogBooking.stepTwo.helpOther = ''
+    },
+    async submitConsultationSession() {
+      this.dialogCreateSession.stepTwo.selectedTimes.forEach(async session => {
+        await this.$axios.$post('http://localhost:4000/sessions', {
+          workshopId: null,
+          startTime: session.startTime,
+          endTime: session.endTime,
+          size: '1',
+          room: 'CB11.00.201',
+          type: 'consultation',
+          createdBy: this.dialogCreateSession.stepOne.advisor,
+          cutoff: '24'
+        })
+      })
+      this.getSessions() // We just call for the new sessions
+      this.snackbar.active = true
+      this.snackbar.message = 'Session(s) Created!'
+      this.dialogCreateSession.active = false
+      this.clearSessionCreation()
+    },
+    async submitConsultationBooking() {
+      // Ideally this should be done in one call.
+      await this.$axios.$post('http://localhost:4000/bookings', {
+        studentId: this.dialogBooking.stepOne.studentIdName,
+        sessionId: this.dialogBooking.session.id,
+        bookingDetailsId: '123', // not real
+        booked: true,
+        attended: false
+      })
+      // No point in making this call. The id of the created booking is needed. It is not returned from the post. Should be done serverside.
+      // await this.$axios.$post('http://localhost:4000/booking-details', {
+      //   studentId: this.dialogBooking.stepOne.studentIdName,
+      //   sessionId: this.session.sessionId,
+      //   booked: true,
+      //   attended: false
+      // })
+      this.getSessions() // We just call for the new sessions
+      this.snackbar.active = true
+      this.snackbar.message = 'Booking Created!'
+      this.dialogBooking.active = false
+      this.clearConsultationBooking()
+    },
+    activateBookingDialog(session) {
+      this.dialogBooking.active = true
+      this.dialogBooking.session = session
     }
   }
 }
