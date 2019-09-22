@@ -26,7 +26,7 @@
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
-              <v-dialog v-model="dialog2" max-width="290">
+              <!-- <v-dialog v-model="dialog2" max-width="290">
                 <template v-slot:activator="{ on }">
                   <v-icon small v-on="on">
                     delete
@@ -34,10 +34,10 @@
                 </template>
                 <v-card>
                   <v-card-title class="headline">
-                    Are you sure you want to delete this skillset?
+                    Are you sure you want to unarchive this skillset?
                   </v-card-title>
                   <v-card-text>
-                    Yes will delete the skillset.
+                    Yes will activate the skillset.
                   </v-card-text>
                   <v-card-actions>
                     <v-btn color="#ff0000" flat @click="dialog2 = false">
@@ -48,11 +48,13 @@
                     </v-btn>
                   </v-card-actions>
                 </v-card>
-              </v-dialog>
+              </v-dialog> -->
+
               <!-- <v-icon small>
                 archive
               </v-icon> -->
-              <v-icon small @click="deleteSkillset(skillsetId)">
+              <!-- <v-icon small @click="deleteSkillset(skillsetId)"> -->
+              <v-icon small @click="unAarchiveSkillset()">
                 delete
               </v-icon>
               <!-- @click="deleteItem(item)" -->
@@ -128,24 +130,6 @@ export default {
   },
 
   methods: {
-    async addSkillset() {
-      let { title, shortTitle } = this.addNew
-      if (title !== '' && shortTitle !== '') {
-        await this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
-        this.addNew.title = ''
-        this.addNew.shortTitle = ''
-        this.dialog = false
-      } else {
-        console.log(
-          'You must enter a title and short title in order to add a skillset'
-        )
-      }
-    },
-    async archiveSkillset(skill) {
-      console.log(skill.id)
-      this.dialog2 = false
-      await this.$store.dispatch(skillsetsModule(ARCHIVE), skill.id)
-    },
     async deleteSnackbar() {
       this.snackbar.active = true
       this.snackbar.message = 'Deleted ## Skill-sets'
@@ -159,6 +143,10 @@ export default {
       // if (skillsetId === null) return false
       // await skillsetId.splice(skillsetId, 1)
       // return true
+    },
+    async unAarchiveSkillset(skillsetId) {
+      console.log('can call method')
+      // await this.$store.dispatch(skillsetsModule(ADD_SKILLSET))
     }
   }
 }

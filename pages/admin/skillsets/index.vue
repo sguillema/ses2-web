@@ -76,15 +76,15 @@
             <td>
               <!-- <router-link :to="`/admin/skillsets/archiveSkillset`"> -->
               <!-- <router-link :to="`/admin/skillsets/${props.item.id}`"> -->
-              <v-icon small @click="archiveSkillset(props.item)">
-                archive
-              </v-icon>
+              <!-- <v-icon small @click="archiveSkillset(props.item)">
+                add
+              </v-icon> -->
               <!-- </router-link> -->
 
               <v-dialog v-model="dialog2" max-width="290">
                 <template v-slot:activator="{ on }">
                   <v-icon small v-on="on">
-                    delete
+                    archive
                   </v-icon>
                 </template>
                 <v-card>
@@ -168,12 +168,17 @@ export default {
       }
     }
   },
+  asyncData() {
+    //GET request to get all skillsts
+  },
 
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
       hideArchived: true
-      // showArchive: true
+      // showArchive: truexxx
     })
+    //call programs programs?skillsetId= whatever
+    //call workshop for each program within the same skillsetworkshop?programId = whatever
   },
 
   methods: {
