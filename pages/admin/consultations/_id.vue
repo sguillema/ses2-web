@@ -4,17 +4,20 @@
       <v-sheet class="column-left" elevation="3">
         <div>
           <Sheet header="Consultation Session Details">
-            <label>Student ID:</label>
-            <div></div>
+            <v-text-field value="Test" label="Student ID" readonly />
+            <v-text-field value="Test" label="Date" readonly />
+            <v-text-field value="Test" label="Time" readonly />
+            <v-text-field value="Test" label="Room" readonly />
 
-            <label>Date:</label>
-            <div></div>
+            <div align="center">
+              <v-btn color="primary" dark class="mb-2" v-on="on">
+                Edit Session
+              </v-btn>
 
-            <label>Time:</label>
-            <div></div>
-
-            <label>Room:</label>
-            <div></div>
+              <v-btn class="ma-2" align="center" tile>
+                Cancel
+              </v-btn>
+            </div>
           </Sheet>
         </div>
       </v-sheet>
@@ -23,20 +26,25 @@
       <v-sheet class="column-left" elevation="3">
         <div>
           <Sheet header="Consultation Booking Details">
-            <label>Topic:</label>
-            <div></div>
+            <v-text-field value="Test" label="Topic" readonly />
 
-            <label>Subject Name:</label>
-            <div></div>
+            <v-text-field value="Test" label="Subject Name" readonly />
 
-            <label>Is a group assignment:</label>
-            <div></div>
+            <v-text-field
+              value="Test"
+              label="Is a group assignment?"
+              readonly
+            />
 
-            <label>Need Help with:</label>
-            <div></div>
+            <v-text-field value="Test" label="Need help with:" readonly />
 
-            <label>Others/Notes:</label>
-            <div></div>
+            <v-text-field value="Test" label="Other/Notes" readonly />
+
+            <div align="center">
+              <v-btn align="center" color="primary" dark class="mb-2" v-on="on">
+                Edit Booking
+              </v-btn>
+            </div>
           </Sheet>
         </div>
       </v-sheet>
@@ -65,10 +73,12 @@
                   :search="search"
                 >
                   <template v-slot:items="props">
+                    <td>{{ props.item.attendance }}</td>
                     <td>{{ props.item.id }}</td>
-                    <td>{{ props.item.name }}</td>
-                    <td>{{ props.item.email }}</td>
-                    <td>
+                    <td>{{ props.item.bookeddate }}</td>
+                    <td>{{ props.item.lastname }}</td>
+                    <td>{{ props.item.firstname }}</td>
+                    <!-- <td>
                       <router-link :to="`/admin/advisors/${props.item.id}`">
                         Edit
                       </router-link>
@@ -77,7 +87,7 @@
                       >
                         View History
                       </router-link>
-                    </td>
+                    </td> -->
                   </template>
                 </v-data-table>
               </div>
@@ -87,7 +97,8 @@
       </div>
     </section>
 
-    <section class="container">
+    <!--Currently don't need the attachment bit 
+      <section class="container">
       <v-sheet class="column-left" elevation="3">
         <div>
           <Sheet header="Consultation Attachments">
@@ -95,13 +106,15 @@
           </Sheet>
         </div>
       </v-sheet>
-    </section>
+    </section> -->
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
+import ViewConsultation from '../../../components/ViewConsultation/ViewConsultation'
 
 export default {
   components: { Sheet },
@@ -132,6 +145,7 @@ export default {
       session: {}
     }
   },
+
   async asyncData({ params, $axios }) {
     // try {
     //   let result = await $axios.$get(`http://localhost:4000/sessions/test`)
@@ -139,6 +153,31 @@ export default {
     // } catch (e) {
     //   console.log(`We have an error`)
     // }
+  },
+
+  async mounted() {
+    // await this.$store.dispatch()
+    this.getSessions()
+  },
+  methods: {
+    async getSessions() {
+      this.sessionsLoading = true
+      let sessions = await this.$axios.$get(
+        'http://localhost:4000/sessions?type=consultation'
+      )
+      let newSessions = []
+      sessions.forEach(async session => {
+        let newSession = session
+        let bookings = await this.$axios.$get(
+          `http://localhost:4000/bookings?sessionId=${session.id}`
+        )
+        newSession.bookings = bookings.bookings
+        newSession.waitlist = bookings.waitlist
+        newSessions.push(newSession)
+      })
+      this.sessions = newSessions
+      this.sessionsLoading = false
+    }
   }
 }
 </script>
