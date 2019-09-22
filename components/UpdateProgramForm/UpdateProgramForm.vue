@@ -1,7 +1,7 @@
 <template>
   <form>
     <Sheet class="sheet">
-      <h2>Personal Details</h2>
+      <h2>Pogram Details</h2>
       <div class="fields">
         <v-layout row wrap>
           <v-flex sm12 md4>
@@ -31,11 +31,6 @@ import { createHelpers } from 'vuex-map-fields'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import EdBackgroundDialog from '../../components/EdBackgroundDialog/EdBackgroundDialog'
 import Sheet from '../Sheet/Sheet'
-import countries from '../../core/data/countries'
-import languages from '../../core/data/languages'
-import genders from '../../core/data/genders'
-import degreeTypes from '../../core/data/degreeTypes'
-import residencyStatuses from '../../core/data/residencyStatuses'
 
 import {
   programModule,
@@ -56,18 +51,6 @@ const { mapFields } = createHelpers({
 export default {
   props: {
     id: { type: String, required: true }
-  },
-
-  data() {
-    return {
-      message: '',
-      errorMessage: '',
-      genders: genders,
-      countries: countries,
-      languages: languages,
-      degreeTypes: degreeTypes,
-      residencyStatuses: residencyStatuses
-    }
   },
 
   computed: {
@@ -92,7 +75,7 @@ export default {
         this.message = ''
         this.errorMessage = ''
         await this.$store.dispatch(programModule(SUBMIT))
-        this.message = 'Student Successfully Updated'
+        this.message = 'Program Successfully Updated'
       } catch (e) {
         this.errorMessage = e.toString()
       }
