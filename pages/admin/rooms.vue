@@ -1,57 +1,6 @@
 <template>
   <div id="page-rooms">
     <section class="container">
-      <div class="column-left">
-        <v-dialog v-model="dialog" width="600">
-          <template v-slot:activator="{ on }">
-            <v-btn class="header-button" depressed v-on="on">
-              +
-            </v-btn>
-          </template>
-          <v-card class="dialog">
-            <v-card-title class="dialog-title-card">
-              <h1 class="dialog-title">Create New Room Form</h1>
-            </v-card-title>
-            <v-divider />
-            <h1 class="dialog-title">Note: Adding room requires approval</h1>
-            <v-card-text class="form">
-              <v-form>
-                <div>
-                  <v-text-field
-                    v-model="newRoom.room"
-                    class="input"
-                    label="Room Location"
-                    outline
-                    :rules="[required]"
-                  />
-                  <v-select
-                    v-model="newRoom.type"
-                    label="Type"
-                    :items="['Small Room', 'Classroom', 'Lecture']"
-                    outline
-                    :rules="[required]"
-                  />
-                  <v-text-field
-                    v-model="newRoom.maxCapacity"
-                    class="input"
-                    label="Max Capacity"
-                    outline
-                    :rules="[required]"
-                  />
-                </div>
-                <div class="step-buttons">
-                  <v-btn text depressed @click="clearRoom">
-                    Cancel
-                  </v-btn>
-                  <v-btn color="primary" depressed @click="addRoom">
-                    Add
-                  </v-btn>
-                </div>
-              </v-form>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-      </div>
       <div class="column-right">
         <Sheet class="sheet" header="Rooms Available" alt>
           <v-toolbar flat color="white">
@@ -67,8 +16,7 @@
             :headers="headers"
             :items="rooms"
             :search="search"
-            hide-actions
-            :expand="expand"
+            item-key="name"
           >
             <template v-slot:items="props">
               <td>{{ props.item.id }}</td>
@@ -86,7 +34,7 @@
 <script>
 // import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
-import { roomsModule, REQUEST, ROOMS, CREATE } from '../../store/rooms/methods'
+import { roomsModule, REQUEST, ROOMS } from '../../store/rooms/methods'
 import Sheet from '../../components/Sheet/Sheet'
 
 const emptyRoomForm = () => ({
@@ -125,20 +73,6 @@ export default {
   methods: {
     required(value) {
       return !!value || 'Required.'
-    },
-    async addRoom() {
-      if (
-        this.newRoom.room === '' ||
-        this.newRoom.type === '' ||
-        this.newRoom.maxCapacity === '' ||
-        this.newRoom.status === ''
-      ) {
-        return false
-      }
-      console.log(this.newRoom)
-      await this.$store.dispatch(roomsModule(CREATE), this.newRoom)
-      this.dialog = false
-      this.newRoom = emptyRoomForm()
     }
   }
 }

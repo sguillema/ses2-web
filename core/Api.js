@@ -323,12 +323,4 @@ export class RoomApi {
       url: `${ROOMS_ENDPOINT}/${room.id}`
     })
   }
-
-  static async createRoom(room) {
-    return await axios({
-      method: 'post',
-      url: `${ROOMS_ENDPOINT}`,
-      data: room
-    })
-  }
 }
