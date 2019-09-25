@@ -14,6 +14,8 @@ const STAFF_ENDPOINT = `${ENDPOINT}/staff`
 const SESSIONS_ENDPOINT = `${ENDPOINT}/sessions`
 const BOOKINGDETAIL_ENDPOINT = `${ENDPOINT}/booking-details`
 const ROOMS_ENDPOINT = `${ENDPOINT}/rooms`
+const EMAILS_ENDPOINT = `${ENDPOINT}/emails`
+const EMAILPLACEHOLDERS_ENDPOINT = `${ENDPOINT}/email-placeholders`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -321,6 +323,40 @@ export class RoomApi {
     return await axios({
       method: 'patch',
       url: `${ROOMS_ENDPOINT}/${room.id}`
+    })
+  }
+}
+
+// Emails Api
+export class EmailsApi {
+  static async getEmails() {
+    return await axios({
+      method: 'get',
+      url: `${EMAILS_ENDPOINT}`
+    })
+  }
+
+  static async updateEmailTemplate(email) {
+    const { id, template } = email
+    const data = { template }
+    return await axios({
+      method: 'patch',
+      url: `${EMAILS_ENDPOINT}/${id}`,
+      data
+    })
+  }
+
+  static async publishEmail(emailId) {
+    return await axios({
+      method: 'post',
+      url: `${EMAILS_ENDPOINT}/${emailId}/publish`
+    })
+  }
+
+  static async getEmailPlaceholders(type) {
+    return await axios({
+      method: 'get',
+      url: `${EMAILPLACEHOLDERS_ENDPOINT}?type=${type}`
     })
   }
 }
