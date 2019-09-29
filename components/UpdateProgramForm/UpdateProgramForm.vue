@@ -29,8 +29,6 @@
 <script>
 import { createHelpers } from 'vuex-map-fields'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
-import EdBackgroundDialog from '../../components/EdBackgroundDialog/EdBackgroundDialog'
-import Sheet from '../Sheet/Sheet'
 
 import {
   programModule,

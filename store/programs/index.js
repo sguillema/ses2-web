@@ -57,12 +57,12 @@ export const actions = {
       }
     }),
 
-  [CREATE]: ({ commit, dispatch }, data) =>
+  [CREATE]: ({ commit }, data) =>
     new Promise(async (resolve, reject) => {
       commit(CREATE)
       try {
         const response = await ProgramApi.createProgram(data)
-        dispatch(REQUEST)
+        commit(SUCCESS, { student: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)

@@ -1,5 +1,5 @@
 import { getField, updateField } from 'vuex-map-fields'
-import { ProgramApi } from '../../core/Api' //need StudentApi
+import { ProgramApi } from '../../core/Api'
 import {
   SUCCESS,
   ERROR,
@@ -8,7 +8,6 @@ import {
 } from './methods'
 
 const emptyState = () => ({
-  //status: '',
   program: {
     id: '',
     skillsetId: '',
