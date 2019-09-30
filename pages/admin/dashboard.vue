@@ -54,10 +54,8 @@ K
           </span>
         </div>
         <div class="annoucement">
-          <p>
-            Occaecat labore excepteur magna exercitation sint ipsum nisi ex eu
-            eiusmod nostrud.
-          </p>
+          Occaecat labore excepteur magna exercitation sint ipsum nisi ex eu
+          eiusmod nostrud.
         </div>
       </div>
       <div class="column-right">
@@ -330,7 +328,8 @@ export default {
             margin-left: 10px;
             margin-bottom: -10px;
             p {
-              font-size: 1.5vw;
+              // font-size: 1.5vw;
+              font-size: 20px;
             }
           }
         }
@@ -346,14 +345,14 @@ export default {
             padding: 10px;
             flex-flow: row wrap;
             align-items: center;
-            margin-left: auto;
-            margin-right: auto;
             justify-content: center;
+            width: 280px;
             .statistic-subheading {
               display: flex;
               flex-flow: row wrap;
               align-items: center;
               justify-content: center;
+              margin: 0 auto;
             }
             p {
               font-size: 50px;
