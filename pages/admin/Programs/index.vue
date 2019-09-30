@@ -256,6 +256,13 @@ export default {
     }
   }
 }
+a {
+  color: #0f4beb;
+  padding-right: 25px;
+  &:hover {
+    text-decoration: underline;
+  }
+}
 .form {
   padding-left: 40px;
   padding-right: 40px;
