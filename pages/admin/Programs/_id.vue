@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import UpdateProgramForm from '../../../components/UpdateProgramForm/UpdateProgramForm'
+import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 
 export default {
   components: { UpdateProgramForm },

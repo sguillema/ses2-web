@@ -2,16 +2,24 @@
   <form>
     <Sheet class="sheet">
       <h2>Pogram Details</h2>
-      <div class="fields">
+      <div v-if="program !== null" class="fields">
         <v-layout row wrap>
           <v-flex sm12 md4>
-            <v-text-field v-model="TITLE" label="Title" outline />
+            <v-text-field v-model="program.title" label="Title" outline />
           </v-flex>
           <v-flex sm12 md4>
-            <v-text-field v-model="DESCRIPTION" label="Description" outline />
+            <v-text-field
+              v-model="program.description"
+              label="Description"
+              outline
+            />
           </v-flex>
           <v-flex sm12 md4>
-            <v-text-field v-model="SKILLSETID" label="Skill-set" outline />
+            <v-text-field
+              v-model="program.skillsetId"
+              label="Skill-set"
+              outline
+            />
           </v-flex>
         </v-layout>
       </div>
@@ -27,44 +35,22 @@
 </template>
 
 <script>
-import { createHelpers } from 'vuex-map-fields'
-import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
-
-import {
-  programModule,
-  ID,
-  SKILLSETID,
-  TITLE,
-  TRAGETGROUP,
-  DESCRIPTION,
-  REQUEST,
-  SUBMIT
-} from '../../store/program/methods'
-
-const { mapFields } = createHelpers({
-  getterType: programModule('getField'),
-  mutationType: programModule('updateField')
-})
+import { ProgramApi } from '../../core/Api'
 
 export default {
   props: {
     id: { type: String, required: true }
   },
 
-  computed: {
-    ...mapFields([
-      ID,
-      SKILLSETID,
-      TITLE,
-      TRAGETGROUP,
-      DESCRIPTION,
-      REQUEST,
-      SUBMIT
-    ])
+  data() {
+    return {
+      program: null
+    }
   },
 
   async mounted() {
-    await this.$store.dispatch(programModule(REQUEST), { id: this.id })
+    const response = await ProgramApi.getProgram(this.id)
+    this.program = response.data
   },
 
   methods: {
@@ -72,7 +58,7 @@ export default {
       try {
         this.message = ''
         this.errorMessage = ''
-        await this.$store.dispatch(programModule(SUBMIT))
+        const response = await ProgramApi.updateProgram(this.data.program)
         this.message = 'Program Successfully Updated'
       } catch (e) {
         this.errorMessage = e.toString()
