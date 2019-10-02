@@ -12,7 +12,270 @@ K
             </v-icon>
           </span>
         </div>
-        <v-btn class="header-button" depressed v-on="on">Create Booking</v-btn>
+        <template>
+          <v-dialog v-model="dialog" persistent width="800">
+            <template v-slot:activator="{ on }">
+              <v-btn class="header-button" depressed v-on="on">
+                Quick Booking
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="dialog-title-card" margin-left="20px">
+                <h1 class="dialog-title">
+                  Quick Booking
+                </h1>
+              </v-card-title>
+            </v-card>
+            <template>
+              <v-stepper v-model="stepCount">
+                <v-stepper-header>
+                  <v-stepper-step :complete="stepCount > 1" step="1">
+                    Select Booking Type
+                  </v-stepper-step>
+                  <v-divider />
+                  <v-stepper-step :complete="stepCount > 2" step="2">
+                    Select Session
+                  </v-stepper-step>
+                  <v-divider />
+                  <v-stepper-step :complete="stepCount > 3" step="3">
+                    Complete Form
+                  </v-stepper-step>
+                </v-stepper-header>
+                <v-stepper-items>
+                  <v-stepper-content step="1">
+                    <div class="step-content" align="center" justify="center">
+                      <v-btn-toggle v-model="toggle_exclusive">
+                        <v-btn depressed @change="bookingType = 'consultation'">
+                          Student Consultation
+                        </v-btn>
+                        <v-btn depressed @change="bookingType = 'workshop'">
+                          Workshop Enrollment
+                        </v-btn>
+                      </v-btn-toggle>
+                    </div>
+                    <div align="center" justify="center">
+                      <v-btn
+                        depressed
+                        color="primary"
+                        @click="getBookingType(bookingType, stepCount)"
+                      >
+                        Continue
+                      </v-btn>
+                      <v-btn depressed text @click="dialog = false">
+                        Cancel
+                      </v-btn>
+                    </div>
+                  </v-stepper-content>
+                  <!-- End of Student Consultation -->
+                  <v-stepper-content step="2">
+                    <div class="step-content step2a">
+                      <h2>Student Consultation</h2>
+                      <h3>Select Available Session</h3>
+                      <p>This is step 2 (path a)</p>
+                      <v-form
+                        ref="BookConsultationStepForm2a"
+                        v-model="step1Valid"
+                        lazy-validation
+                        class="step-subcontainer form"
+                      >
+                        <v-autocomplete
+                          v-model="
+                            dialogBookConsultation.stepTwoA.consultationSessions
+                          "
+                          :items="consultations"
+                          :rules="
+                            dialogBookConsultation.stepTwoA
+                              .consultationSessionRules
+                          "
+                          label="Consultation Session"
+                          placeholder="Select available session"
+                          outline
+                          required
+                          class="input"
+                        />
+                      </v-form>
+                    </div>
+                    <!-- TODO: Get Available Sessions and Validate Continue Button -->
+                    <v-btn depressed @click="stepCount = 1">
+                      Back
+                    </v-btn>
+                    <v-btn
+                      color="primary"
+                      depressed
+                      @click="
+                        stepCount = 3
+                        dialogBookConsultation.width = 1200
+                      "
+                    >
+                      Continue
+                    </v-btn>
+                    <v-btn depressed text @click="dialog = false">Cancel</v-btn>
+                  </v-stepper-content>
+                  <v-stepper-content step="3">
+                    <div class="step-content step3a">
+                      <h2>Student Consultation</h2>
+                      <h3>Select Student</h3>
+                      <p>This is step 3 (path a)</p>
+                      <v-form
+                        ref="BookConsultationStepForm3a"
+                        v-model="step1Valid"
+                        lazy-validation
+                        class="step-subcontainer form"
+                      >
+                        <v-autocomplete
+                          v-model="
+                            dialogBookConsultation.stepThreeA
+                              .consultationSessions
+                          "
+                          :items="consultations"
+                          :rules="
+                            dialogBookConsultation.stepThreeA
+                              .consultationSessionRules
+                          "
+                          label="Consultation Session"
+                          placeholder="Select available session"
+                          outline
+                          class="input"
+                        />
+                        <v-text-field
+                          v-model="dialogBookConsultation.stepThreeA.studentID"
+                          class="input"
+                          label="Student ID"
+                          outline
+                          :rules="[
+                            dialogBookConsultation.stepThreeA.rules.required
+                          ]"
+                        />
+                        <v-text-field
+                          v-model="dialogBookConsultation.stepThreeA.date"
+                          class="input"
+                          label="Date"
+                          outline
+                          :rules="[
+                            dialogBookConsultation.stepThreeA.rules.required
+                          ]"
+                        />
+                        <v-text-field
+                          v-model="dialogBookConsultation.stepThreeA.time"
+                          class="input"
+                          label="Time"
+                          outline
+                          :rules="[
+                            dialogBookConsultation.stepThreeA.rules.required
+                          ]"
+                        />
+                        <v-text-field
+                          v-model="dialogBookConsultation.stepThreeA.advisor"
+                          class="input"
+                          label="Advisor Name"
+                          outline
+                          :rules="[
+                            dialogBookConsultation.stepThreeA.rules.required
+                          ]"
+                        />
+                      </v-form>
+                    </div>
+                    <v-btn depressed @click="stepCount = 2">
+                      Back
+                    </v-btn>
+                    <v-btn depressed color="primary" @click="stepCount = 4">
+                      Complete
+                    </v-btn>
+                    <v-btn depressed text @click="dialog = false">Cancel</v-btn>
+                  </v-stepper-content>
+                  <v-stepper-content step="4">
+                    <div class="step-content step4a">
+                      <h2>Student Consultation</h2>
+                      <h3>Confirmation</h3>
+                      <p>This is step 4 (path a)</p>
+                      <v-btn depressed @click="stepCount = 3">
+                        Back
+                      </v-btn>
+                      <v-btn depressed color="primary" @click="stepCount = 1">
+                        Confirm
+                      </v-btn>
+                      <v-btn depressed text @click="dialog = false">
+                        Cancel
+                      </v-btn>
+                    </div>
+                  </v-stepper-content>
+                  <!-- End of Student Consultation -->
+                  <!-- Start of Worskhop Enrollment -->
+                  <v-stepper-content step="5">
+                    <v-card class="mb-12" height="100%">
+                      <h2 class="dialog-title">
+                        Workshop Enrollment
+                      </h2>
+                      <h3>Select Session</h3>
+                      <p>This is step 2 (path b)</p>
+                      <v-btn @click="stepCount = 1">
+                        Back
+                      </v-btn>
+                      <v-btn @click="stepCount = 6">
+                        Next
+                      </v-btn>
+                      <v-btn @click="stepCount = 1">
+                        Reset
+                      </v-btn>
+                      <v-btn text @click="dialog = false">Cancel</v-btn>
+                    </v-card>
+                  </v-stepper-content>
+                  <v-stepper-content step="6">
+                    <v-card class="mb-12" height="100%">
+                      <h2 class="dialog-title">
+                        Workshop Enrollment
+                      </h2>
+                      <h3>Complete Form</h3>
+                      <p>This is step 3 (path b)</p>
+                      <v-btn @click="stepCount = 5">
+                        Back
+                      </v-btn>
+                      <v-btn @click="stepCount = 1">
+                        Complete
+                      </v-btn>
+                      <v-btn @click="stepCount = 1">
+                        Reset
+                      </v-btn>
+                      <v-btn text @click="dialog = false">Cancel</v-btn>
+                    </v-card>
+                  </v-stepper-content>
+                  <!-- End of Workshop Enrollment -->
+                </v-stepper-items>
+              </v-stepper>
+            </template>
+            <!-- <v-card>
+                <div>
+                  
+                </div>
+              </v-card-text>
+              <v-divider :inset="inset" />
+              <v-card-actions>
+                <div class="flex-grow-1"></div>
+                <v-btn
+                  class="v-btn v-btn--flat v-btn--text theme--light v-size--default green--text text--darken-1"
+                  text
+                  @click="dialog = false"
+                >
+                  Close
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialog2" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <h1 class="dialog-title">Book a Student Consultation</h1>
+              </v-card-title>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialog3" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <h1 class="dialog-title">Workshop Enrollment</h1>
+              </v-card-title>
+            </v-card> -->
+          </v-dialog>
+        </template>
         <div class="section-heading">
           Your Statistics
           <span class="right">
@@ -46,7 +309,7 @@ K
           </div>
         </div>
         <div class="section-heading">
-          Annoucements
+          Maintenence Board
           <span class="right">
             <v-icon @click="editItem(props.item)">
               add
@@ -72,7 +335,7 @@ K
             <v-carousel-item v-for="(slide, i) in slides" :key="i">
               <v-sheet color="colors[i]" height="100%">
                 <v-row class="fill-height" align="center" justify="center">
-                  <div class="display-3">{{ slide }}</div>
+                  <div class="display-custom">{{ slide }}</div>
                 </v-row>
               </v-sheet>
             </v-carousel-item>
@@ -195,6 +458,7 @@ K
 </template>
 
 <script>
+import moment from 'moment'
 import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 
@@ -203,13 +467,40 @@ export default {
   layout: 'admin',
   data() {
     return {
+      bookingType: [
+        { text: 'Consultation', value: 'consultation' },
+        { text: 'Workshop', value: 'workshop' }
+      ],
       type: this.$store.getters[authModule(TYPE)],
       ConsultationApi: [],
-      dialogCreateSession: {
+      dialog: false,
+      stepCount: 0,
+      dialogBookConsultation: {
         active: false,
-        // active: true, // change to false when done
-        width: 800
-        // width: 1200, // change to 800 when done
+        width: 800,
+        stepTwoA: {
+          consultationSessions: '',
+          consultationSessionRules: [v => !!v || 'Session is required']
+        },
+        stepThreeA: {
+          consultationSessions: '',
+          consultationSessionRules: [v => !!v || 'Session is required'],
+          studentID: '',
+          time: '',
+          date: '',
+          advisor: '',
+          rules: {
+            required: value => !!value || 'Required'
+          }
+        }
+      },
+      dialogBookWorkshop: {
+        active: false,
+        width: 800,
+        stepTwoB: {
+          workshopSessions: '',
+          workshopSessionRules: [v => !!v || 'Session is required']
+        }
       },
       search: '',
       headers: [
@@ -223,11 +514,6 @@ export default {
       ],
       colors: ['red', 'blue', 'green', 'yellow', 'purple'],
       slides: ['monkaS', 'pepega', 'commit', 'progfund', 'bouldering']
-      // data: vm => ({
-      //   date: new Date().toISOString().substr(0, 10),
-      //   dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
-      //   menu1: false
-      // })
     }
   },
 
@@ -258,6 +544,25 @@ export default {
 
       const [month, day, year] = date.split('/')
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    },
+    getFormattedDate(date) {
+      return moment(date).format('YYYY-MM-DD')
+    },
+    validateStep(nextStep, form) {
+      if (!form || this.$refs[form].validate()) {
+        this.stepCount = nextStep
+      }
+    },
+    getBookingType(bookingType, stepCount) {
+      console.log(stepCount)
+      console.log(bookingType)
+      // eslint-disable-next-line no-empty
+      if (bookingType == 'consultation') {
+        this.stepCount = 2
+      }
+      if (bookingType == 'workshop') {
+        this.stepCount = 5
+      }
     }
   }
 }
@@ -289,7 +594,7 @@ export default {
         color: $color-white;
         height: 80px;
         font-size: $font-subheading;
-        margin-bottom: 25px;
+        // margin-bottom: 25px;
         margin-left: -1px;
         margin-top: 4px;
       }
@@ -335,8 +640,13 @@ export default {
         }
         .sub-box2 {
           display: flex;
-          background-image: linear-gradient($color-red2, $color-darkred);
-          color: #ffffff;
+          // background-image: linear-gradient($color-red2, $color-darkred)
+          background: white;
+          border: solid;
+          border-width: 1px;
+          border-color: $color-red2;
+          // color: #ffffff;
+          color: $color-red2;
           font-size: 12px;
           margin-left: -20px;
           margin-right: -20px;
@@ -346,7 +656,7 @@ export default {
             flex-flow: row wrap;
             align-items: center;
             justify-content: center;
-            width: 280px;
+            width: 100%;
             .statistic-subheading {
               display: flex;
               flex-flow: row wrap;
@@ -358,7 +668,8 @@ export default {
               font-size: 50px;
               font-weight: 500;
               max-height: 60px;
-              color: white;
+              // color: white;
+              color: $color-red2;
               margin-right: 10px;
               margin-left: 10px;
             }
@@ -383,6 +694,15 @@ export default {
         color: white;
         margin-bottom: 25px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        .display-custom {
+          display: flex;
+          font-size: 2vw;
+          font-weight: 400;
+          font-family: Roboto, sans-serif !important;
+          height: inherit;
+          align-items: center;
+          justify-content: center;
+        }
       }
       .section-heading {
         font-size: 18px;
