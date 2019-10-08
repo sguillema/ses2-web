@@ -19,8 +19,8 @@ K
                 Quick Booking
               </v-btn>
             </template>
-            <v-card>
-              <v-card-title class="dialog-title-card" margin-left="20px">
+            <v-card class="dialog">
+              <v-card-title class="dialog-title-card">
                 <h1 class="dialog-title">
                   Quick Booking
                 </h1>
@@ -42,9 +42,9 @@ K
                   </v-stepper-step>
                 </v-stepper-header>
                 <v-stepper-items>
-                  <v-stepper-content step="1">
+                  <v-stepper-content class="step1" step="1">
                     <div class="step-content" align="center" justify="center">
-                      <v-btn-toggle v-model="toggle_exclusive">
+                      <v-btn-toggle v-model="toggle_one" mandatory>
                         <v-btn depressed @change="bookingType = 'consultation'">
                           Student Consultation
                         </v-btn>
@@ -66,14 +66,14 @@ K
                       </v-btn>
                     </div>
                   </v-stepper-content>
-                  <!-- End of Student Consultation -->
+                  <!-- Start of Student Consultation -->
                   <v-stepper-content step="2">
                     <div class="step-content step2a">
                       <h2>Student Consultation</h2>
                       <h3>Select Available Session</h3>
                       <p>This is step 2 (path a)</p>
                       <v-form
-                        ref="BookConsultationStepForm2a"
+                        ref="BookingConsultationStepForm2A"
                         v-model="step1Valid"
                         lazy-validation
                         class="step-subcontainer form"
@@ -96,16 +96,13 @@ K
                       </v-form>
                     </div>
                     <!-- TODO: Get Available Sessions and Validate Continue Button -->
-                    <v-btn depressed @click="stepCount = 1">
+                    <v-btn depressed @click="clearConsultationBooking()">
                       Back
                     </v-btn>
                     <v-btn
                       color="primary"
                       depressed
-                      @click="
-                        stepCount = 3
-                        dialogBookConsultation.width = 1200
-                      "
+                      @click="validateStep(3, 'BookingConsultationStepForm2A')"
                     >
                       Continue
                     </v-btn>
@@ -117,25 +114,17 @@ K
                       <h3>Select Student</h3>
                       <p>This is step 3 (path a)</p>
                       <v-form
-                        ref="BookConsultationStepForm3a"
+                        ref="BookingConsultationStepForm3A"
                         v-model="step1Valid"
                         lazy-validation
                         class="step-subcontainer form"
                       >
-                        <v-autocomplete
+                        <v-text-field
                           v-model="
-                            dialogBookConsultation.stepThreeA
-                              .consultationSessions
-                          "
-                          :items="consultations"
-                          :rules="
-                            dialogBookConsultation.stepThreeA
-                              .consultationSessionRules
+                            dialogBookConsultation.stepTwoA.consultationSessions
                           "
                           label="Consultation Session"
-                          placeholder="Select available session"
-                          outline
-                          class="input"
+                          disabled
                         />
                         <v-text-field
                           v-model="dialogBookConsultation.stepThreeA.studentID"
@@ -178,7 +167,11 @@ K
                     <v-btn depressed @click="stepCount = 2">
                       Back
                     </v-btn>
-                    <v-btn depressed color="primary" @click="stepCount = 4">
+                    <v-btn
+                      depressed
+                      color="primary"
+                      @click="validateStep(4, 'BookingConsultationStepForm3A')"
+                    >
                       Complete
                     </v-btn>
                     <v-btn depressed text @click="dialog = false">Cancel</v-btn>
@@ -188,6 +181,34 @@ K
                       <h2>Student Consultation</h2>
                       <h3>Confirmation</h3>
                       <p>This is step 4 (path a)</p>
+                      <v-text-field
+                        v-model="
+                          dialogBookConsultation.stepThreeA.consultationSessions
+                        "
+                        label="Consultation Session"
+                        disabled
+                      />
+                      <v-text-field
+                        v-model="dialogBookConsultation.stepThreeA.studentID"
+                        label="Student ID"
+                        disabled
+                      />
+                      <v-text-field
+                        v-model="dialogBookConsultation.stepThreeA.date"
+                        label="Date"
+                        disabled
+                      />
+                      <v-text-field
+                        v-model="dialogBookConsultation.stepThreeA.time"
+                        label="Time"
+                        disabled
+                      />
+                      <v-text-field
+                        v-model="dialogBookConsultation.stepThreeA.advisor"
+                        label="Advisor"
+                        disabled
+                      />
+                      <!-- Butts -->
                       <v-btn depressed @click="stepCount = 3">
                         Back
                       </v-btn>
@@ -208,16 +229,37 @@ K
                       </h2>
                       <h3>Select Session</h3>
                       <p>This is step 2 (path b)</p>
-                      <v-btn @click="stepCount = 1">
+                      <v-form
+                        ref="BookingWorkshopStepForm2B"
+                        v-model="step2Valid"
+                        lazy-validation
+                        class="step-subcontainer form"
+                      >
+                        <v-autocomplete
+                          v-model="dialogBookWorkshop.stepTwoB.workshopSessions"
+                          :items="workshops"
+                          :rules="
+                            dialogBookWorkshop.stepTwoB.workshopSessionRules
+                          "
+                          label="Workshop Session"
+                          placeholder="Select available session"
+                          outline
+                          required
+                          class="input"
+                        />
+                      </v-form>
+                      <v-btn depressed @click="clearWorkshopBooking()">
                         Back
                       </v-btn>
-                      <v-btn @click="stepCount = 6">
+                      <v-btn depressed color="primary" @click="stepCount = 6">
                         Next
                       </v-btn>
-                      <v-btn @click="stepCount = 1">
+                      <v-btn depressed @click="stepCount = 1">
                         Reset
                       </v-btn>
-                      <v-btn text @click="dialog = false">Cancel</v-btn>
+                      <v-btn text depressed @click="dialog = false">
+                        Cancel
+                      </v-btn>
                     </v-card>
                   </v-stepper-content>
                   <v-stepper-content step="6">
@@ -227,16 +269,75 @@ K
                       </h2>
                       <h3>Complete Form</h3>
                       <p>This is step 3 (path b)</p>
-                      <v-btn @click="stepCount = 5">
+                      <v-form
+                        ref="BookingWorkshopStepForm3B"
+                        v-model="step1Valid"
+                        lazy-validation
+                        class="step-subcontainer form"
+                      >
+                        <v-autocomplete
+                          v-model="
+                            dialogBookWorkshop.stepThreeB.workshopSessions
+                          "
+                          :items="workshops"
+                          :rules="
+                            dialogBookWorkshop.stepThreeB.workshopSessionRules
+                          "
+                          label="Workshop Session"
+                          placeholder="Select available session"
+                          outline
+                          class="input"
+                        />
+                        <v-text-field
+                          v-model="dialogBookWorkshop.stepThreeB.studentID"
+                          class="input"
+                          label="Student ID"
+                          placeholder="Enter Student ID/Name"
+                          outline
+                          :rules="[
+                            dialogBookWorkshop.stepThreeB.rules.required
+                          ]"
+                        />
+                        <v-text-field
+                          v-model="dialogBookWorkshop.stepThreeB.date"
+                          class="input"
+                          label="Date"
+                          outline
+                          :rules="[
+                            dialogBookWorkshop.stepThreeB.rules.required
+                          ]"
+                        />
+                        <v-text-field
+                          v-model="dialogBookWorkshop.stepThreeB.time"
+                          class="input"
+                          label="Time"
+                          outline
+                          :rules="[
+                            dialogBookWorkshop.stepThreeB.rules.required
+                          ]"
+                        />
+                        <v-text-field
+                          v-model="dialogBookWorkshop.stepThreeB.advisor"
+                          class="input"
+                          label="Advisor Name"
+                          outline
+                          :rules="[
+                            dialogBookWorkshop.stepThreeB.rules.required
+                          ]"
+                        />
+                      </v-form>
+                      <v-btn depressed @click="stepCount = 5">
                         Back
                       </v-btn>
-                      <v-btn @click="stepCount = 1">
+                      <v-btn depressed color="primary" @click="stepCount = 1">
                         Complete
                       </v-btn>
-                      <v-btn @click="stepCount = 1">
+                      <v-btn depressed @click="stepCount = 1">
                         Reset
                       </v-btn>
-                      <v-btn text @click="dialog = false">Cancel</v-btn>
+                      <v-btn text depressed @click="dialog = false">
+                        Cancel
+                      </v-btn>
                     </v-card>
                   </v-stepper-content>
                   <!-- End of Workshop Enrollment -->
@@ -467,14 +568,16 @@ export default {
   layout: 'admin',
   data() {
     return {
-      bookingType: [
-        { text: 'Consultation', value: 'consultation' },
-        { text: 'Workshop', value: 'workshop' }
-      ],
+      bookingType: 'consultation',
+      // bookingType: [
+      //   { text: 'Consultation', value: 'consultation' },
+      //   { text: 'Workshop', value: 'workshop' }
+      // ],
       type: this.$store.getters[authModule(TYPE)],
       ConsultationApi: [],
       dialog: false,
       stepCount: 0,
+      consultations: ['Test1', 'Test2'],
       dialogBookConsultation: {
         active: false,
         width: 800,
@@ -483,8 +586,6 @@ export default {
           consultationSessionRules: [v => !!v || 'Session is required']
         },
         stepThreeA: {
-          consultationSessions: '',
-          consultationSessionRules: [v => !!v || 'Session is required'],
           studentID: '',
           time: '',
           date: '',
@@ -500,6 +601,17 @@ export default {
         stepTwoB: {
           workshopSessions: '',
           workshopSessionRules: [v => !!v || 'Session is required']
+        },
+        stepThreeB: {
+          workshopSessions: '',
+          workshopSessionRules: [v => !!v || 'Session is required'],
+          studentID: '',
+          time: '',
+          date: '',
+          advior: '',
+          rules: {
+            required: value => !!value || 'Required'
+          }
         }
       },
       search: '',
@@ -520,6 +632,10 @@ export default {
   computed: {
     computedDateFormatted() {
       return this.formatDate(this.date)
+    },
+    // Mimics the computerSelectedSession() in index consultation
+    computedAvailableSessions() {
+      return this.dialogBooking.session.startTime
     }
   },
 
@@ -545,24 +661,42 @@ export default {
       const [month, day, year] = date.split('/')
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
-    getFormattedDate(date) {
-      return moment(date).format('YYYY-MM-DD')
-    },
+    // getFormattedDate(date) {
+    //   return moment(date).format('YYYY-MM-DD')
+    // },
     validateStep(nextStep, form) {
       if (!form || this.$refs[form].validate()) {
         this.stepCount = nextStep
       }
     },
     getBookingType(bookingType, stepCount) {
-      console.log(stepCount)
       console.log(bookingType)
-      // eslint-disable-next-line no-empty
+      console.log(stepCount)
       if (bookingType == 'consultation') {
         this.stepCount = 2
       }
       if (bookingType == 'workshop') {
         this.stepCount = 5
       }
+    },
+    getAvailableSession() {
+      console.log()
+    },
+    clearConsultationBooking() {
+      this.stepCount = 1
+      // this.dialogConsultationBooking.active = false
+      this.dialogBookConsultation.stepTwoA.consultationSessions = ''
+      // this.dialogConsultationBooking.stepTwoA.studentID = ''
+      // this.dialogConsultationBooking.stepThreeA.topic = ''
+      // this.dialogConsultationBooking.stepThreeA.subjectName = ''
+      // this.dialogConsultationBooking.stepThreeA.assignmentType = ''
+    },
+    clearWorkshopBooking() {
+      this.stepCount = 1
+      this.bookingType = 'consultation'
+      // this.dialogWorkshopBooking.active = false
+      // this.dialogWorkshopBooking.session = {}
+      // this.dialogWorkshopBooking.stepTwoA.studentID = ''
     }
   }
 }
@@ -774,6 +908,55 @@ export default {
         }
       }
     }
+  }
+}
+.dialog {
+  .dialog-title {
+    margin: 0;
+    padding-left: 25px;
+    color: #ffffff;
+    font-size: 20px;
+  }
+  .dialog-title2 {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 20px;
+  }
+  .dialog-title-card {
+    background: $color-red2;
+    height: 70px;
+  }
+  .dialog-title-card2 {
+    background: #ffffff;
+    height: 70px;
+  }
+  .step-buttons {
+    display: flex;
+    justify-content: center;
+  }
+  .stepForm2 {
+    display: flex;
+    flex-direction: column;
+    > div {
+      flex: 1;
+      display: flex;
+    }
+    .input {
+      width: 340px;
+    }
+  }
+  .step-review {
+    padding: 10px;
+    border: 1px solid black;
+    margin-bottom: 40px;
+    > div {
+      display: flex;
+    }
+  }
+}
+.step1 {
+  .step-content {
+    margin-bottom: 20px;
   }
 }
 </style>

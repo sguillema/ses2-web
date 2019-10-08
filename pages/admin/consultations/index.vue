@@ -883,8 +883,11 @@ export default {
       return moment(date).format('YYYY-MM-DD')
     },
     validateStep(nextStep, form) {
+      console.log(nextStep)
+      console.log(form)
       if (!form || this.$refs[form].validate()) {
         this.stepCount = nextStep
+        console.log(nextStep)
       }
     },
     createSessionCalendarSelectTime({ date, time }) {
