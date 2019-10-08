@@ -82,7 +82,7 @@ K
                           v-model="
                             dialogBookConsultation.stepTwoA.consultationSessions
                           "
-                          :items="consultations"
+                          :items="activeSessions"
                           :rules="
                             dialogBookConsultation.stepTwoA
                               .consultationSessionRules
@@ -446,40 +446,41 @@ K
           Your Schedule
         </div>
         <div class="form">
-          <div class="header">
-            Upcoming All Sessions
-          </div>
-          <div>
-            <v-toolbar flat color="white">
-              <v-text-field
-                v-model="search"
-                class="input-spacing"
-                append-icon="search"
-                placeholder="Search for Sessions"
-              />
-            </v-toolbar>
-          </div>
-          <div>
-            <div class="calendar-toolbar">
-              <div class="right">
-                <v-btn-toggle v-model="toggle_one" mandatory>
-                  <v-btn text>
-                    <v-icon class>view_headline</v-icon>
-                  </v-btn>
-                  <v-btn text>
-                    <v-icon class>view_week</v-icon>
-                  </v-btn>
-                </v-btn-toggle>
-              </div>
-              <div class="middle">
-                <!-- <v-btn-toggle v-model="toggle_exclusive">
-                  <v-btn text>
-                    <v-icon class="icon">
-                      arrow_back_ios
-                    </v-icon>
-                  </v-btn> -->
-                <div class="date">
-                  <v-col cols="12" sm="6" md="4">
+          <Sheet :header="sheetHeader" alt>
+            <div class="header">
+              Upcoming All Sessions
+            </div>
+            <div>
+              <v-toolbar flat color="white">
+                <v-text-field
+                  v-model="search"
+                  class="input-spacing"
+                  append-icon="search"
+                  placeholder="Search for Sessions"
+                />
+              </v-toolbar>
+            </div>
+            <div>
+              <div class="calendar-toolbar">
+                <div class="right">
+                  <v-btn-toggle v-model="toggle_one" mandatory>
+                    <v-btn text>
+                      <v-icon class>view_headline</v-icon>
+                    </v-btn>
+                    <v-btn text>
+                      <v-icon class>view_week</v-icon>
+                    </v-btn>
+                  </v-btn-toggle>
+                </div>
+                <div class="middle">
+                  <!-- <v-btn-toggle v-model="toggle_exclusive">
+                    <v-btn text>
+                      <v-icon class="icon">
+                        arrow_back_ios
+                      </v-icon>
+                    </v-btn> -->
+                  <div class="date">
+                    <!-- <v-col cols="12" sm="6" md="4"> -->
                     <v-menu
                       v-model="menu2"
                       :close-on-content-click="false"
@@ -490,11 +491,10 @@ K
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
-                          v-model="picker"
+                          v-model="computedDateFormattedMomentjs"
                           label="Date"
                           prepend-icon="event"
                           class="calendar"
-                          hint="MM/DD/YYYY format"
                           show-current="showCurrent"
                           readonly
                           v-on="on"
@@ -502,55 +502,65 @@ K
                       </template>
                       <v-date-picker v-model="date" @input="menu2 = false" />
                     </v-menu>
-                  </v-col>
+                    <!-- </v-col> -->
+                  </div>
+                  <!-- <v-btn text>
+                      <v-icon>
+                        arrow_forward_ios
+                      </v-icon>
+                    </v-btn>
+                  </v-btn-toggle> -->
                 </div>
-                <!-- <v-btn text>
-                    <v-icon>
-                      arrow_forward_ios
-                    </v-icon>
-                  </v-btn>
-                </v-btn-toggle> -->
-              </div>
-              <div class="right">
-                <v-btn-toggle v-model="toggle_one" mandatory>
-                  <v-btn text value="monthly">
-                    <div class="display">
-                      Monthly
-                    </div>
-                  </v-btn>
-                  <v-btn text value="weekly">
-                    <div class="display">
-                      Weekly
-                    </div>
-                  </v-btn>
-                  <v-btn text value="daily">
-                    <div class="display">
-                      Daily
-                    </div>
-                  </v-btn>
-                </v-btn-toggle>
+                <div class="right">
+                  <v-btn-toggle v-model="toggle_one" mandatory>
+                    <v-btn text value="all">
+                      <div class="display">
+                        All
+                      </div>
+                    </v-btn>
+                    <v-btn text value="monthly">
+                      <div class="display">
+                        Monthly
+                      </div>
+                    </v-btn>
+                    <v-btn text value="weekly">
+                      <div class="display">
+                        Weekly
+                      </div>
+                    </v-btn>
+                    <v-btn text value="daily">
+                      <div class="display">
+                        Daily
+                      </div>
+                    </v-btn>
+                  </v-btn-toggle>
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <v-data-table
-              :headers="headers"
-              :items="sessions"
-              :search="search"
-              item-key="name"
-              class="elevation-1"
-            >
-              <template v-slot:items="props">
-                <td>{{ props.item.date }}</td>
-                <td>{{ props.item.id }}</td>
-                <td>{{ props.item.type }}</td>
-                <td>{{ props.item.time }}</td>
-                <td>{{ props.item.room }}</td>
-                <td>{{ props.item.topic }}</td>
-                <td>{{ props.item.status }}</td>
-              </template>
-            </v-data-table>
-          </div>
+            <div>
+              <v-data-table
+                :headers="headers"
+                :search="search"
+                :items="filteredSessions"
+                class="table-wrapper"
+                :loading="sessionsloading"
+              >
+                <template v-if="!sessionsLoading" v-slot:items="props">
+                  <td>{{ getSessionDate(props.item.dat) }}</td>
+                  <td>{{ props.item.id }}</td>
+                  <td>{{ props.item.type }}</td>
+                  <td>
+                    {{
+                      getSessionPeriod(props.item.startTime, props.item.endTime)
+                    }}
+                  </td>
+                  <td>{{ props.item.room }}</td>
+                  <td>{{ props.item.topic }}</td>
+                  <td>{{ props.item.status }}</td>
+                </template>
+              </v-data-table>
+            </div>
+          </Sheet>
         </div>
       </div>
     </section>
@@ -561,6 +571,11 @@ K
 <script>
 import moment from 'moment'
 import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
+import {
+  sessionsModule,
+  SESSIONS,
+  REQUEST
+} from '~../../../store/sessions/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 
 export default {
@@ -568,6 +583,8 @@ export default {
   layout: 'admin',
   data() {
     return {
+      menu2: false,
+      date: new Date().toISOString().substr(0, 10),
       bookingType: 'consultation',
       // bookingType: [
       //   { text: 'Consultation', value: 'consultation' },
@@ -575,9 +592,14 @@ export default {
       // ],
       type: this.$store.getters[authModule(TYPE)],
       ConsultationApi: [],
+      // Loading the sessions in the quickbooking
+      // consultations: [],
+      // sessions: [],
+      // -> End
       dialog: false,
       stepCount: 0,
-      consultations: ['Test1', 'Test2'],
+      sessions: ['yeet'],
+      // consultations: ['Test1', 'Test2'],
       dialogBookConsultation: {
         active: false,
         width: 800,
@@ -628,27 +650,96 @@ export default {
       slides: ['monkaS', 'pepega', 'commit', 'progfund', 'bouldering']
     }
   },
-
   computed: {
+    // sessions: {
+    //   get() {
+    //     return this.$store.getters[sessionsModule(SESSIONS)]
+    //   }
+    // },
+
+    // Display all sessions that have not passed yet -
+    // activeSessions() {
+    //   let activeSessions = this.$axios.$get(
+    //     'http://localhost:4000/sessions?type=all'
+    //   )
+    //   return activeSessions
+    // },
+    // filteredSessions() {
+    //   let filteredSessions = this.sessions.filter(session => {
+    //     switch (this.calendarType) {
+    //       case 'date': {
+    //         if (moment(session.startTime).isSame(this.value, 'day')) {
+    //           return true
+    //         } else {
+    //           return false
+    //         }
+    //       }
+    //       case 'month': {
+    //         if (moment(session.startTime).isSame(this.value, 'month')) {
+    //           return true
+    //         } else {
+    //           return false
+    //         }
+    //       }
+    //     }
+    //     console.log(this.sessions)
+    //   })
+    //   return filteredSessions
+    // },
+    calendarType() {
+      if (this.calendarToggle) {
+        return 'date'
+      } else {
+        return 'month'
+      }
+    },
+    // This is correct from vuetify.js
     computedDateFormatted() {
       return this.formatDate(this.date)
+    },
+    computedDateFormattedMomentjs() {
+      return this.date ? moment(this.date).format('dddd, MMMM Do YYYY') : ''
     },
     // Mimics the computerSelectedSession() in index consultation
     computedAvailableSessions() {
       return this.dialogBooking.session.startTime
     }
+    // TODO: Display sessions according to calendar filter
+    // sheetHeader() {
+    //   if (this.calendarToggle) {
+    //     return 'Upcoming Consultations'
+    //   } else {
+    //     return 'Upcoming Consultations (monthly)'
+    //   }
+    // }
   },
 
-  watch: {
-    date(val) {
-      this.dateFormatted = this.formatDate(this.date)
-    }
-  },
+  // mounted() {
+  //   this.$store.dispatch(sessionsModule(REQUEST))
+  // },
+
+  // async mounted() {
+  //   this.getSessions()
+  // },
+
+  // watch: {
+  //   date(val) {
+  //     this.dateFormatted = this.formatDate(this.date)
+  //   }
+  // },
 
   methods: {
+    // async getSessions() {
+    //   this.sessionsLoading = true
+    //   let sessions = await this.$axios.$get(
+    //     'http://localhost:4000/sessions?type=all'
+    //   )
+    //   this.sessionsLoading = false
+    // },
     onClick() {
       this.$store.dispatch(authModule(LOGOUT))
     },
+    // From vuetify.js
     formatDate(date) {
       if (!date) return null
 
@@ -661,17 +752,32 @@ export default {
       const [month, day, year] = date.split('/')
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
-    // getFormattedDate(date) {
-    //   return moment(date).format('YYYY-MM-DD')
-    // },
+    // -> END
+    getFormattedDate(date) {
+      return moment(date).format('YYYY-MM-DD')
+    },
+    getArrayLength(array) {
+      return array.length
+    },
+    getSessionDate(date) {
+      return moment(date).format('DD/MM/YYYY')
+    },
+    getFormattedSessionTime(start) {
+      return moment(start).format('kk:mm')
+    },
+    getSessionPeriod(start, end) {
+      return `${this.getFormattedSessionTime(
+        start
+      )} - ${this.getFormattedSessionTime(end)}`
+    },
     validateStep(nextStep, form) {
       if (!form || this.$refs[form].validate()) {
         this.stepCount = nextStep
       }
     },
     getBookingType(bookingType, stepCount) {
-      console.log(bookingType)
-      console.log(stepCount)
+      // console.log(bookingType)
+      // console.log(stepCount)
       if (bookingType == 'consultation') {
         this.stepCount = 2
       }
@@ -679,9 +785,9 @@ export default {
         this.stepCount = 5
       }
     },
-    getAvailableSession() {
-      console.log()
-    },
+    // getAvailableSession() {
+    //   console.log()
+    // },
     clearConsultationBooking() {
       this.stepCount = 1
       // this.dialogConsultationBooking.active = false
@@ -876,7 +982,7 @@ export default {
             justify-content: center;
             .date {
               display: inline-flex;
-              width: 200px;
+              width: 300px;
               align-items: center;
               justify-content: center;
               font-size: 15px;
