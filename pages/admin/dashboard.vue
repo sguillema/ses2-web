@@ -7,9 +7,9 @@ K
         <div class="section-heading">
           Your Shortcuts
           <span class="right">
-            <v-icon @click="editItem(props.item)">
+            <!-- <v-icon @click="editItem(props.item)">
               add
-            </v-icon>
+            </v-icon> -->
           </span>
         </div>
         <template>
@@ -380,9 +380,9 @@ K
         <div class="section-heading">
           Your Statistics
           <span class="right">
-            <v-icon @click="editItem(props.item)">
+            <!-- <v-icon @click="editItem(props.item)">
               add
-            </v-icon>
+            </v-icon> -->
           </span>
         </div>
         <div class="box">
@@ -412,9 +412,9 @@ K
         <div class="section-heading">
           Maintenence Board
           <span class="right">
-            <v-icon @click="editItem(props.item)">
+            <!-- <v-icon @click="editItem(props.item)">
               add
-            </v-icon>
+            </v-icon> -->
           </span>
         </div>
         <div class="annoucement">
@@ -427,14 +427,9 @@ K
           Your HELPS News
         </div>
         <div class="advertisement">
-          <v-carousel
-            cycle
-            height="200"
-            hide-delimiter-background
-            show-arrows-on-hover
-          >
+          <v-carousel cycle hide-delimiter-background show-arrows-on-hover>
             <v-carousel-item v-for="(slide, i) in slides" :key="i">
-              <v-sheet color="colors[i]" height="100%">
+              <v-sheet color="colors[i]">
                 <v-row class="fill-height" align="center" justify="center">
                   <div class="display-custom">{{ slide }}</div>
                 </v-row>
@@ -464,21 +459,29 @@ K
               <div class="calendar-toolbar">
                 <div class="right">
                   <v-btn-toggle v-model="toggle_one" mandatory>
-                    <v-btn text>
-                      <v-icon class>view_headline</v-icon>
+                    <v-btn depressed text>
+                      <v-icon>view_headline</v-icon>
                     </v-btn>
-                    <v-btn text>
-                      <v-icon class>view_week</v-icon>
+                    <v-btn depressed text>
+                      <v-icon>view_week</v-icon>
                     </v-btn>
                   </v-btn-toggle>
                 </div>
                 <div class="middle">
-                  <!-- <v-btn-toggle v-model="toggle_exclusive">
-                    <v-btn text>
-                      <v-icon class="icon">
-                        arrow_back_ios
-                      </v-icon>
-                    </v-btn> -->
+                  <v-btn depressed text>
+                    <v-icon>arrow_back_ios</v-icon>
+                  </v-btn>
+                  <!-- <v-btn
+                    fab
+                    outlined
+                    small
+                    absolute
+                    left
+                    color="primary"
+                    @click="$refs.calendar.prev()"
+                  >
+                    <v-icon dark>mdi-chevron-left</v-icon>
+                  </v-btn> -->
                   <div class="date">
                     <!-- <v-col cols="12" sm="6" md="4"> -->
                     <v-menu
@@ -504,31 +507,30 @@ K
                     </v-menu>
                     <!-- </v-col> -->
                   </div>
-                  <!-- <v-btn text>
-                      <v-icon>
-                        arrow_forward_ios
-                      </v-icon>
-                    </v-btn>
-                  </v-btn-toggle> -->
+                  <v-btn depressed text>
+                    <v-icon>
+                      arrow_forward_ios
+                    </v-icon>
+                  </v-btn>
                 </div>
                 <div class="right">
-                  <v-btn-toggle v-model="toggle_one" mandatory>
-                    <v-btn text value="all">
+                  <v-btn-toggle v-model="toggle_one_calendar" mandatory>
+                    <v-btn text depressed @change="view = 'all'">
                       <div class="display">
                         All
                       </div>
                     </v-btn>
-                    <v-btn text value="monthly">
+                    <v-btn text depressed @change="view = 'monthly'">
                       <div class="display">
                         Monthly
                       </div>
                     </v-btn>
-                    <v-btn text value="weekly">
+                    <v-btn text depressed @change="view = 'weekly'">
                       <div class="display">
                         Weekly
                       </div>
                     </v-btn>
-                    <v-btn text value="daily">
+                    <v-btn text depressed @change="view = 'daily'">
                       <div class="display">
                         Daily
                       </div>
@@ -541,12 +543,14 @@ K
               <v-data-table
                 :headers="headers"
                 :search="search"
-                :items="filteredSessions"
+                :items="activeSessions"
                 class="table-wrapper"
                 :loading="sessionsloading"
               >
                 <template v-if="!sessionsLoading" v-slot:items="props">
-                  <td>{{ getSessionDate(props.item.dat) }}</td>
+                  <td>
+                    {{ getSessionDate(props.item.startTime) }}
+                  </td>
                   <td>{{ props.item.id }}</td>
                   <td>{{ props.item.type }}</td>
                   <td>
@@ -583,6 +587,7 @@ export default {
   layout: 'admin',
   data() {
     return {
+      view: 'all',
       menu2: false,
       date: new Date().toISOString().substr(0, 10),
       bookingType: 'consultation',
@@ -599,6 +604,7 @@ export default {
       dialog: false,
       stepCount: 0,
       sessions: ['yeet'],
+      sessionsLoading: true,
       // consultations: ['Test1', 'Test2'],
       dialogBookConsultation: {
         active: false,
@@ -664,35 +670,48 @@ export default {
     //   )
     //   return activeSessions
     // },
-    // filteredSessions() {
-    //   let filteredSessions = this.sessions.filter(session => {
-    //     switch (this.calendarType) {
-    //       case 'date': {
-    //         if (moment(session.startTime).isSame(this.value, 'day')) {
-    //           return true
-    //         } else {
-    //           return false
-    //         }
-    //       }
-    //       case 'month': {
-    //         if (moment(session.startTime).isSame(this.value, 'month')) {
-    //           return true
-    //         } else {
-    //           return false
-    //         }
-    //       }
-    //     }
-    //     console.log(this.sessions)
-    //   })
-    //   return filteredSessions
-    // },
-    calendarType() {
-      if (this.calendarToggle) {
-        return 'date'
-      } else {
-        return 'month'
-      }
+    activeSessions() {
+      return this.sessions
     },
+    filteredSessions() {
+      let filteredSessions = this.sessions.filter(session => {
+        switch (this.calendarType) {
+          case 'date': {
+            if (moment(session.startTime).isSame(this.value, 'day')) {
+              return true
+            } else {
+              return false
+            }
+          }
+          case 'month': {
+            if (moment(session.startTime).isSame(this.value, 'month')) {
+              return true
+            } else {
+              return false
+            }
+          }
+          case 'weekly': {
+            if (moment(session.startTime).isSame(this.value, 'weekly')) {
+              return true
+            } else {
+              return false
+            }
+          }
+          case 'all': {
+            if (moment(session.startTime).isSame(this.value, 'all')) {
+              return true
+            } else {
+              return false
+            }
+          }
+        }
+        console.log(this.sessions)
+      })
+      return filteredSessions
+    },
+    // toggle_one_calendar() {
+    //   if (this.calendarToggle == 'date')
+    // },
     // This is correct from vuetify.js
     computedDateFormatted() {
       return this.formatDate(this.date)
@@ -718,9 +737,9 @@ export default {
   //   this.$store.dispatch(sessionsModule(REQUEST))
   // },
 
-  // async mounted() {
-  //   this.getSessions()
-  // },
+  async mounted() {
+    this.getSessions()
+  },
 
   // watch: {
   //   date(val) {
@@ -729,13 +748,24 @@ export default {
   // },
 
   methods: {
-    // async getSessions() {
-    //   this.sessionsLoading = true
-    //   let sessions = await this.$axios.$get(
-    //     'http://localhost:4000/sessions?type=all'
-    //   )
-    //   this.sessionsLoading = false
-    // },
+    async getSessions() {
+      this.sessionsLoading = true
+      let sessions = await this.$axios.$get(
+        'http://localhost:4000/sessions?type=all'
+      )
+      let newSessions = []
+      sessions.forEach(async session => {
+        let newSession = session
+        let bookings = await this.$axios.$get(
+          `http://localhost:4000/bookings?sessionId=${session.id}`
+        )
+        newSession.bookings = bookings.bookings
+        newSession.waitlist = bookings.waitlist
+        newSessions.push(newSession)
+      })
+      this.sessions = newSessions
+      this.sessionsLoading = false
+    },
     onClick() {
       this.$store.dispatch(authModule(LOGOUT))
     },
@@ -826,7 +856,7 @@ export default {
         font-size: 18px;
         color: #707070;
         font-weight: 500;
-        margin-left: 20px;
+        // margin-left: 20px;
       }
       .header-button {
         width: 100%;
@@ -934,12 +964,12 @@ export default {
         color: white;
         margin-bottom: 25px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        margin-top: 3px;
         .display-custom {
           display: flex;
           font-size: 2vw;
           font-weight: 400;
           font-family: Roboto, sans-serif !important;
-          height: inherit;
           align-items: center;
           justify-content: center;
         }
@@ -948,13 +978,11 @@ export default {
         font-size: 18px;
         color: #707070;
         font-weight: 500;
-        margin-left: 20px;
+        // margin-left: 20px;
       }
       .form {
         background: white;
         padding: 20px;
-        height: auto;
-        max-height: 500px;
         margin-top: 25px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         .header {
@@ -990,8 +1018,10 @@ export default {
             }
             .icon {
               display: flex;
-              align-items: center;
-              justify-content: center;
+              position: middle;
+              margin-right: 5px;
+              // align-items: center;
+              // justify-content: center;
             }
           }
           .right {
@@ -1005,7 +1035,7 @@ export default {
             margin-bottom: 20px;
             .display {
               display: inline-flex;
-              width: 80px;
+              width: 60px;
               padding: 5px;
               align-items: center;
               justify-content: center;

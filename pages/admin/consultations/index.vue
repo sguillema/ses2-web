@@ -1069,10 +1069,10 @@ export default {
       width: 290px;
       margin-right: 27px;
       .header-button {
-        margin-left: 0;
-        margin-right: 0;
+        // margin-left: 0;
+        // margin-right: 0;
         margin-bottom: 15px;
-        margin-top: 0;
+        // margin-top: 0;
         width: 100%;
         height: 60px;
         font-size: $font-subheading;
