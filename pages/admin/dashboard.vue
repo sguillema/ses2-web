@@ -406,11 +406,11 @@ K
           <div class="sub-box2">
             <div class="column">
               <div class="statistic-subheading">
-                <p>5</p>
+                <p>{{ getNumberOfConsultations() }}</p>
                 Consultations
               </div>
               <div class="statistic-subheading">
-                <p>2</p>
+                <p>{{ getNumberOfWorkshops() }}</p>
                 Workshops
               </div>
             </div>
@@ -661,6 +661,8 @@ export default {
       stepCount: 0,
       sessions: ['yeet'],
       sessionsLoading: true,
+      consultationSessions: ['honk'],
+      workshopSessions: ['kong'],
       // consultations: ['Test1', 'Test2'],
       dialogBookConsultation: {
         active: false,
@@ -773,6 +775,8 @@ export default {
 
   async mounted() {
     this.getSessions()
+    this.getConsultationSessions()
+    this.getWorkshopSessions()
   },
 
   methods: {
@@ -792,6 +796,42 @@ export default {
         newSessions.push(newSession)
       })
       this.sessions = newSessions
+      this.sessionsLoading = false
+    },
+    async getConsultationSessions() {
+      this.sessionsLoading = true
+      let consultationSessions = await this.$axios.$get(
+        'http://localhost:4000/sessions?type=consultation'
+      )
+      let newSessions = []
+      consultationSessions.forEach(async session => {
+        let newSession = session
+        let bookings = await this.$axios.$get(
+          `http://localhost:4000/bookings?sessionId=${session.id}`
+        )
+        newSession.bookings = bookings.bookings
+        newSession.waitlist = bookings.waitlist
+        newSessions.push(newSession)
+      })
+      this.consultationSessions = newSessions
+      this.sessionsLoading = false
+    },
+    async getWorkshopSessions() {
+      this.sessionsLoading = true
+      let workshopSessions = await this.$axios.$get(
+        'http://localhost:4000/sessions?type=workshop'
+      )
+      let newSessions = []
+      workshopSessions.forEach(async session => {
+        let newSession = session
+        let bookings = await this.$axios.$get(
+          `http://localhost:4000/bookings?sessionId=${session.id}`
+        )
+        newSession.bookings = bookings.bookings
+        newSession.waitlist = bookings.waitlist
+        newSessions.push(newSession)
+      })
+      this.workshopSessions = newSessions
       this.sessionsLoading = false
     },
     // onClick() {
@@ -864,6 +904,12 @@ export default {
     },
     getNumberOfSessions() {
       return this.sessions.length
+    },
+    getNumberOfConsultations() {
+      return this.consultationSessions.length
+    },
+    getNumberOfWorkshops() {
+      return this.workshopSessions.length - this.consultationSessions.length
     }
   }
 }
