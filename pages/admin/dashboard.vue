@@ -19,9 +19,9 @@ K
                 <v-btn class="text-btn" depressed v-on="on">
                   Quick Booking
                 </v-btn>
-                <v-btn class="icon-btn">
-                  Add
-                </v-btn>
+                <v-icon large class="icon-btn" v-on="on">
+                  add
+                </v-icon>
               </div>
             </template>
             <v-card class="dialog">
@@ -392,7 +392,9 @@ K
         </div>
         <div class="box">
           <div class="sub-box">
-            <div class="super-heading">7</div>
+            <div class="super-heading">
+              {{ getNumberOfSessions(sessions) }}
+            </div>
             <div class="center">
               <p>
                 No.
@@ -422,9 +424,49 @@ K
             </v-icon> -->
           </span>
         </div>
-        <div class="annoucement">
-          Occaecat labore excepteur magna exercitation sint ipsum nisi ex eu
-          eiusmod nostrud.
+        <div class="announcement">
+          <div class="text">
+            Occaecat labore excepteur magna exercitation sint ipsum nisi ex eu
+            eiusmod nostrud.
+          </div>
+          <template>
+            <v-dialog v-model="dialog2" width="500">
+              <template v-slot:activator="{ on }">
+                <v-icon large class="btn" dark v-on="on">
+                  announcement
+                </v-icon>
+              </template>
+
+              <v-card>
+                <v-card-title class="headline grey lighten-2" primary-title>
+                  Maintenence Board
+                </v-card-title>
+
+                <v-card-text>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna ad ad
+                  ad minim veniam, quis nostrud exercitation laboris laboris
+                  nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                  in reprehenderit in voluptate velit esse cillum dolore eu
+                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                  cupidatat non proident, sunt in culpa qui officia deserunt
+                  deserunt mollit anim id est laborum.
+                </v-card-text>
+
+                <v-divider />
+
+                <v-card-actions>
+                  <div class="flex-grow-1"></div>
+                  <v-btn color="primary" text @click="dialog2 = false">
+                    Close
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </template>
+          <!-- <v-btn depressed @click="onClick">
+            <v-icon>annoucement</v-icon>
+          </v-btn> -->
         </div>
       </div>
       <div class="column-right">
@@ -615,6 +657,7 @@ export default {
       // sessions: [],
       // -> End
       dialog: false,
+      dialog2: false,
       stepCount: 0,
       sessions: ['yeet'],
       sessionsLoading: true,
@@ -818,6 +861,9 @@ export default {
       // this.dialogWorkshopBooking.active = false
       // this.dialogWorkshopBooking.session = {}
       // this.dialogWorkshopBooking.stepTwoA.studentID = ''
+    },
+    getNumberOfSessions() {
+      return this.sessions.length
     }
   }
 }
@@ -861,7 +907,7 @@ export default {
           width: inherit;
         }
         .icon-btn {
-          display: none !important;
+          display: none;
         }
       }
       .box {
@@ -889,7 +935,7 @@ export default {
             }
           }
           .super-heading {
-            font-size: 100px;
+            font-size: 80px;
             font-weight: 500;
             margin-right: 10px;
           }
@@ -942,13 +988,18 @@ export default {
           }
         }
       }
-      .annoucement {
+      .announcement {
         display: inline-flex;
-        padding: 25px;
         background: white;
         margin-top: 5px;
         text-align: center;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        .text {
+          padding: 20px;
+        }
+      }
+      .btn {
+        display: none;
       }
     }
     > .column-right {
@@ -1115,7 +1166,6 @@ export default {
       display: flex;
       justify-content: center;
       > .column-left {
-        min-width: 80px;
         width: 80px;
         margin-right: 25px;
         .section-heading {
@@ -1126,20 +1176,48 @@ export default {
             display: none !important;
           }
           .icon-btn {
-            display: block;
+            display: flex !important;
+            color: $color-white;
+            height: inherit;
           }
         }
         .box {
           .sub-box {
-            center {
-              .p {
-                font-size: 12px;
+            .super-heading {
+              font-size: 60px;
+              margin: 0 auto;
+            }
+            .center {
+              margin: 0 auto;
+              p {
+                font-size: 15px;
               }
-              .span {
-                font-size: 12px;
+              span {
+                font-size: 15px;
               }
             }
           }
+          .sub-box2 {
+            .column {
+              .statistic-subheading {
+                font-size: 11px;
+              }
+            }
+          }
+        }
+        .announcement {
+          height: 80px;
+          width: inherit;
+          justify-content: center;
+          align-items: center;
+          .text {
+            display: none !important;
+          }
+        }
+        .btn {
+          display: flex !important;
+          color: $color-red2;
+          background: none;
         }
       }
     }
