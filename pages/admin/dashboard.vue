@@ -1,7 +1,7 @@
 K
 <template>
   <div id="page-authenticated">
-    <div>Hello this is an authenticated route :) with type {{ type }}</div>
+    <!-- <div>Hello this is an authenticated route :) with type {{ type }}</div> -->
     <section class="container">
       <div class="column-left">
         <div class="section-heading">
@@ -15,9 +15,14 @@ K
         <template>
           <v-dialog v-model="dialog" persistent width="800">
             <template v-slot:activator="{ on }">
-              <v-btn class="header-button" depressed v-on="on">
-                Quick Booking
-              </v-btn>
+              <div class="header-button">
+                <v-btn class="text-btn" depressed v-on="on">
+                  Quick Booking
+                </v-btn>
+                <v-btn class="icon-btn">
+                  Add
+                </v-btn>
+              </div>
             </template>
             <v-card class="dialog">
               <v-card-title class="dialog-title-card">
@@ -427,15 +432,17 @@ K
           Your HELPS News
         </div>
         <div class="advertisement">
-          <v-carousel cycle hide-delimiter-background show-arrows-on-hover>
-            <v-carousel-item v-for="(slide, i) in slides" :key="i">
-              <v-sheet color="colors[i]">
-                <v-row class="fill-height" align="center" justify="center">
-                  <div class="display-custom">{{ slide }}</div>
-                </v-row>
-              </v-sheet>
-            </v-carousel-item>
-          </v-carousel>
+          <template>
+            <v-carousel cycle height="300" hide-delimiters show-arrows-on-hover>
+              <v-carousel-item v-for="(slide, i) in slides" :key="i">
+                <v-sheet :color="colors[i]" height="100%">
+                  <v-row class="fill-height" align="center" justify="center">
+                    <div class="display-custom">{{ slide }} owo</div>
+                  </v-row>
+                </v-sheet>
+              </v-carousel-item>
+            </v-carousel>
+          </template>
         </div>
         <div class="section-heading">
           Your Schedule
@@ -560,7 +567,23 @@ K
                   </td>
                   <td>{{ props.item.room }}</td>
                   <td>{{ props.item.topic }}</td>
-                  <td>{{ props.item.status }}</td>
+                  <td>
+                    <router-link
+                      v-if="getArrayLength(props.item.bookings) > 0"
+                      :to="
+                        `/admin/students/${props.item.bookings[0].studentId}`
+                      "
+                    >
+                      {{ props.item.bookings[0].studentId }}
+                    </router-link>
+                    <a
+                      v-else
+                      class="book-link"
+                      @click="activateBookingDialog(props.item)"
+                    >
+                      Book now
+                    </a>
+                  </td>
                 </template>
               </v-data-table>
             </div>
@@ -568,18 +591,13 @@ K
         </div>
       </div>
     </section>
-    <v-btn @click="onClick">Logout</v-btn>
+    <!-- <v-btn @click="onClick">Logout</v-btn> -->
   </div>
 </template>
 
 <script>
 import moment from 'moment'
-import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
-import {
-  sessionsModule,
-  SESSIONS,
-  REQUEST
-} from '~../../../store/sessions/methods'
+import { authModule, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 
 export default {
@@ -591,11 +609,6 @@ export default {
       menu2: false,
       date: new Date().toISOString().substr(0, 10),
       bookingType: 'consultation',
-      // bookingType: [
-      //   { text: 'Consultation', value: 'consultation' },
-      //   { text: 'Workshop', value: 'workshop' }
-      // ],
-      type: this.$store.getters[authModule(TYPE)],
       ConsultationApi: [],
       // Loading the sessions in the quickbooking
       // consultations: [],
@@ -650,26 +663,13 @@ export default {
         { text: 'Time', value: 'time' },
         { text: 'Room', value: 'room' },
         { text: 'Topic', value: 'topic' },
-        { text: 'Status', value: 'status' }
+        { text: 'Booking By', value: 'bokings[0].studentID' }
       ],
       colors: ['red', 'blue', 'green', 'yellow', 'purple'],
       slides: ['monkaS', 'pepega', 'commit', 'progfund', 'bouldering']
     }
   },
   computed: {
-    // sessions: {
-    //   get() {
-    //     return this.$store.getters[sessionsModule(SESSIONS)]
-    //   }
-    // },
-
-    // Display all sessions that have not passed yet -
-    // activeSessions() {
-    //   let activeSessions = this.$axios.$get(
-    //     'http://localhost:4000/sessions?type=all'
-    //   )
-    //   return activeSessions
-    // },
     activeSessions() {
       return this.sessions
     },
@@ -705,14 +705,9 @@ export default {
             }
           }
         }
-        console.log(this.sessions)
       })
       return filteredSessions
     },
-    // toggle_one_calendar() {
-    //   if (this.calendarToggle == 'date')
-    // },
-    // This is correct from vuetify.js
     computedDateFormatted() {
       return this.formatDate(this.date)
     },
@@ -733,19 +728,9 @@ export default {
     // }
   },
 
-  // mounted() {
-  //   this.$store.dispatch(sessionsModule(REQUEST))
-  // },
-
   async mounted() {
     this.getSessions()
   },
-
-  // watch: {
-  //   date(val) {
-  //     this.dateFormatted = this.formatDate(this.date)
-  //   }
-  // },
 
   methods: {
     async getSessions() {
@@ -766,9 +751,9 @@ export default {
       this.sessions = newSessions
       this.sessionsLoading = false
     },
-    onClick() {
-      this.$store.dispatch(authModule(LOGOUT))
-    },
+    // onClick() {
+    //   this.$store.dispatch(authModule(LOGOUT))
+    // },
     // From vuetify.js
     formatDate(date) {
       if (!date) return null
@@ -849,7 +834,7 @@ export default {
     display: flex;
     justify-content: center;
     > .column-left {
-      min-width: 80px;
+      // min-width: 80px;
       width: 290px;
       margin-right: 25px;
       .section-heading {
@@ -859,14 +844,25 @@ export default {
         // margin-left: 20px;
       }
       .header-button {
+        display: flex;
         width: 100%;
         background-image: linear-gradient($color-red2, $color-darkred);
-        color: $color-white;
         height: 80px;
-        font-size: $font-subheading;
         // margin-bottom: 25px;
         margin-left: -1px;
         margin-top: 4px;
+        align-items: center;
+        justify-content: center;
+        .text-btn {
+          color: $color-white;
+          font-size: $font-subheading;
+          background: none;
+          height: inherit;
+          width: inherit;
+        }
+        .icon-btn {
+          display: none !important;
+        }
       }
       .box {
         display: block;
@@ -959,12 +955,14 @@ export default {
       width: 100%;
       max-width: 970px;
       .advertisement {
-        background: white;
-        background-image: linear-gradient($color-blue, $color-darkblue);
-        color: white;
+        // background: white;
+        // background-image: linear-gradient($color-blue, $color-darkblue);
+        // color: white;
+        display: flex;
         margin-bottom: 25px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         margin-top: 3px;
+        height: 300px;
         .display-custom {
           display: flex;
           font-size: 2vw;
@@ -972,6 +970,7 @@ export default {
           font-family: Roboto, sans-serif !important;
           align-items: center;
           justify-content: center;
+          height: inherit;
         }
       }
       .section-heading {
@@ -979,6 +978,18 @@ export default {
         color: #707070;
         font-weight: 500;
         // margin-left: 20px;
+      }
+      .table-wrapper {
+        a {
+          color: $color-secondary;
+          padding-right: 25px;
+          &.book-link {
+            color: $color-primary;
+          }
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
       .form {
         background: white;
@@ -1093,6 +1104,45 @@ export default {
 .step1 {
   .step-content {
     margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 1368px) {
+  #page-authenticated {
+    display: block;
+    padding: 10px;
+    .container {
+      height: inherit;
+      display: flex;
+      justify-content: center;
+      > .column-left {
+        min-width: 80px;
+        width: 80px;
+        margin-right: 25px;
+        .section-heading {
+          font-size: 14px;
+        }
+        .header-button {
+          .text-btn {
+            display: none !important;
+          }
+          .icon-btn {
+            display: block;
+          }
+        }
+        .box {
+          .sub-box {
+            center {
+              .p {
+                font-size: 12px;
+              }
+              .span {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>
