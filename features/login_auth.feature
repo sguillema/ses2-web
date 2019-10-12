@@ -1,9 +1,6 @@
-Feature: User Login
+Feature: Functionality test
 
-  Test for successful user login
-
-# Background: student credentials 
-# Given a student with username "username" and password "password" and is registered
+  Test for successful functionality
 
   @userHook
 Scenario Outline: user logs in with correct credentials 
@@ -18,14 +15,10 @@ Examples:
 | 11230099 | password |
 
 
-# Scenario: user logs in for the first time 
-# Given the user is on the login page
-# And is not logged in 
-# When the user enters their "username" AND "password" AND logs in for the first time
-# Then they are brought to the 
-
-# Scenario: user logs in with incorrect credentials 
-# Given the user is on the login page
-# And is not logged in
-# When the user enters their "username" AND "password" AND submits
-# Then they are logged in and sent to the dashboard
+@createHook
+Scenario: Admin creates skillset, programs and workshops
+    Given the user is on the admin skillset page
+    And the user creates a skillset with test data and click submit
+    And the user creates a program with the created program 
+    When the user creates a workshop 
+    Then the created workshop should contain the inherited details from previously created program and skillset
