@@ -8,46 +8,37 @@
     <section class="container">
       <h1>sessions {{ this.$route.params.id }}</h1>
       <Sheet class="sheet" header="Workshop Session Details">
-        <label>Topic:</label>
-        <div>{{ workshop.title }}</div>
-        <label>Target Audience:</label>
-        <div>{{ program.targetGroup }}</div>
-        <label>
-          Description:
-          <div>
-            {{ workshop.description }}
-          </div>
-        </label>
-        <label>
-          Cut-off:
-          <div>
-            {{ session.cutoff }}
-          </div>
-        </label>
-        <label>
-          Maximum:
-          <div>
-            {{ session.size }}
-          </div>
-        </label>
-        <label>
-          When:
-          <div>
-            {{ getDateRangeString(session.startTime, session.endTime) }}
-          </div>
-        </label>
-        <label>
-          Room:
-          <div>
-            {{ session.room }}
-          </div>
-        </label>
-        <v-btn color="primary" depressed:disabled>
-          Edit
-        </v-btn>
-        <v-btn text depressed @click="stepCount = 1">
-          Cancel
-        </v-btn>
+        <div>
+          <label>Topic: {{ workshop.title }}</label>
+        </div>
+        <div>
+          <label>Target Audience: {{ program.targetGroup }}</label>
+        </div>
+        <div>
+          <label>Description: {{ workshop.description }}</label>
+        </div>
+        <div>
+          <label>Cut-off: {{ session.cutoff }}</label>
+        </div>
+        <div>
+          <label>Maximum: {{ session.size }}</label>
+        </div>
+        <div>
+          <label>
+            When: {{ getDateRangeString(session.startTime, session.endTime) }}
+          </label>
+        </div>
+        <div>
+          <label>Room: {{ session.room }}</label>
+        </div>
+        <div align="center">
+          <v-btn color="primary" depressed:disabled>
+            Edit
+          </v-btn>
+          <v-btn text depressed @click="stepCount = 1">
+            Cancel
+          </v-btn>
+        </div>
       </Sheet>
     </section>
     <section class="container">
@@ -121,7 +112,7 @@ export default {
         { text: 'StudentID', value: 'id' },
         { text: 'Booked Date', value: 'bDate' },
         { text: 'Last Name', value: 'lName' },
-        { text: 'Frist Name', value: 'fName' }
+        { text: 'First Name', value: 'fName' }
       ]
     }
   },
