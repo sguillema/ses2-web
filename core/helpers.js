@@ -24,3 +24,18 @@ export const getExpiryOptions = shouldRemember => {
 export const storeModule = (moduleName, method) => {
   return `${moduleName}/${method}`
 }
+
+export const helpWithTypes = [
+  'Addressing the assignment question',
+  'Addressing the marking criteria',
+  'Structure',
+  'Paragraph development',
+  'Referencing',
+  'Grammar'
+]
+
+export const getHelpWithType = helpStr => {
+  const index = parseInt(helpStr)
+  if (isNaN(index)) return helpStr
+  return helpWithTypes[index]
+}

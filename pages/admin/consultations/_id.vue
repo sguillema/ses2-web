@@ -1,151 +1,82 @@
 <template>
-  <div id="page-viewconsultation">
-    <section class="container">
-      <v-sheet class="column-left" elevation="3">
-        <div>
-          <Sheet header="Consultation Session Details">
-            <label>
-              Student ID
-              <div></div>
-            </label>
-
-            <label>
-              Date
-              <div>
-                {{ getMomentDateFormat(session.startTime) }}
-              </div>
-            </label>
-
-            <label>
-              Time
-              <div>
-                {{ getMomentTimeFormat(session.startTime) }}
-              </div>
-            </label>
-
-            <label>
-              Room
-              <div>
-                {{ getRoom(session.room) }}
-              </div>
-            </label>
-
-            <label>
-              Title
-              <div></div>
-            </label>
-
-            <div align="center">
-              <v-btn color="primary" dark class="mb-2" v-on="on">
-                Edit Session
-              </v-btn>
-
-              <v-btn class="ma-2" align="center" tile>
-                Cancel
-              </v-btn>
-            </div>
-          </Sheet>
+  <section id="page-viewconsultation">
+    <div class="container">
+      <Sheet v-if="!!session" header="Consultation Session Details">
+        <div class="row">
+          <label>Date</label>
+          <div class="field">
+            {{ getMomentDateFormat(session.startTime) }}
+          </div>
         </div>
-      </v-sheet>
-    </section>
-    <section class="container">
-      <v-sheet class="column-left" elevation="3">
-        <div>
-          <Sheet header="Consultation Booking Details">
-            <label>
-              Topic
-              <div></div>
-            </label>
-
-            <label>
-              Subject Name
-              <div>
-                {{ getSubjectName(bookingDetails.subjectName) }}
-              </div>
-            </label>
-
-            <label>
-              Is a group assignment?
-              <div>
-                {{ getGroupAssignment(bookingDetails.isGroupAssignment) }}
-              </div>
-            </label>
-
-            <label>
-              Need help with:
-              <div>
-                {{ getHelpWith(bookingDetails.helpWith) }}
-              </div>
-            </label>
-
-            <label>
-              Other/Notes
-              <div></div>
-            </label>
-          </Sheet>
+        <div class="row">
+          <label>Time</label>
+          <div class="field">
+            {{ getMomentTimeFormat(session.startTime) }} -
+            {{ getMomentTimeFormat(session.endTime) }}
+          </div>
         </div>
-      </v-sheet>
-    </section>
-    <section class="container">
-      <div class="column-left">
-        <div>
-          <Sheet header="Student List">
-            <h3 align="center">Add student to the Attendance list</h3>
-            <div class="section-header">
-              <v-text-field
-                v-model="search"
-                class="input-spacing"
-                label="Student ID/Name"
-                placeholder="Enter Student ID/Name"
-                outline
-              />
-              <div align="center">
-                <v-btn depressed large disabled>Add</v-btn>
-              </div>
-              <div>
-                <v-data-table
-                  class="table-wrapper"
-                  :headers="headers"
-                  :items="sessionItems"
-                  :search="search"
-                  item-key="name"
-                >
-                  <template v-slot:items="props">
-                    <td>{{ props.item.att }}</td>
-                    <td>{{ props.item.id }}</td>
-                    <td>{{ props.item.bDate }}</td>
-                    <td>{{ props.item.lName }}</td>
-                    <td>{{ props.item.fName }}</td>
-                    <!-- <td>
-                      <router-link :to="`/admin/advisors/${props.item.id}`">
-                        Edit
-                      </router-link>
-                      <router-link
-                        :to="`/admin/advisors/${props.item.id}/history`"
-                      >
-                        View History
-                      </router-link>
-                    </td> -->
-                  </template>
-                </v-data-table>
-              </div>
-            </div>
-          </Sheet>
+        <div class="row">
+          <label>Room</label>
+          <div class="field">{{ session.room }}</div>
         </div>
-      </div>
-    </section>
-
-    <!--Currently don't need the attachment bit
-      <section class="container">
-      <v-sheet class="column-left" elevation="3">
-        <div>
-          <Sheet header="Consultation Attachments">
-            <label>Topic:</label>
-          </Sheet>
+        <div class="action row">
+          <v-btn color="primary" dark depressed>
+            Edit Session
+          </v-btn>
+          <v-btn class="ma-2" depressed>
+            Cancel
+          </v-btn>
         </div>
-      </v-sheet>
-    </section> -->
-  </div>
+      </Sheet>
+    </div>
+    <div class="container">
+      <Sheet
+        v-if="!!bookingDetails && !!bookedBooking"
+        header="Consultation Booking Details"
+      >
+        <div class="row">
+          <label>Student ID</label>
+          <div class="field">{{ bookedBooking.studentId }}</div>
+        </div>
+        <div class="row">
+          <label>Topic</label>
+          <div class="field">{{ bookingDetails.appointmentFor }}</div>
+        </div>
+        <div class="row">
+          <label>Subject Name</label>
+          <div class="field">{{ bookingDetails.subjectName }}</div>
+        </div>
+        <div class="row">
+          <label>Assignment Type</label>
+          <div class="field">{{ bookingDetails.assignmentType }}</div>
+        </div>
+        <div class="row">
+          <label>Is a group assignment?</label>
+          <div class="field">
+            {{ bookingDetails.isGroupAssignment ? 'Yes' : 'No' }}
+          </div>
+        </div>
+        <div class="row">
+          <label>Need help with</label>
+          <div class="field">
+            <ul>
+              <li
+                v-for="(helpItem, index) in bookingDetails.helpWith"
+                :key="index"
+              >
+                {{ getHelpWithType(helpItem) }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="action row">
+          <v-btn color="primary" dark depressed>
+            Edit Booking
+          </v-btn>
+        </div>
+      </Sheet>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -159,6 +90,7 @@ import {
   WorkshopApi
 } from '../../../core/Api'
 import ViewConsultation from '../../../components/ViewConsultation/ViewConsultation'
+import { getHelpWithType } from '../../../core/helpers'
 
 export default {
   components: { Sheet },
@@ -167,9 +99,10 @@ export default {
   data() {
     return {
       search: '',
-      session: [],
-      bookings: [],
-      bookingDetails: [],
+      session: null,
+      bookedBooking: null,
+      waitlist: [],
+      bookingDetails: null,
       headers: [
         { text: 'Attendance', value: 'att' },
         { text: 'StudentID', value: 'id' },
@@ -191,42 +124,21 @@ export default {
     }
   },
 
-  async asyncData({ params, $axios }) {
-    // try {
-    //   let result = await $axios.$get(`http://localhost:4000/sessions/test`)
-    //   return { result }
-    // } catch (e) {
-    //   console.log(`We have an error`)
-    // }
-  },
-
   async mounted() {
-    // await this.$store.dispatch()
-    //this.getSessions()
-
     const res = await SessionApi.getSession(this.$route.params.id)
     this.session = res.data
 
-    //GET BOOKINGS AND WAITLIST
-
-    const params = {
-      sessionId: this.$route.params.id
-    }
-
-    const res1 = await BookingApi.getBookings(params)
-    console.log(res1.data)
-
+    const res1 = await BookingApi.getBookingsBySessionId(this.$route.params.id)
     const { bookings, waitlist } = res1.data
-    // const bookingDetailsId = bookings[0].bookingDetailsId
+    if (bookings.length > 0) {
+      this.bookedBooking = bookings[0]
 
-    // const res2 = await BookingDetailsApi.getBookingDetail(bookingDetailsId)
-    // const bookingDetails = res2.data
-    //this.bookings = res2.data
-    /*
-    console.log(res2.data)
-    const { bookingsD } = res2.data
-    console.log(bookingsD[0].bookingId)
-    */
+      const res2 = await BookingDetailsApi.getBookingDetailByBookingId(
+        this.bookedBooking.id
+      )
+      const bookingDetails = res2.data
+      this.bookingDetails = res2.data
+    }
   },
   methods: {
     getMomentDateFormat(date) {
@@ -235,27 +147,36 @@ export default {
     getMomentTimeFormat(date) {
       return moment(date).format('h:mm a')
     },
-    getRoom(room) {
-      return room
-    },
-    getTitle(title) {
-      return title
-    },
-    getSubjectName(subjectName) {
-      return subjectName
-    },
-    getGroupAssignment(isGroupAssignment) {
-      return isGroupAssignment
-    },
-    getHelpWith(helpWith) {
-      return helpWith
-    }
+    getHelpWithType
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
+
+.row {
+  margin-bottom: 12px;
+  display: flex;
+  &.action {
+    margin-left: 196px;
+    margin-bottom: 0;
+  }
+}
+
+label {
+  width: 200px;
+  text-align: right;
+  color: $color-darkgray;
+  font-weight: $fontweight-bold;
+  &:after {
+    content: ':';
+    margin-right: 24px;
+  }
+}
+
+.field {
+}
 
 #page-consultations {
   .container {
