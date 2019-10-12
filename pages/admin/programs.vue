@@ -54,6 +54,7 @@
                         :rules="[newProgram.rules.required]"
                       />
                       <v-textarea
+                        id="programDescription"
                         v-model="newProgram.description"
                         class="input"
                         label="Description"
