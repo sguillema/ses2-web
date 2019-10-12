@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 
 export default {
   middleware: adminAuthenticated,
