@@ -1,22 +1,47 @@
+// NOTE: ID = SESSIONID, NOT WORKSHOPIDs
+
 <template>
-  <div id="page-workshops">
+  <div v-if="isLoading" id="page-sessions">
+    Loading
+  </div>
+  <div v-else id="page-sessions">
     <section class="container">
-      <h1>workshops {{ this.$route.params.id }}</h1>
+      <h1>sessions {{ this.$route.params.id }}</h1>
       <Sheet class="sheet" header="Workshop Session Details">
         <label>Topic:</label>
-        <br />
+        <div>{{ workshop.title }}</div>
         <label>Target Audience:</label>
-        <br />
-        <label>Description:</label>
-        <br />
-        <label>Cut-off:</label>
-        <br />
-        <label>Maximum:</label>
-        <br />
-        <label>When:</label>
-        <br />
-        <label>Room:</label>
-        <br />
+        <div>{{ program.targetGroup }}</div>
+        <label>
+          Description:
+          <div>
+            {{ workshop.description }}
+          </div>
+        </label>
+        <label>
+          Cut-off:
+          <div>
+            {{ session.cutoff }}
+          </div>
+        </label>
+        <label>
+          Maximum:
+          <div>
+            {{ session.size }}
+          </div>
+        </label>
+        <label>
+          When:
+          <div>
+            {{ getDateRangeString(session.startTime, session.endTime) }}
+          </div>
+        </label>
+        <label>
+          Room:
+          <div>
+            {{ session.room }}
+          </div>
+        </label>
         <v-btn color="primary" depressed:disabled>
           Edit
         </v-btn>
@@ -28,9 +53,7 @@
     <section class="container">
       <Sheet class="sheet" header="Student list">
         <v-container>
-          <v-row justify="center">
-            <h2>Add Student to the Attendence List</h2>
-          </v-row>
+          <h2 align="center">Add Student to the Attendence List</h2>
         </v-container>
         <br />
         <v-text-field
@@ -43,18 +66,20 @@
         <v-btn block color="primary" depressed:disabled>
           Add
         </v-btn>
+        <br />
         <v-data-table
           :headers="headers"
-          :items="workshopsItems"
+          :items="sessionItems"
           :search="search"
           item-key="name"
           class="elevation-1"
         >
           <template v-slot:items="props">
+            <td>{{ props.item.att }}</td>
             <td>{{ props.item.id }}</td>
-            <td>{{ props.item.title }}</td>
-            <td>{{ props.item.shortTitle }}</td>
-            <td>{{ props.item.noWorkshop }}</td>
+            <td>{{ props.item.bDate }}</td>
+            <td>{{ props.item.lName }}</td>
+            <td>{{ props.item.fName }}</td>
             <td>
               <v-btn block color="primary">
                 delete
@@ -68,8 +93,15 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
+import {
+  WorkshopApi,
+  SessionApi,
+  BookingApi,
+  ProgramApi
+} from '../../../core/Api'
 
 export default {
   middleware: adminAuthenticated,
@@ -79,18 +111,55 @@ export default {
   data() {
     return {
       search: '',
+      isLoading: true,
+      session: null,
+      workshop: null,
+      program: null,
+      bookings: [],
       headers: [
-        { text: 'Attendence', value: 'id' },
-        { text: 'Title', value: 'title' },
-        { text: 'Short Title', value: 'shortTitle' },
-        { text: 'No. of Workshops', value: 'noWorkshops' },
-        { text: 'Actions', value: 'actions' }
+        { text: 'Attendence', value: 'att' },
+        { text: 'StudentID', value: 'id' },
+        { text: 'Booked Date', value: 'bDate' },
+        { text: 'Last Name', value: 'lName' },
+        { text: 'Frist Name', value: 'fName' }
       ]
+    }
+  },
+
+  async asyncData({ params, $axios }) {},
+  async mounted() {
+    // GET SESSION BY ID
+
+    const res = await SessionApi.getSession(this.$route.params.id)
+    this.session = res.data
+
+    // GET BOOKINGS AND WAITLIST
+    const params = {
+      sessionId: this.$route.params.id
+    }
+    const res1 = await BookingApi.getBookings(params)
+    this.bookings = res1.data.bookings
+
+    const res2 = await WorkshopApi.getWorkshop(this.session.workshopId)
+    this.workshop = res2.data
+
+    const res3 = await ProgramApi.getProgram(this.workshop.programId)
+    this.program = res3.data
+
+    this.isLoading = false
+  },
+  methods: {
+    getDateRangeString(startDate, endDate) {
+      const momentStart = moment(startDate)
+      const momentEnd = moment(endDate)
+      const formattedStart = momentStart.format('ddd D MMM hh:mm A')
+      const formattedEnd = momentEnd.format('hh:mm A')
+      return `${formattedStart} - ${formattedEnd}`
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '~assets/styles/variables';
+@import ')~assets/styles/variables';
 </style>
