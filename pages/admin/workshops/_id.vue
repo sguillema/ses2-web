@@ -60,15 +60,15 @@
         <br />
         <v-data-table
           :headers="headers"
-          :items="sessionItems"
+          :items="bookings"
           :search="search"
           item-key="name"
           class="elevation-1"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.att }}</td>
-            <td>{{ props.item.id }}</td>
-            <td>{{ props.item.bDate }}</td>
+            <td>{{ props.item.attended }}</td>
+            <td>{{ props.item.studentId }}</td>
+            <td>{{ props.item.createdAt }}</td>
             <td>{{ props.item.lName }}</td>
             <td>{{ props.item.fName }}</td>
             <td>
