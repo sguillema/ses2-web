@@ -68,7 +68,7 @@
           <template v-slot:items="props">
             <td>{{ props.item.attended }}</td>
             <td>{{ props.item.studentId }}</td>
-            <td>{{ props.item.createdAt }}</td>
+            <td>{{ getDayString(props.item.createdAt) }}</td>
             <td>{{ props.item.lName }}</td>
             <td>{{ props.item.fName }}</td>
             <td>
@@ -146,6 +146,11 @@ export default {
       const formattedStart = momentStart.format('ddd D MMM hh:mm A')
       const formattedEnd = momentEnd.format('hh:mm A')
       return `${formattedStart} - ${formattedEnd}`
+    },
+    getDayString(bookedDate) {
+      const momentBooked = moment(bookedDate)
+      const formattedBooked = momentBooked.format('DD MM YYYY')
+      return `${formattedBooked}`
     }
   }
 }
