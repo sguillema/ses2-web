@@ -93,8 +93,8 @@
                 <td>
                   <v-dialog width="800">
                     <template v-slot:activator="{ on }">
-                      <v-btn v-on="on">
-                        Add
+                      <v-btn depressed v-on="on">
+                        <v-icon>plus</v-icon>
                       </v-btn>
                     </template>
                     <v-card class="dialog">
@@ -111,9 +111,9 @@
                       <v-divider class="divider" />
                       <v-card-text>
                         <b>Please Note:</b>
-                        When changing the session form credetials you must
+                        When changing the session form credentials you must
                         notify the advisor and/or student through email of the
-                        change at least 24hr proir to the start time.
+                        change at least 24hr prior to the start time.
                       </v-card-text>
 
                       <v-card-text>
@@ -130,10 +130,6 @@
                                 label="Room"
                                 outline
                               />
-                              <v-checkbox
-                                class="studentEmail"
-                                label="Email Student Consultation Update"
-                              />
                               <v-text-field
                                 label="Start Time"
                                 placeholder="Start Time"
@@ -145,10 +141,16 @@
                                 outline
                               />
                               <v-checkbox
+                                class="studentEmail"
+                                label="Email Student Consultation Update"
+                              />
+                              <v-checkbox
                                 class="advisorEmail"
                                 label="Email Advisor Consultation Update"
                               />
-                              <v-btn depressed color="primary">Add</v-btn>
+                              <v-btn depressed color="primary">
+                                Add
+                              </v-btn>
                             </v-col>
                           </v-row>
                         </v-container>
@@ -279,6 +281,9 @@ export default {
       await this.$store.dispatch(workshopsModule(CREATE), this.newWorkshop)
       this.dialog = false
       this.newWorkshop = emptyWorkshopForm()
+    },
+    async addSession() {
+      console.log('Called addSession function')
     },
     getMomentDateFormat(date) {
       return moment(date).format('DD/MM/YYYY')
