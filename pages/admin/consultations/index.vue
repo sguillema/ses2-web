@@ -668,6 +668,7 @@ import moment from 'moment'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
 import ViewConsultation from '../../../components/ViewConsultation/ViewConsultation'
+import { BookingApi } from '../../../core/Api'
 
 export default {
   components: { Sheet },
@@ -1036,6 +1037,7 @@ export default {
     },
     async submitConsultationBooking() {
       // Ideally this should be done in one call.
+
       await this.$axios.$post('http://localhost:4000/bookings', {
         studentId: this.dialogBooking.stepOne.studentIdName,
         sessionId: this.dialogBooking.session.id,

@@ -135,7 +135,7 @@
       </div>
     </section>
 
-    <!--Currently don't need the attachment bit 
+    <!--Currently don't need the attachment bit
       <section class="container">
       <v-sheet class="column-left" elevation="3">
         <div>
@@ -214,13 +214,13 @@ export default {
     }
 
     const res1 = await BookingApi.getBookings(params)
-    //this.bookings = res1.data
+    console.log(res1.data)
 
     const { bookings, waitlist } = res1.data
-    const bookingDetailsId = bookings[0].bookingDetailsId
+    // const bookingDetailsId = bookings[0].bookingDetailsId
 
-    const res2 = await BookingDetailsApi.getBookingDetail(bookingDetailsId)
-    const bookingDetails = res2.data
+    // const res2 = await BookingDetailsApi.getBookingDetail(bookingDetailsId)
+    // const bookingDetails = res2.data
     //this.bookings = res2.data
     /*
     console.log(res2.data)
