@@ -29,6 +29,7 @@
                   <v-form>
                     <div>
                       <v-text-field
+                        id="workshopTitle"
                         v-model="newWorkshop.title"
                         class="input"
                         label="Title"
@@ -54,6 +55,7 @@
                         :rules="[required]"
                       />
                       <v-textarea
+                        id="workshopDescription"
                         v-model="newWorkshop.description"
                         class="input"
                         label="Description"
