@@ -1,8 +1,74 @@
 <template>
   <div id="page-workshops">
     <section class="container">
+      <!-- <div class="column-left"> -->
+      <v-dialog v-model="dialog" width="800">
+        <template v-slot:activator="{ on }">
+          <v-btn color="primary" dark class="mb-2" v-on="on">
+            +
+          </v-btn>
+        </template>
+        <v-card class="dialog">
+          <v-card-title class="dialog-title-card">
+            <h1 class="dialog-title">Create Workshop Information</h1>
+          </v-card-title>
+          <v-card-title class="dialog-title-card2">
+            <h1 class="dialog-title2">Workshop Details Form</h1>
+          </v-card-title>
+          <v-divider />
+          <v-card-text class="form">
+            <v-form>
+              <div>
+                <v-text-field
+                  id="workshopTitle"
+                  v-model="newWorkshop.title"
+                  class="input"
+                  label="Title"
+                  outline
+                  :rules="[required]"
+                />
+                <v-select
+                  v-model="newWorkshop.programId"
+                  label="Program"
+                  :items="programs"
+                  item-value="id"
+                  item-text="title"
+                  outline
+                  :rules="[required]"
+                />
+                <v-select
+                  v-model="newWorkshop.staffId"
+                  :items="staff"
+                  item-value="id"
+                  item-text="id"
+                  label="Staff ID"
+                  outline
+                  :rules="[required]"
+                />
+                <v-textarea
+                  id="workshopDescription"
+                  v-model="newWorkshop.description"
+                  class="input"
+                  label="Description"
+                  outline
+                  rows="1"
+                  auto-grow
+                  box
+                  :rules="[required]"
+                />
+              </div>
+              <div class="step-buttons">
+                <v-btn color="primary" @click="addWorkshop">
+                  Create Workshop
+                </v-btn>
+              </div>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <!--</div> -->
       <div class="column-right">
-        <Sheet class="sheet" header="Upcoming Workshops">
+        <Sheet class="sheet" header="Upcoming Workshops" alt>
           <v-toolbar flat color="white">
             <v-text-field
               v-model="search"
@@ -11,78 +77,12 @@
               placeholder="Search for Workshops"
             />
             <v-spacer />
-            <v-dialog v-model="dialog" width="800">
-              <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark class="mb-2" v-on="on">
-                  Create Workshop
-                </v-btn>
-              </template>
-              <v-card class="dialog">
-                <v-card-title class="dialog-title-card">
-                  <h1 class="dialog-title">Create Workshop Information</h1>
-                </v-card-title>
-                <v-card-title class="dialog-title-card2">
-                  <h1 class="dialog-title2">Workshop Details Form</h1>
-                </v-card-title>
-                <v-divider />
-                <v-card-text class="form">
-                  <v-form>
-                    <div>
-                      <v-text-field
-                        id="workshopTitle"
-                        v-model="newWorkshop.title"
-                        class="input"
-                        label="Title"
-                        outline
-                        :rules="[required]"
-                      />
-                      <v-select
-                        v-model="newWorkshop.programId"
-                        label="Program"
-                        :items="programs"
-                        item-value="id"
-                        item-text="title"
-                        outline
-                        :rules="[required]"
-                      />
-                      <v-select
-                        v-model="newWorkshop.staffId"
-                        :items="staff"
-                        item-value="id"
-                        item-text="id"
-                        label="Staff ID"
-                        outline
-                        :rules="[required]"
-                      />
-                      <v-textarea
-                        id="workshopDescription"
-                        v-model="newWorkshop.description"
-                        class="input"
-                        label="Description"
-                        outline
-                        rows="1"
-                        auto-grow
-                        box
-                        :rules="[required]"
-                      />
-                    </div>
-                    <div class="step-buttons">
-                      <v-btn color="primary" @click="addWorkshop">
-                        Create Workshop
-                      </v-btn>
-                    </div>
-                  </v-form>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
           </v-toolbar>
           <v-data-table
             class="table-wrapper"
             :headers="headers"
             :items="workshops"
             :search="search"
-            hide-actions
-            :expand="expand"
           >
             <template v-slot:items="props">
               <tr @click="props.expanded = !props.expanded">
@@ -90,6 +90,72 @@
                 <td>{{ props.item.staffId }}</td>
                 <td>{{ getProgramTitle(props.item.programId) }}</td>
                 <td>{{ props.item.description }}</td>
+                <td>
+                  <v-dialog width="800">
+                    <template v-slot:activator="{ on }">
+                      <v-btn v-on="on">
+                        Add
+                      </v-btn>
+                    </template>
+                    <v-card class="dialog">
+                      <v-card-title class="dialog-title-card">
+                        <span class="headline">
+                          Add Consultation Form
+                        </span>
+                      </v-card-title>
+                      <v-card-title class="dialog-title-card2">
+                        <span class="headline2">
+                          Consultation Session Form
+                        </span>
+                      </v-card-title>
+                      <v-divider class="divider" />
+                      <v-card-text>
+                        <b>Please Note:</b>
+                        When changing the session form credetials you must
+                        notify the advisor and/or student through email of the
+                        change at least 24hr proir to the start time.
+                      </v-card-text>
+
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                              <v-text-field
+                                label="Date"
+                                placeholder="Today's Date"
+                                outline
+                              />
+                              <v-select
+                                :items="selectItems"
+                                label="Room"
+                                outline
+                              />
+                              <v-checkbox
+                                class="studentEmail"
+                                label="Email Student Consultation Update"
+                              />
+                              <v-text-field
+                                label="Start Time"
+                                placeholder="Start Time"
+                                outline
+                              />
+                              <v-text-field
+                                label="End Time"
+                                placeholder="End Time"
+                                outline
+                              />
+                              <v-checkbox
+                                class="advisorEmail"
+                                label="Email Advisor Consultation Update"
+                              />
+                              <v-btn depressed color="primary">Add</v-btn>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card-text>
+                    </v-card>
+                  </v-dialog>
+                </td>
               </tr>
             </template>
             <template v-slot:expand="props">
@@ -108,6 +174,13 @@
                       <td>{{ getMomentTimeFormat(props.item.startTime) }}</td>
                       <td>{{ getMomentTimeFormat(props.item.endTime) }}</td>
                       <td>{{ props.item.room }}</td>
+                      <td>
+                        <router-link
+                          :to="`/admin/consultations/${props.item.id}`"
+                        >
+                          View
+                        </router-link>
+                      </td>
                     </tr>
                   </template>
                 </v-data-table>
@@ -288,12 +361,18 @@ export default {
     font-size: 20px;
   }
   .dialog-title-card {
-    background: #ff1818;
+    background-color: #ff1818;
     height: 70px;
   }
   .dialog-title-card2 {
     background: #ffffff;
     height: 70px;
+  }
+  .headline {
+    color: #ffffff;
+  }
+  .headline2 {
+    font-size: 20px;
   }
   .step-content {
     padding: 0 20px;
