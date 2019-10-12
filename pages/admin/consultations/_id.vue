@@ -4,10 +4,36 @@
       <v-sheet class="column-left" elevation="3">
         <div>
           <Sheet header="Consultation Session Details">
-            <v-text-field value="Test" label="Student ID" readonly />
-            <v-text-field value="Test" label="Date" readonly />
-            <v-text-field value="Test" label="Time" readonly />
-            <v-text-field value="Test" label="Room" readonly />
+            <label>
+              Student ID
+              <div></div>
+            </label>
+
+            <label>
+              Date
+              <div>
+                {{ getMomentDateFormat(session.startTime) }}
+              </div>
+            </label>
+
+            <label>
+              Time
+              <div>
+                {{ getMomentTimeFormat(session.startTime) }}
+              </div>
+            </label>
+
+            <label>
+              Room
+              <div>
+                {{ getRoom(session.room) }}
+              </div>
+            </label>
+
+            <label>
+              Title
+              <div></div>
+            </label>
 
             <div align="center">
               <v-btn color="primary" dark class="mb-2" v-on="on">
@@ -26,25 +52,36 @@
       <v-sheet class="column-left" elevation="3">
         <div>
           <Sheet header="Consultation Booking Details">
-            <v-text-field value="Test" label="Topic" readonly />
+            <label>
+              Topic
+              <div></div>
+            </label>
 
-            <v-text-field value="Test" label="Subject Name" readonly />
+            <label>
+              Subject Name
+              <div>
+                {{ getSubjectName(bookingDetails.subjectName) }}
+              </div>
+            </label>
 
-            <v-text-field
-              value="Test"
-              label="Is a group assignment?"
-              readonly
-            />
+            <label>
+              Is a group assignment?
+              <div>
+                {{ getGroupAssignment(bookingDetails.isGroupAssignment) }}
+              </div>
+            </label>
 
-            <v-text-field value="Test" label="Need help with:" readonly />
+            <label>
+              Need help with:
+              <div>
+                {{ getHelpWith(bookingDetails.helpWith) }}
+              </div>
+            </label>
 
-            <v-text-field value="Test" label="Other/Notes" readonly />
-
-            <div align="center">
-              <v-btn align="center" color="primary" dark class="mb-2" v-on="on">
-                Edit Booking
-              </v-btn>
-            </div>
+            <label>
+              Other/Notes
+              <div></div>
+            </label>
           </Sheet>
         </div>
       </v-sheet>
@@ -115,7 +152,12 @@
 import moment from 'moment'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
-import { SessionApi, BookingApi } from '../../../core/Api'
+import {
+  SessionApi,
+  BookingApi,
+  BookingDetailsApi,
+  WorkshopApi
+} from '../../../core/Api'
 import ViewConsultation from '../../../components/ViewConsultation/ViewConsultation'
 
 export default {
@@ -125,7 +167,9 @@ export default {
   data() {
     return {
       search: '',
-      session: null,
+      session: [],
+      bookings: [],
+      bookingDetails: [],
       headers: [
         { text: 'Attendance', value: 'att' },
         { text: 'StudentID', value: 'id' },
@@ -170,7 +214,42 @@ export default {
     }
 
     const res1 = await BookingApi.getBookings(params)
-    console.log(res1.data)
+    //this.bookings = res1.data
+
+    const { bookings, waitlist } = res1.data
+    const bookingDetailsId = bookings[0].bookingDetailsId
+
+    const res2 = await BookingDetailsApi.getBookingDetail(bookingDetailsId)
+    const bookingDetails = res2.data
+    //this.bookings = res2.data
+    /*
+    console.log(res2.data)
+    const { bookingsD } = res2.data
+    console.log(bookingsD[0].bookingId)
+    */
+  },
+  methods: {
+    getMomentDateFormat(date) {
+      return moment(date).format('DD/MM/YYYY')
+    },
+    getMomentTimeFormat(date) {
+      return moment(date).format('h:mm a')
+    },
+    getRoom(room) {
+      return room
+    },
+    getTitle(title) {
+      return title
+    },
+    getSubjectName(subjectName) {
+      return subjectName
+    },
+    getGroupAssignment(isGroupAssignment) {
+      return isGroupAssignment
+    },
+    getHelpWith(helpWith) {
+      return helpWith
+    }
   }
 }
 </script>

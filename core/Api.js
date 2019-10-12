@@ -92,6 +92,13 @@ export class BookingApi {
 }
 //Booking details API
 export class BookingDetailsApi {
+  static async getBookingDetail(bookingDetailsId) {
+    return await axios({
+      method: 'get',
+      url: `${BOOKINGDETAIL_ENDPOINT}/${bookingDetailsId}`
+    })
+  }
+
   static async getBookingDetailByBookingId(bookingId) {
     return await axios({
       method: 'get',
