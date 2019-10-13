@@ -5,80 +5,64 @@
     Loading
   </div>
   <div v-else id="page-sessions">
-    <section class="container">
-      <h1>sessions {{ this.$route.params.id }}</h1>
-      <Sheet class="sheet" header="Workshop Session Details">
-        <div>
-          <label>Topic: {{ workshop.title }}</label>
-        </div>
-        <div>
-          <label>Target Audience: {{ program.targetGroup }}</label>
-        </div>
-        <div>
-          <label>Description: {{ workshop.description }}</label>
-        </div>
-        <div>
-          <label>Cut-off: {{ session.cutoff }}</label>
-        </div>
-        <div>
-          <label>Maximum: {{ session.size }}</label>
-        </div>
-        <div>
-          <label>
-            When: {{ getDateRangeString(session.startTime, session.endTime) }}
-          </label>
-        </div>
-        <div>
-          <label>Room: {{ session.room }}</label>
-        </div>
-        <div align="center">
-          <v-btn color="primary" depressed:disabled>
-            Edit
-          </v-btn>
-          <v-btn text depressed @click="stepCount = 1">
-            Cancel
-          </v-btn>
-        </div>
-      </Sheet>
-    </section>
-    <section class="container">
-      <Sheet class="sheet" header="Student list">
-        <v-container>
-          <h2 align="center">Add Student to the Attendence List</h2>
-        </v-container>
-        <br />
-        <v-text-field
-          v-model="studentList"
-          label="Enter Student ID/Name"
-          type="number"
-          outline
-        />
-
-        <v-btn block color="primary" depressed:disabled>
-          Add
-        </v-btn>
-        <br />
-        <v-data-table
-          :headers="headers"
-          :items="sessionItems"
-          :search="search"
-          item-key="name"
-          class="elevation-1"
-        >
-          <template v-slot:items="props">
-            <td>{{ props.item.att }}</td>
-            <td>{{ props.item.id }}</td>
-            <td>{{ props.item.bDate }}</td>
-            <td>{{ props.item.lName }}</td>
-            <td>{{ props.item.fName }}</td>
-            <td>
-              <v-btn block color="primary">
-                delete
-              </v-btn>
-            </td>
-          </template>
-        </v-data-table>
-      </Sheet>
+    <section class="left">
+      <div class="container">
+        <Sheet class="sheet" header="Workshop Session Details">
+          <div class="row">
+            <label>Topic</label>
+            <div class="field">
+              {{ workshop.title }}
+            </div>
+          </div>
+          <div class="row">
+            <label>Target Audience</label>
+            <div class="field">
+              {{ program.targetGroup }}
+            </div>
+          </div>
+          <div class="row">
+            <label>Description</label>
+            <div class="field">
+              {{ workshop.description }}
+            </div>
+          </div>
+          <div class="row">
+            <label>Cut-off</label>
+            <div class="field">
+              {{ session.cutoff }}
+            </div>
+          </div>
+          <div class="row">
+            <label>Maximum</label>
+            <div class="field">
+              {{ session.size }}
+            </div>
+          </div>
+          <div class="row">
+            <label>When</label>
+            <div class="field">
+              {{ getDateRangeString(session.startTime, session.endTime) }}
+            </div>
+          </div>
+          <div class="row">
+            <label>Room</label>
+            <div class="field">
+              {{ session.room }}
+            </div>
+          </div>
+          <div class="action row">
+            <v-btn color="primary" dark depressed>
+              Edit Session
+            </v-btn>
+            <v-btn class="ma-2" depressed>
+              Cancel
+            </v-btn>
+          </div>
+        </Sheet>
+      </div>
+      <div class="container">
+        <BookedStudentList :session-id="session.id" />
+      </div>
     </section>
   </div>
 </template>
@@ -93,11 +77,12 @@ import {
   BookingApi,
   ProgramApi
 } from '../../../core/Api'
+import BookedStudentList from '../../../components/BookedStudentList'
 
 export default {
   middleware: adminAuthenticated,
   layout: 'admin',
-  components: { Sheet },
+  components: { Sheet, BookedStudentList },
 
   data() {
     return {
@@ -106,7 +91,6 @@ export default {
       session: null,
       workshop: null,
       program: null,
-      bookings: [],
       headers: [
         { text: 'Attendence', value: 'att' },
         { text: 'StudentID', value: 'id' },
@@ -123,13 +107,6 @@ export default {
 
     const res = await SessionApi.getSession(this.$route.params.id)
     this.session = res.data
-
-    // GET BOOKINGS AND WAITLIST
-    const params = {
-      sessionId: this.$route.params.id
-    }
-    const res1 = await BookingApi.getBookings(params)
-    this.bookings = res1.data.bookings
 
     const res2 = await WorkshopApi.getWorkshop(this.session.workshopId)
     this.workshop = res2.data
@@ -152,5 +129,40 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import ')~assets/styles/variables';
+@import '~assets/styles/variables';
+
+#page-sessions {
+  display: flex;
+}
+
+.left {
+  flex: 1 1 auto;
+}
+
+.right {
+  width: 388px;
+}
+
+.row {
+  margin-bottom: 12px;
+  display: flex;
+  &.action {
+    margin-left: 196px;
+    margin-bottom: 0;
+  }
+}
+
+label {
+  width: 200px;
+  text-align: right;
+  color: $color-darkgray;
+  font-weight: $fontweight-bold;
+  &:after {
+    content: ':';
+    margin-right: 24px;
+  }
+}
+
+.field {
+}
 </style>

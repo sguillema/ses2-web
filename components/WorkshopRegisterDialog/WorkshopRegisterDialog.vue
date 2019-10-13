@@ -413,7 +413,7 @@ export default {
       const bookingDetailsId = null
 
       const promises = this.selectedSessions.map(async session => {
-        return await BookingApi.createBooking({
+        return await BookingApi.addBooking({
           studentId,
           booked,
           attended,

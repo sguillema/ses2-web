@@ -133,6 +133,12 @@ export class SessionApi {
     })
   }
 
+  static async getSessionsByWorkshopId(workshopId) {
+    return await this.getSessions({
+      workshopId
+    })
+  }
+
   static async getConsultationSessions() {
     const params = {
       type: 'consultation'
@@ -294,11 +300,7 @@ export class WorkshopApi {
   }
 
   static async getSessionsByWorkshopId(id) {
-    return await axios({
-      method: 'get',
-      url: `${SESSIONS_ENDPOINT}/?workshopId=${id}`,
-      data: id
-    })
+    return await SessionApi.getSessionsByWorkshopId(id)
   }
 }
 
