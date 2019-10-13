@@ -29,6 +29,7 @@
                   <v-form>
                     <div>
                       <v-text-field
+                        id="workshopTitle"
                         v-model="newWorkshop.title"
                         class="input"
                         label="Title"
@@ -54,6 +55,7 @@
                         :rules="[required]"
                       />
                       <v-textarea
+                        id="workshopDescription"
                         v-model="newWorkshop.description"
                         class="input"
                         label="Description"
@@ -100,6 +102,11 @@
                   <template v-slot:items="props">
                     <tr>
                       <!-- <td>{{ props.item.room }}</td> -->
+                      <td>
+                        <router-link :to="`/admin/workshops/${props.item.id}`">
+                          {{ props.item.id }}
+                        </router-link>
+                      </td>
                       <td style="padding:22px">
                         {{ getMomentDateFormat(props.item.startTime) }}
                       </td>
@@ -121,14 +128,14 @@
 
 <script>
 import moment from 'moment'
-import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import {
   workshopsModule,
   REQUEST,
   WORKSHOPS,
   CREATE
-} from '../../store/workshops/methods'
-import Sheet from '../../components/Sheet/Sheet'
+} from '../../../store/workshops/methods'
+import Sheet from '../../../components/Sheet/Sheet'
 
 const emptyWorkshopForm = () => ({
   title: '',
@@ -151,6 +158,7 @@ export default {
         { text: 'Description', value: 'description', sortable: false }
       ],
       sessionsHeaders: [
+        { text: 'ID', value: 'id', sortable: false },
         { text: 'Date', value: 'date', sortable: false },
         { text: 'Start Time', value: 'startTime', sortable: false },
         { text: 'Finish Time', value: 'finishTime', sortable: false },
@@ -249,6 +257,7 @@ export default {
         @include input-spacing();
         max-width: 300px;
       }
+
       .section-header {
         display: flex;
         justify-content: space-between;

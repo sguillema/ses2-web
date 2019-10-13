@@ -554,29 +554,29 @@
                           <div>
                             <v-checkbox
                               v-model="dialogBooking.stepTwo.help0"
-                              :label="`Addressing the assignment question`"
+                              :label="helpWithTypes[0]"
                             />
                             <v-checkbox
                               v-model="dialogBooking.stepTwo.help1"
-                              :label="`Addressing the marking criteria`"
+                              :label="helpWithTypes[1]"
                             />
                             <v-checkbox
                               v-model="dialogBooking.stepTwo.help2"
-                              :label="`Structure`"
+                              :label="helpWithTypes[2]"
                             />
                           </div>
                           <div>
                             <v-checkbox
                               v-model="dialogBooking.stepTwo.help3"
-                              :label="`Paragraph development`"
+                              :label="helpWithTypes[3]"
                             />
                             <v-checkbox
                               v-model="dialogBooking.stepTwo.help4"
-                              :label="`Referencing`"
+                              :label="helpWithTypes[4]"
                             />
                             <v-checkbox
                               v-model="dialogBooking.stepTwo.help5"
-                              :label="`Grammar`"
+                              :label="helpWithTypes[5]"
                             />
                           </div>
                         </div>
@@ -659,6 +659,9 @@
 import moment from 'moment'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
+import ViewConsultation from '../../../components/ViewConsultation/ViewConsultation'
+import { BookingApi, SessionApi, BookingDetailsApi } from '../../../core/Api'
+import { helpWithTypes } from '../../../core/helpers'
 
 export default {
   components: { Sheet },
@@ -666,6 +669,7 @@ export default {
   layout: 'admin',
   data() {
     return {
+      helpWithTypes,
       snackbar: {
         active: false,
         message: ''
@@ -846,20 +850,16 @@ export default {
   methods: {
     async getSessions() {
       this.sessionsLoading = true
-      let sessions = await this.$axios.$get(
-        'http://localhost:4000/sessions?type=consultation'
-      )
-      let newSessions = []
-      sessions.forEach(async session => {
+      let sessions = (await SessionApi.getConsultationSessions()).data
+      let promises = sessions.map(async session => {
         let newSession = session
-        let bookings = await this.$axios.$get(
-          `http://localhost:4000/bookings?sessionId=${session.id}`
-        )
+        let bookings = (await BookingApi.getBookingsBySessionId(session.id))
+          .data
         newSession.bookings = bookings.bookings
         newSession.waitlist = bookings.waitlist
-        newSessions.push(newSession)
+        return newSession
       })
-      this.sessions = newSessions
+      this.sessions = await Promise.all(promises)
       this.sessionsLoading = false
     },
     getArrayLength(array) {
@@ -1011,7 +1011,7 @@ export default {
     },
     async submitConsultationSession() {
       this.dialogCreateSession.stepTwo.selectedTimes.forEach(async session => {
-        await this.$axios.$post('http://localhost:4000/sessions', {
+        await SessionApi.addSession({
           workshopId: null,
           startTime: session.startTime,
           endTime: session.endTime,
@@ -1030,20 +1030,40 @@ export default {
     },
     async submitConsultationBooking() {
       // Ideally this should be done in one call.
-      await this.$axios.$post('http://localhost:4000/bookings', {
+      const addBookingResponse = await BookingApi.addBooking({
         studentId: this.dialogBooking.stepOne.studentIdName,
         sessionId: this.dialogBooking.session.id,
-        bookingDetailsId: '123', // not real
         booked: true,
         attended: false
       })
-      // No point in making this call. The id of the created booking is needed. It is not returned from the post. Should be done serverside.
-      // await this.$axios.$post('http://localhost:4000/booking-details', {
-      //   studentId: this.dialogBooking.stepOne.studentIdName,
-      //   sessionId: this.session.sessionId,
-      //   booked: true,
-      //   attended: false
-      // })
+      const bookingId = addBookingResponse.data
+      const { stepTwo } = this.dialogBooking
+      let helpRadios = [
+        stepTwo.help0,
+        stepTwo.help1,
+        stepTwo.help2,
+        stepTwo.help3,
+        stepTwo.help4,
+        stepTwo.help5
+      ]
+      const helpWith = helpRadios
+        .map((value, index) => {
+          if (value) return index.toString()
+          return null
+        })
+        .filter(value => !!value)
+
+      if (stepTwo.helpOther) {
+        helpWith.push(stepTwo.helpOther)
+      }
+      await BookingDetailsApi.addBookingDetails({
+        bookingId,
+        appointmentFor: stepTwo.topic,
+        subjectName: stepTwo.subjectName,
+        assignmentType: stepTwo.assignmentType,
+        isGroupAssignment: stepTwo.groupAssignment,
+        helpWith
+      })
       this.getSessions() // We just call for the new sessions
       this.snackbar.active = true
       this.snackbar.message = 'Booking Created!'

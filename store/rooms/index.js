@@ -1,4 +1,4 @@
-import { RoomApi } from '../../core/api'
+import { RoomApi } from '../../core/Api'
 import { REQUEST, SUCCESS, ERROR, ROOMS, CLEAR, CREATE } from './methods'
 
 const emptyState = () => ({

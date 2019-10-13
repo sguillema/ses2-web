@@ -658,9 +658,13 @@ K
 </template>
 
 <script>
+<<<<<<< HEAD
 import moment from 'moment'
 // import { authModule, LOGOUT } from '~/store/auth/methods'
+=======
+>>>>>>> 9a9a78d7d4a750267ebddde8c480e7a064d30da2
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 
 export default {
   middleware: adminAuthenticated,

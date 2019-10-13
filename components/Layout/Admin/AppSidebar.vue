@@ -31,9 +31,9 @@
 </template>
 
 <script>
-import LogoFlag from '~/components/Logos/LogoFlag'
-import ProfileMenu from './ProfileMenu'
 import { ADMIN_SIDEBAR_OPEN } from '../../../store/methods'
+import ProfileMenu from './ProfileMenu'
+import LogoFlag from '~/components/Logos/LogoFlag'
 
 export default {
   components: { LogoFlag, ProfileMenu },

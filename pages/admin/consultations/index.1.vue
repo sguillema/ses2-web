@@ -283,10 +283,15 @@
               </td>
               <td>xx</td>
               <td>
-                <router-link :to="`/consultations/${props.item.id}`">
+                <router-link :to="`/consultations/viewconsultation`">
                   View
                 </router-link>
               </td>
+              <!-- <td>
+                <router-link :to="`admin/consultations/viewconsultation}`">
+                  Edit
+                </router-link>
+              </td> -->
             </template>
           </v-data-table>
         </Sheet>
@@ -299,6 +304,7 @@
 import moment from 'moment'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
+import ViewConsultation from '../../../components/ViewConsultation/ViewConsultation'
 
 export default {
   components: { Sheet },
