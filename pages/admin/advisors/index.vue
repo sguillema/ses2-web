@@ -8,12 +8,16 @@
         </v-btn>
       </v-snackbar> -->
       <Sheet header="Available Advisors" alt>
-        <v-text-field
-          v-model="search"
-          class="input-spacing"
-          append-icon="search"
-          placeholder="Search"
-        />
+        <div>
+          <v-toolbar flat color="white">
+            <v-text-field
+              v-model="search"
+              class="input-spacing"
+              append-icon="search"
+              placeholder="Search for Advisors"
+            />
+          </v-toolbar>
+        </div>
         <v-data-table
           class="table-wrapper"
           :headers="headers"

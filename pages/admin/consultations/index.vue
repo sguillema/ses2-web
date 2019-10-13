@@ -1117,6 +1117,12 @@ export default {
       font-size: 60px;
     }
   }
+  .header-button {
+    background: $color-red2;
+    .header-button-icon {
+      font-size: 60px;
+    }
+  }
   .calendar-button {
     background: $color-black;
   }
@@ -1125,12 +1131,6 @@ export default {
     > .column-left {
       width: 80px;
       margin-right: 27px;
-      .header-button {
-        background: $color-red2;
-        .header-button-icon {
-          font-size: 60px;
-        }
-      }
     }
     > .column-right {
       width: 100%;

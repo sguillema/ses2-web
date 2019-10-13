@@ -1,6 +1,72 @@
 <template>
   <div id="page-workshops">
     <section class="container">
+      <div class="column-left">
+        <v-dialog v-model="dialog" width="800">
+          <template v-slot:activator="{ on }">
+            <v-btn class="header-button" color="primary" depressed v-on="on">
+              <v-icon class="header-button-icon">add</v-icon>
+            </v-btn>
+          </template>
+          <v-card class="dialog">
+            <v-card-title class="dialog-title-card">
+              <h1 class="dialog-title">Create Workshop Information</h1>
+            </v-card-title>
+            <v-card-title class="dialog-title-card2">
+              <h1 class="dialog-title2">Workshop Details Form</h1>
+            </v-card-title>
+            <v-divider />
+            <v-card-text class="form">
+              <v-form>
+                <div>
+                  <v-text-field
+                    id="workshopTitle"
+                    v-model="newWorkshop.title"
+                    class="input"
+                    label="Title"
+                    outline
+                    :rules="[required]"
+                  />
+                  <v-select
+                    v-model="newWorkshop.programId"
+                    label="Program"
+                    :items="programs"
+                    item-value="id"
+                    item-text="title"
+                    outline
+                    :rules="[required]"
+                  />
+                  <v-select
+                    v-model="newWorkshop.staffId"
+                    :items="staff"
+                    item-value="id"
+                    item-text="id"
+                    label="Staff ID"
+                    outline
+                    :rules="[required]"
+                  />
+                  <v-textarea
+                    id="workshopDescription"
+                    v-model="newWorkshop.description"
+                    class="input"
+                    label="Description"
+                    outline
+                    rows="1"
+                    auto-grow
+                    box
+                    :rules="[required]"
+                  />
+                </div>
+                <div class="step-buttons">
+                  <v-btn color="primary" @click="addWorkshop">
+                    Create Workshop
+                  </v-btn>
+                </div>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </div>
       <div class="column-right">
         <Sheet class="sheet" header="Upcoming Workshops" alt>
           <v-toolbar flat color="white">
@@ -10,71 +76,6 @@
               append-icon="search"
               placeholder="Search for Workshops"
             />
-            <v-spacer />
-            <v-dialog v-model="dialog" width="800">
-              <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark class="mb-2" v-on="on">
-                  Create Workshop
-                </v-btn>
-              </template>
-              <v-card class="dialog">
-                <v-card-title class="dialog-title-card">
-                  <h1 class="dialog-title">Create Workshop Information</h1>
-                </v-card-title>
-                <v-card-title class="dialog-title-card2">
-                  <h1 class="dialog-title2">Workshop Details Form</h1>
-                </v-card-title>
-                <v-divider />
-                <v-card-text class="form">
-                  <v-form>
-                    <div>
-                      <v-text-field
-                        id="workshopTitle"
-                        v-model="newWorkshop.title"
-                        class="input"
-                        label="Title"
-                        outline
-                        :rules="[required]"
-                      />
-                      <v-select
-                        v-model="newWorkshop.programId"
-                        label="Program"
-                        :items="programs"
-                        item-value="id"
-                        item-text="title"
-                        outline
-                        :rules="[required]"
-                      />
-                      <v-select
-                        v-model="newWorkshop.staffId"
-                        :items="staff"
-                        item-value="id"
-                        item-text="id"
-                        label="Staff ID"
-                        outline
-                        :rules="[required]"
-                      />
-                      <v-textarea
-                        id="workshopDescription"
-                        v-model="newWorkshop.description"
-                        class="input"
-                        label="Description"
-                        outline
-                        rows="1"
-                        auto-grow
-                        box
-                        :rules="[required]"
-                      />
-                    </div>
-                    <div class="step-buttons">
-                      <v-btn color="primary" @click="addWorkshop">
-                        Create Workshop
-                      </v-btn>
-                    </div>
-                  </v-form>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
           </v-toolbar>
           <v-data-table
             class="table-wrapper"
@@ -224,57 +225,42 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 
-#page-consultations {
-  .container {
-    display: flex;
-    .column-left {
-      min-width: 290px;
-      width: 290px;
-      margin-right: 27px;
-      .filter-container {
-        position: relative;
-        .calendar-toggle {
-          position: absolute;
-          right: 0;
-          color: white;
-          z-index: 1;
-          margin-top: 7px;
-          transform: scale(0.8);
-        }
-        .filters {
-          padding: 14px;
-        }
-        .calendar {
-          box-shadow: none;
-        }
-      }
-    }
-    .column-right {
-      width: 100%;
-      .input-spacing {
-        @include input-spacing();
-        max-width: 300px;
-      }
-
-      .section-header {
-        display: flex;
-        justify-content: space-between;
-        .header-button {
-          margin-right: 30px;
-        }
-      }
-      .table-wrapper {
-        a {
-          color: $color-secondary;
-          padding-right: 25px;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-    }
+.calendar-button,
+.header-button {
+  min-width: unset;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 15px;
+  margin-top: 0;
+  width: 100%;
+  height: 80px;
+  color: $color-white;
+  .calendar-button-icon {
+    font-size: 60px;
   }
 }
+.header-button {
+  background: $color-red2;
+  .header-button-icon {
+    font-size: 60px;
+  }
+}
+.calendar-button {
+  background: $color-black;
+}
+
+.container {
+  display: flex;
+  .column-left {
+    width: 80px;
+    min-width: 80px;
+    margin-right: 27px;
+  }
+  .column-right {
+    width: 100%;
+  }
+}
+
 .form {
   padding-left: 40px;
   padding-right: 40px;
