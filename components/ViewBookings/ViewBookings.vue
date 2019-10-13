@@ -16,10 +16,13 @@
         <td>{{ props.item.session.room }}</td>
         <td>{{ props.item.session.createdBy }}</td>
         <td>
-          <i class="material-icons" color="red">school</i>
+          <i class="material-icons" color="red" @click="dialog = true">
+            school
+          </i>
         </td>
       </template>
     </v-data-table>
+    <attendance :state="dialog" />
   </Sheet>
 </template>
 
@@ -35,9 +38,10 @@ import {
 } from '../../core/Api'
 
 import Sheet from '../../components/Sheet/Sheet'
+import Attendance from '../ViewBookings/attendance'
 
 export default {
-  components: { Sheet },
+  components: { Sheet, Attendance },
   data() {
     return {
       type: this.$store.getters[authModule(TYPE)],
@@ -56,7 +60,8 @@ export default {
       bookings: [],
       workshops: [],
       bookingDetails: [],
-      bookingsWithData: []
+      bookingsWithData: [],
+      dialog: false
     }
   },
   async mounted() {
