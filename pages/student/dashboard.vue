@@ -2,17 +2,17 @@
   <div id="page-authenticated">
     <section class="container">
       <h1>Welcome to UTS:HELPS Booking System</h1>
-      <ViewBookings />
+      <ViewCurrentBookings />
     </section>
   </div>
 </template>
 
 <script>
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
-import ViewBookings from '../../components/ViewBookings/ViewBookings'
+import ViewCurrentBookings from '../../components/ViewCurrentBookings/ViewCurrentBookings'
 
 export default {
-  components: { ViewBookings },
+  components: { ViewCurrentBookings },
   middleware: studentAuthenticated,
   layout: 'student'
 }

@@ -99,7 +99,6 @@
                 >
                   <template v-slot:items="props">
                     <tr>
-                      <!-- <td>{{ props.item.room }}</td> -->
                       <td style="padding:22px">
                         {{ getMomentDateFormat(props.item.startTime) }}
                       </td>
@@ -109,7 +108,6 @@
                     </tr>
                   </template>
                 </v-data-table>
-                <!-- <v-btn depressed class="primary">Add Session</v-btn> -->
               </v-card>
             </template>
           </v-data-table>

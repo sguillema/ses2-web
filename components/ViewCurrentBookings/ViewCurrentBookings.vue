@@ -1,23 +1,41 @@
 <template>
   <Sheet class="sheet">
-    <h2>Your Bookings</h2>
+    <h2>Your Current Bookings</h2>
     <v-data-table
       class="bookings-data-table"
       :headers="headers"
-      :items="bookingsWithData"
+      :items="currentBookings"
       hide-actions
+      :expand="expand"
     >
       <template v-slot:items="props">
-        <td>{{ getMomentDateFormat(props.item.session.startTime) }}</td>
-        <td>{{ getMomentTimeFormat(props.item.session.startTime) }}</td>
-        <td>{{ getMomentTimeFormat(props.item.session.endTime) }}</td>
-        <td>{{ props.item.session.type }}</td>
-        <td>{{ props.item.title }}</td>
-        <td>{{ props.item.session.room }}</td>
-        <td>{{ props.item.session.createdBy }}</td>
-        <td>
-          <i class="material-icons" color="red">school</i>
-        </td>
+        <tr @click="props.expanded = !props.expanded">
+          <td>{{ getMomentDateFormat(props.item.session.startTime) }}</td>
+          <td>{{ getMomentTimeFormat(props.item.session.startTime) }}</td>
+          <td>{{ getMomentTimeFormat(props.item.session.endTime) }}</td>
+          <td>{{ props.item.session.type }}</td>
+          <td>{{ props.item.title }}</td>
+          <td>{{ props.item.session.room }}</td>
+          <td>{{ props.item.session.createdBy }}</td>
+          <td>
+            <i class="material-icons" color="red">school</i>
+          </td>
+        </tr>
+      </template>
+      <template v-slot:expand="props">
+        <v-card flat>
+          <v-data-table
+            :headers="headers"
+            :items="bookingsWithData.sessions"
+            hide-actions
+          >
+            <template v-slot:items="props">
+              <tr>
+                <td>{{ props.item.name }}</td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
       </template>
     </v-data-table>
   </Sheet>
@@ -56,7 +74,9 @@ export default {
       bookings: [],
       workshops: [],
       bookingDetails: [],
-      bookingsWithData: []
+      bookingsWithData: [],
+      currentBookings: [],
+      expand: false
     }
   },
   async mounted() {
@@ -83,11 +103,17 @@ export default {
         title
       }
     })
-    const bookingsWithData = await Promise.all(promises)
-    this.bookingsWithData = _.sortBy(
-      bookingsWithData,
-      bookingWithData => bookingWithData.session.startTime
-    )
+    let bookingsWithData = await Promise.all(promises)
+
+    const currentBookings = []
+    for (let i = 0; i < bookingsWithData.length; i++) {
+      const bookingWithData = bookingsWithData[i]
+      if (moment().isBefore(bookingWithData.session.startTime)) {
+        currentBookings.push(bookingWithData)
+      }
+    }
+
+    this.currentBookings = currentBookings
   },
   methods: {
     getMomentDateFormat(date) {
