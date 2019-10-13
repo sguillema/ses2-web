@@ -52,7 +52,6 @@
             <v-toolbar flat color="white">
               <v-text-field
                 v-model="search"
-                class="input-spacing"
                 append-icon="search"
                 placeholder="Search for Skillsets"
               />
