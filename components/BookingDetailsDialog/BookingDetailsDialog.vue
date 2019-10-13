@@ -21,12 +21,14 @@
         <v-form>
           <div>
             <v-text-field
+              v-model="topic"
               class="input"
               label="Topic"
               outline
               :rules="[required]"
             />
             <v-select
+              v-model="subjectName"
               label="Subject Name"
               item-value="id"
               item-text="title"
@@ -34,37 +36,51 @@
               :rules="[required]"
             />
             <v-select
+              v-model="assignmentType"
               item-value="id"
               item-text="id"
               label="Assignment Type"
               outline
               :rules="[required]"
             />
-            <v-checkbox label="Is this a group assignment?" />
+            <v-checkbox
+              v-model="isAGroupAssignment"
+              label="Is this a group assignment?"
+            />
           </div>
           <v-divider dark />
           <div>
             <p class="help-text">Need help with...</p>
             <v-layout row wrap>
               <v-flex xs12 sm6>
-                <v-checkbox label="Addressing the assignment question" />
-                <v-checkbox label="Addressing the marking criteria" />
-                <v-checkbox label="Structure" />
+                <v-checkbox
+                  v-model="addressingAssignmentQuestion"
+                  label="Addressing the assignment question"
+                />
+                <v-checkbox
+                  v-model="addressingMarkingCriteria"
+                  label="Addressing the marking criteria"
+                />
+                <v-checkbox v-model="structure" label="Structure" />
               </v-flex>
               <v-flex xs12 sm6>
-                <v-checkbox label="Paragraph Development" />
-                <v-checkbox label="Referencing" />
-                <v-checkbox label="Grammar" />
+                <v-checkbox
+                  v-model="paragraphDevelopment"
+                  label="Paragraph Development"
+                />
+                <v-checkbox v-model="referencing" label="Referencing" />
+                <v-checkbox v-model="grammar" label="Grammar" />
               </v-flex>
             </v-layout>
             <v-text-field
+              v-model="others"
               class="input"
               label="Others, please specify below"
               outline
             />
           </div>
           <div class="step-buttons">
-            <v-btn color="primary" @click="addWorkshop">
+            <v-btn color="primary" @click="handleUpdate">
               Update
             </v-btn>
           </div>
@@ -75,9 +91,44 @@
 </template>
 
 <script>
+import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+
 export default {
+  middleware: adminAuthenticated,
   props: {
-    bookingId: { type: String, required: true }
+    bookingid: { type: String, required: true }
+  },
+  data() {
+    return {
+      topic: '',
+      subjectName: {},
+      assignmentType: {},
+      isAGroupAssignment: false,
+      addressingAssignmentQuestion: false,
+      addressingMarkingCriteria: false,
+      structure: false,
+      paragraphDevelopment: false,
+      referencing: false,
+      grammar: false,
+      others: ''
+    }
+  },
+
+  async mounted() {
+    await console.log('Booking Details Dialog component has loaded.')
+  },
+
+  methods: {
+    async handleUpdate() {
+      if (
+        this.topic == '' ||
+        this.subjectName == {} ||
+        this.assignmentType == {}
+      ) {
+        return false
+      }
+      console.log('Booking details updated.')
+    }
   }
 }
 </script>
@@ -86,8 +137,8 @@ export default {
 @import '~assets/styles/variables';
 
 .dialog-title-card {
-  background-color: red;
-  color: white;
+  background-color: $color-primary;
+  color: $color-white;
   padding: 15px 35px;
 
   .dialog-title {
