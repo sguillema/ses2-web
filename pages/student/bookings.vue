@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import { authModule, TYPE } from '~/store/auth/methods'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import WorkshopRegisterDialog from '../../components/WorkshopRegisterDialog/WorkshopRegisterDialog'
 import ViewBookings from '../../components/ViewBookings/ViewBookings'
+import { authModule, TYPE } from '~/store/auth/methods'
 
 export default {
   components: { WorkshopRegisterDialog, ViewBookings },

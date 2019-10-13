@@ -84,7 +84,13 @@ export class BookingApi {
     })
   }
 
-  static async createBooking(booking) {
+  static async getBookingsBySessionId(sessionId) {
+    return await this.getBookings({
+      sessionId
+    })
+  }
+
+  static async addBooking(booking) {
     return await axios({
       method: 'post',
       url: `${BOOKINGS_ENDPOINT}`,
@@ -94,26 +100,63 @@ export class BookingApi {
 }
 //Booking details API
 export class BookingDetailsApi {
+  static async getBookingDetail(bookingDetailsId) {
+    return await axios({
+      method: 'get',
+      url: `${BOOKINGDETAIL_ENDPOINT}/${bookingDetailsId}`
+    })
+  }
+
   static async getBookingDetailByBookingId(bookingId) {
     return await axios({
       method: 'get',
       url: `${BOOKINGDETAIL_ENDPOINT}?bookingId=${bookingId}`
     })
   }
+
+  static async addBookingDetails(bookingDetails) {
+    return await axios({
+      method: 'post',
+      url: `${BOOKINGDETAIL_ENDPOINT}`,
+      data: bookingDetails
+    })
+  }
 }
 //Session API
 export class SessionApi {
-  static async getSessions() {
+  static async getSessions(params) {
+    const query = querystring.stringify(params)
     return await axios({
       method: 'get',
-      url: SESSIONS_ENDPOINT
+      url: `${SESSIONS_ENDPOINT}?${query}`
     })
+  }
+
+  static async getSessionsByWorkshopId(workshopId) {
+    return await this.getSessions({
+      workshopId
+    })
+  }
+
+  static async getConsultationSessions() {
+    const params = {
+      type: 'consultation'
+    }
+    return await this.getSessions(params)
   }
 
   static async getSession(sessionId) {
     return await axios({
       method: 'get',
       url: `${SESSIONS_ENDPOINT}/${sessionId}`
+    })
+  }
+
+  static async addSession(session) {
+    return await axios({
+      method: 'post',
+      url: `${SESSIONS_ENDPOINT}`,
+      data: session
     })
   }
 }
@@ -256,11 +299,7 @@ export class WorkshopApi {
   }
 
   static async getSessionsByWorkshopId(id) {
-    return await axios({
-      method: 'get',
-      url: `${SESSIONS_ENDPOINT}/?workshopId=${id}`,
-      data: id
-    })
+    return await SessionApi.getSessionsByWorkshopId(id)
   }
 }
 
