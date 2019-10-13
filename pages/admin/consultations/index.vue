@@ -1027,12 +1027,13 @@ export default {
     },
     async submitConsultationBooking() {
       // Ideally this should be done in one call.
-      const bookingId = await BookingApi.addBooking({
+      const addBookingResponse = await BookingApi.addBooking({
         studentId: this.dialogBooking.stepOne.studentIdName,
         sessionId: this.dialogBooking.session.id,
         booked: true,
         attended: false
       })
+      const bookingId = addBookingResponse.data
       const { stepTwo } = this.dialogBooking
       let helpRadios = [
         stepTwo.help0,
