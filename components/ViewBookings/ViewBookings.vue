@@ -20,6 +20,7 @@
             v-if="!props.item.session.attended && isSessionOpen"
             class="material-icons"
             color="gray"
+            @click="dialog = true"
           >
             school
           </i>
@@ -27,12 +28,14 @@
             v-else-if="props.item.session.attended"
             class="material-icons"
             color="green"
+            @click="dialog = true"
           >
             school
           </i>
         </td>
       </template>
     </v-data-table>
+    <attendance :state="dialog" />
   </Sheet>
 </template>
 
@@ -46,10 +49,11 @@ import {
   BookingDetailsApi
 } from '../../core/Api'
 import Sheet from '../../components/Sheet/Sheet'
+import Attendance from '../ViewBookings/attendance'
 import { authModule, TYPE, USER } from '~/store/auth/methods'
 
 export default {
-  components: { Sheet },
+  components: { Sheet, Attendance },
   data() {
     return {
       type: this.$store.getters[authModule(TYPE)],
@@ -68,7 +72,8 @@ export default {
       bookings: [],
       workshops: [],
       bookingDetails: [],
-      bookingsWithData: []
+      bookingsWithData: [],
+      dialog: false
     }
   },
   computed: {
