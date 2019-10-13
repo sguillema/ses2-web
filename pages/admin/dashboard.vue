@@ -87,7 +87,9 @@ K
                           v-model="
                             dialogBookConsultation.stepTwoA.consultationSessions
                           "
-                          :items="activeSessions"
+                          :items="consultationSessions"
+                          item-value="id"
+                          item-text="id"
                           :rules="
                             dialogBookConsultation.stepTwoA
                               .consultationSessionRules
@@ -107,7 +109,13 @@ K
                     <v-btn
                       color="primary"
                       depressed
-                      @click="validateStep(3, 'BookingConsultationStepForm2A')"
+                      @click="
+                        validateStep(
+                          3,
+                          'BookingConsultationStepForm2A',
+                          consultationSessions
+                        )
+                      "
                     >
                       Continue
                     </v-btn>
@@ -125,13 +133,6 @@ K
                         class="step-subcontainer form"
                       >
                         <v-text-field
-                          v-model="
-                            dialogBookConsultation.stepTwoA.consultationSessions
-                          "
-                          label="Consultation Session"
-                          disabled
-                        />
-                        <v-text-field
                           v-model="dialogBookConsultation.stepThreeA.studentID"
                           class="input"
                           label="Student ID"
@@ -141,31 +142,26 @@ K
                           ]"
                         />
                         <v-text-field
-                          v-model="dialogBookConsultation.stepThreeA.date"
-                          class="input"
+                          v-model="
+                            dialogBookConsultation.stepTwoA.consultationSessions
+                          "
+                          label="Consultation Session ID"
+                          disabled
+                        />
+                        <!-- <v-text-field
+                          v-model="computedBookingDialogDate"
                           label="Date"
-                          outline
-                          :rules="[
-                            dialogBookConsultation.stepThreeA.rules.required
-                          ]"
+                          disabled
                         />
                         <v-text-field
-                          v-model="dialogBookConsultation.stepThreeA.time"
-                          class="input"
+                          v-model="computedBookingDialogTime"
                           label="Time"
-                          outline
-                          :rules="[
-                            dialogBookConsultation.stepThreeA.rules.required
-                          ]"
-                        />
+                          disabled
+                        /> -->
                         <v-text-field
-                          v-model="dialogBookConsultation.stepThreeA.advisor"
-                          class="input"
+                          v-model="computerBookingDialogAdvisor"
                           label="Advisor Name"
-                          outline
-                          :rules="[
-                            dialogBookConsultation.stepThreeA.rules.required
-                          ]"
+                          disabled
                         />
                       </v-form>
                     </div>
@@ -187,18 +183,18 @@ K
                       <h3>Confirmation</h3>
                       <p>This is step 4 (path a)</p>
                       <v-text-field
-                        v-model="
-                          dialogBookConsultation.stepThreeA.consultationSessions
-                        "
-                        label="Consultation Session"
-                        disabled
-                      />
-                      <v-text-field
                         v-model="dialogBookConsultation.stepThreeA.studentID"
                         label="Student ID"
                         disabled
                       />
                       <v-text-field
+                        v-model="
+                          dialogBookConsultation.stepTwoA.consultationSessions
+                        "
+                        label="Consultation Session ID"
+                        disabled
+                      />
+                      <!-- <v-text-field
                         v-model="dialogBookConsultation.stepThreeA.date"
                         label="Date"
                         disabled
@@ -207,7 +203,7 @@ K
                         v-model="dialogBookConsultation.stepThreeA.time"
                         label="Time"
                         disabled
-                      />
+                      /> -->
                       <v-text-field
                         v-model="dialogBookConsultation.stepThreeA.advisor"
                         label="Advisor"
@@ -506,7 +502,7 @@ K
             </div>
             <div>
               <div class="calendar-toolbar">
-                <div class="right">
+                <!-- <div class="right">
                   <v-btn-toggle v-model="toggle_one" mandatory>
                     <v-btn depressed text>
                       <v-icon>view_headline</v-icon>
@@ -515,11 +511,11 @@ K
                       <v-icon>view_week</v-icon>
                     </v-btn>
                   </v-btn-toggle>
-                </div>
+                </div> -->
                 <div class="middle">
-                  <v-btn depressed text>
+                  <!-- <v-btn depressed text>
                     <v-icon>arrow_back_ios</v-icon>
-                  </v-btn>
+                  </v-btn> -->
                   <!-- <v-btn
                     fab
                     outlined
@@ -556,30 +552,34 @@ K
                     </v-menu>
                     <!-- </v-col> -->
                   </div>
-                  <v-btn depressed text>
+                  <!-- <v-btn depressed text>
                     <v-icon>
                       arrow_forward_ios
                     </v-icon>
-                  </v-btn>
+                  </v-btn> -->
                 </div>
                 <div class="right">
-                  <v-btn-toggle v-model="toggle_one_calendar" mandatory>
-                    <v-btn text depressed @change="view = 'all'">
+                  <v-btn-toggle
+                    v-model="toggle_one_calendar"
+                    mandatory
+                    :type="sheetViewType"
+                  >
+                    <v-btn text depressed @change="sheetViewToggle = 'all'">
                       <div class="display">
                         All
                       </div>
                     </v-btn>
-                    <v-btn text depressed @change="view = 'monthly'">
+                    <v-btn text depressed @change="sheetViewToggle = 'monthly'">
                       <div class="display">
                         Monthly
                       </div>
                     </v-btn>
-                    <v-btn text depressed @change="view = 'weekly'">
+                    <v-btn text depressed @change="sheetViewToggle = 'weekly'">
                       <div class="display">
                         Weekly
                       </div>
                     </v-btn>
-                    <v-btn text depressed @change="view = 'daily'">
+                    <v-btn text depressed @change="sheetViewToggle = 'daily'">
                       <div class="display">
                         Daily
                       </div>
@@ -592,7 +592,7 @@ K
               <v-data-table
                 :headers="headers"
                 :search="search"
-                :items="activeSessions"
+                :items="filteredSessions"
                 class="table-wrapper"
                 :loading="sessionsloading"
               >
@@ -639,7 +639,7 @@ K
 
 <script>
 import moment from 'moment'
-import { authModule, LOGOUT } from '~/store/auth/methods'
+// import { authModule, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 
 export default {
@@ -656,26 +656,22 @@ export default {
       // consultations: [],
       // sessions: [],
       // -> End
-      dialog: false,
       dialog2: false,
       stepCount: 0,
       sessions: ['yeet'],
       sessionsLoading: true,
-      consultationSessions: ['honk'],
+      consultationSessions: [],
       workshopSessions: ['kong'],
+      sheetViewToggle: 'all',
       // consultations: ['Test1', 'Test2'],
       dialogBookConsultation: {
         active: false,
-        width: 800,
         stepTwoA: {
-          consultationSessions: '',
+          consultationSessions: {},
           consultationSessionRules: [v => !!v || 'Session is required']
         },
         stepThreeA: {
           studentID: '',
-          time: '',
-          date: '',
-          advisor: '',
           rules: {
             required: value => !!value || 'Required'
           }
@@ -683,9 +679,8 @@ export default {
       },
       dialogBookWorkshop: {
         active: false,
-        width: 800,
         stepTwoB: {
-          workshopSessions: '',
+          workshopSessions: {},
           workshopSessionRules: [v => !!v || 'Session is required']
         },
         stepThreeB: {
@@ -715,39 +710,39 @@ export default {
     }
   },
   computed: {
+    //replacement for filteredsessions for now.
     activeSessions() {
       return this.sessions
     },
     filteredSessions() {
       let filteredSessions = this.sessions.filter(session => {
-        switch (this.calendarType) {
-          case 'date': {
-            if (moment(session.startTime).isSame(this.value, 'day')) {
-              return true
-            } else {
-              return false
-            }
-          }
-          case 'month': {
-            if (moment(session.startTime).isSame(this.value, 'month')) {
+        switch (this.sheetViewType) {
+          case 'daily': {
+            console.log('daily')
+            if (moment(session.startTime).date() === moment().date()) {
               return true
             } else {
               return false
             }
           }
           case 'weekly': {
-            if (moment(session.startTime).isSame(this.value, 'weekly')) {
+            console.log('weekly')
+            if (moment(session.startTime).week() === moment().week()) {
+              return true
+            } else {
+              return false
+            }
+          }
+          case 'monthly': {
+            console.log('monthly')
+            if (moment(session.startTime).month() === moment().month()) {
               return true
             } else {
               return false
             }
           }
           case 'all': {
-            if (moment(session.startTime).isSame(this.value, 'all')) {
-              return true
-            } else {
-              return false
-            }
+            return true
           }
         }
       })
@@ -759,10 +754,24 @@ export default {
     computedDateFormattedMomentjs() {
       return this.date ? moment(this.date).format('dddd, MMMM Do YYYY') : ''
     },
+    computedSelectedConsultation() {
+      return this.dialogBookConsultation.stepTwoA.session.startTime
+    },
+    // computedBookingDialogDate() {
+    //   return moment(this.dialog.session.startTime).format('DD/MM/YYYY')
+    // },
+    // computedBookingDialogTime() {
+    //   return `${moment(this.dialog.session.startTime).format(
+    //     'HH:mm A'
+    //   )} - ${moment(this.dialog.session.endTime).format('HH:mm A')}`
+    // },
+    computerBookingDialogAdvisor() {
+      return this.dialogBookConsultation.stepTwoA.consultationSessions.advisor
+    },
     // Mimics the computerSelectedSession() in index consultation
-    computedAvailableSessions() {
-      return this.dialogBooking.session.startTime
-    }
+    // computedAvailableSessions() {
+    //   return this.dialogBooking.session.startTime
+    // }
     // TODO: Display sessions according to calendar filter
     // sheetHeader() {
     //   if (this.calendarToggle) {
@@ -771,19 +780,34 @@ export default {
     //     return 'Upcoming Consultations (monthly)'
     //   }
     // }
+    sheetViewType() {
+      if (this.sheetViewToggle == 'daily') {
+        return 'daily'
+      } else if (this.sheetViewToggle == 'weekly') {
+        return 'weekly'
+      } else if (this.sheetViewToggle == 'monthly') {
+        return 'monthly'
+      } else {
+        return 'all'
+      }
+    }
   },
 
   async mounted() {
     this.getSessions()
     this.getConsultationSessions()
     this.getWorkshopSessions()
+    // Another way to get only consultation list
+    // this.consultations = await this.$axios.$get(
+    //   'http://localhost:4000/sessions?type=consultation'
+    // )
   },
 
   methods: {
     async getSessions() {
       this.sessionsLoading = true
       let sessions = await this.$axios.$get(
-        'http://localhost:4000/sessions?type=all'
+        'http://localhost:4000/sessions?startTime=session'
       )
       let newSessions = []
       sessions.forEach(async session => {
@@ -797,11 +821,12 @@ export default {
       })
       this.sessions = newSessions
       this.sessionsLoading = false
+      console.log('gettin bitches')
     },
     async getConsultationSessions() {
       this.sessionsLoading = true
       let consultationSessions = await this.$axios.$get(
-        'http://localhost:4000/sessions?type=consultation'
+        'http://localhost:4000/sessions?startTime=consultation'
       )
       let newSessions = []
       consultationSessions.forEach(async session => {
@@ -819,7 +844,7 @@ export default {
     async getWorkshopSessions() {
       this.sessionsLoading = true
       let workshopSessions = await this.$axios.$get(
-        'http://localhost:4000/sessions?type=workshop'
+        'http://localhost:4000/sessions?startTime=workshop'
       )
       let newSessions = []
       workshopSessions.forEach(async session => {
@@ -868,10 +893,11 @@ export default {
         start
       )} - ${this.getFormattedSessionTime(end)}`
     },
-    validateStep(nextStep, form) {
+    validateStep(nextStep, form, session) {
       if (!form || this.$refs[form].validate()) {
         this.stepCount = nextStep
       }
+      console.log(session)
     },
     getBookingType(bookingType, stepCount) {
       // console.log(bookingType)
@@ -909,8 +935,14 @@ export default {
       return this.consultationSessions.length
     },
     getNumberOfWorkshops() {
-      return this.workshopSessions.length - this.consultationSessions.length
+      return this.workshopSessions.length
+    },
+    gettest() {
+      console.log(this.sheetViewType)
     }
+    // changeCalendarView() {
+    //   if (view = 'weekly')
+    // }
   }
 }
 </script>
