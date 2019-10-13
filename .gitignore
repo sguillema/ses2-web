@@ -84,3 +84,4 @@ dist
 sw.*
 
 package-lock.json
+.DS_Store
