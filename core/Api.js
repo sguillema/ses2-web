@@ -97,6 +97,13 @@ export class BookingApi {
       data: booking
     })
   }
+
+  static async deleteBooking(body) {
+    return await axios({
+      method: 'delete',
+      url: `${BOOKINGS_ENDPOINT}/${body}`
+    })
+  }
 }
 //Booking details API
 export class BookingDetailsApi {

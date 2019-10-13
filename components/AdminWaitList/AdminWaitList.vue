@@ -4,28 +4,33 @@
       <strong>Add students to the Waiting List</strong>
     </div>
     <v-text-field
-      v-model="addStudentIdValue"
+      v-model="addStudentId"
       style="padding:10px"
       label="Student ID/Name"
       placeholder="Enter Student ID/Name"
       outline
     />
-    <v-btn depressed>Add</v-btn>
+    <v-btn depressed @click="addStudent()">Add</v-btn>
     <p>There are {{ studentAmount }} students on the waiting list</p>
     <v-data-table
+      v-model="selected"
       :headers="headers"
       :items="bookingDetails.waitlist"
       :items-per-page="5"
-      show-select="true"
     >
-      <template v-slot:items="props">
-        <td>{{ props.item.studentId }}</td>
+      <template slot="items" slot-scope="props">
+        <td>
+          <v-checkbox v-model="props.selected" primary hide-details />
+        </td>
+        <td>
+          {{ props.item.studentId }}
+        </td>
         <td>{{ props.item.createdAt }}</td>
       </template>
     </v-data-table>
     <div>
-      <v-btn depressed>Remove</v-btn>
-      <v-btn depressed>Clear</v-btn>
+      <v-btn depressed @click="nukeOneThing()">Remove</v-btn>
+      <v-btn depressed @click="nukeEverything()">Clear</v-btn>
     </div>
   </Sheet>
 </template>
@@ -36,14 +41,21 @@ import {
   waitListModule,
   REQUEST,
   BOOKINGS,
-  BOOKINGS_LENGTH
+  BOOKINGS_LENGTH,
+  ADD_STUDENT,
+  REMOVE_STUDENT
 } from '../../store/waitlist/methods'
 
 export default {
   components: { Sheet },
+  props: {
+    sessionId: { type: String, required: true }
+  },
   data() {
     return {
+      singleSelect: false,
       headers: [
+        {},
         {
           text: 'Student ID',
           value: 'studentId'
@@ -53,8 +65,15 @@ export default {
           value: 'createdAt'
         }
       ],
-      addStudentIdValue: '',
-      sessionId: ''
+      addStudentValue: {
+        studentId: '',
+        sessionId: '',
+        bookingDetails: 'mockData',
+        booked: true,
+        attended: false
+      },
+      addStudentId: '',
+      selected: []
     }
   },
   computed: {
@@ -66,15 +85,30 @@ export default {
     }
   },
   mounted() {
-    //sessionId value needs to be injected somehow
     this.$store.dispatch(waitListModule(REQUEST), {
-      sessionId: this.sessionId
+      sessionId: 'sessionId=' + this.sessionId
     })
   },
   methods: {
-    // async addStudent() {
-    //   ada
-    // }
+    async addStudent() {
+      this.addStudentValue.studentId = this.addStudentId
+      this.addStudentValue.sessionId = this.sessionId
+
+      this.$store.dispatch(waitListModule(ADD_STUDENT), {
+        studentId: this.addStudentValue
+      })
+      this.addStudentId = ''
+    },
+    async nukeEverything() {
+      this.selected = []
+    },
+    async nukeOneThing() {
+      let body = { bookingId: this.selected[0].id, sessionId: this.sessionId }
+      this.selected = []
+      this.$store.dispatch(waitListModule(REMOVE_STUDENT), {
+        body: body
+      })
+    }
   }
 }
 </script>

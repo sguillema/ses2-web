@@ -38,7 +38,7 @@ export const mutations = {
   [SUCCESS]: (state, { bookings }) => {
     state.status = 'success'
     state.bookings = bookings
-    state.bookingsLength = bookings.length
+    state.bookingsLength = Object.keys(bookings.waitlist).length
   },
 
   [ERROR]: state => {
@@ -62,48 +62,30 @@ export const actions = {
         commit(ERROR)
         reject(e)
       }
+    }),
+
+  [ADD_STUDENT]: ({ commit, dispatch }, { studentId }) =>
+    new Promise(async (resolve, reject) => {
+      commit(ADD_STUDENT)
+      try {
+        await BookingApi.addBooking(studentId)
+        console.log(studentId.sessionId)
+        dispatch(REQUEST, { sessionId: 'sessionId=' + studentId.sessionId })
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
+
+  [REMOVE_STUDENT]: ({ commit, dispatch }, { body }) =>
+    new Promise(async (resolve, reject) => {
+      commit(REMOVE_STUDENT)
+      try {
+        await BookingApi.deleteBooking(body.bookingId)
+      } catch (e) {
+        dispatch(REQUEST, { sessionId: 'sessionId=' + body.sessionId })
+        commit(ERROR)
+        reject(e)
+      }
     })
-
-  //   [REMOVE_SKILLSET]: ({ commit, dispatch }, { skillsetId, active }) =>
-  //     new Promise(async (resolve, reject) => {
-  //       commit(REMOVE_SKILLSET)
-  //       try {
-  //         const response = await SkillsetApi.updateSkillset(skillsetId, {
-  //           active
-  //         })
-  //         dispatch(REQUEST)
-  //         resolve(response)
-  //       } catch (e) {
-  //         commit(ERROR)
-  //         reject(e)
-  //       }
-  //     }),
-
-  //   [ARCHIVE]: ({ commit, dispatch }, skillsetId) =>
-  //     new Promise(async (resolve, reject) => {
-  //       commit(REQUEST)
-  //       try {
-  //         const response = await SkillsetApi.updateSkillset(skillsetId, {
-  //           active: false
-  //         })
-  //         dispatch(REQUEST, { hideArchived: true })
-  //         resolve(response)
-  //       } catch (e) {
-  //         commit(ERROR)
-  //         reject(e)
-  //       }
-  //     }),
-
-  //   [ADD_SKILLSET]: ({ commit, dispatch }, skillset) =>
-  //     new Promise(async (resolve, reject) => {
-  //       commit(ADD_SKILLSET)
-  //       try {
-  //         const response = await SkillsetApi.addSkillset(skillset)
-  //         dispatch(REQUEST, { hideArchived: true })
-  //         resolve(response)
-  //       } catch (e) {
-  //         commit(ERROR)
-  //         reject(e)
-  //       }
-  //     })
 }
