@@ -107,7 +107,7 @@ export const actions = {
         const response = await SkillsetApi.updateSkillset(skillsetId, {
           active: true
         })
-        dispatch(REQUEST, { hideArchived: true })
+        dispatch(REQUEST, { showArchive: true })
         resolve(response)
       } catch (e) {
         commit(ERROR)

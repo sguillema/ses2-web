@@ -27,9 +27,9 @@
             <td>
               <v-dialog v-model="dialog2" max-width="290">
                 <template v-slot:activator="{ on }">
-                  <v-icon small v-on="on">
-                    delete
-                  </v-icon>
+                  <v-btn small depressed class="mb-2" v-on="on">
+                    Unarchive
+                  </v-btn>
                 </template>
                 <v-card>
                   <v-card-title class="headline">
@@ -52,14 +52,20 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-
+              <!-- @click="deleteSnackbar" -->
               <!-- <v-icon small>
                 archive
               </v-icon>
-               <v-icon small @click="deleteSkillset(skillsetId)" @click="deleteSnackbar"> -->
-              <!-- <v-icon small @click="unAarchiveSkillset(props.item)">
-                delete
-              </v-icon> -->
+               <v-icon small @click="deleteSkillset(skillsetId)" > -->
+              <!-- <v-btn
+                small
+                depressed
+                class="mb-2"
+                v-on="on"
+                @click="unAarchiveSkillset(props.item)"
+              >
+                Unarchive
+              </v-btn> -->
               <!-- @click="deleteItem(item)" -->
               <!-- <v-icon small @click="editSnackbar">
                 edit
@@ -107,14 +113,7 @@ export default {
         { text: '#', value: 'noWorkshops' },
         { text: 'Actions', value: 'actions' }
       ],
-      addNew: {
-        title: '',
-        shortTitle: '',
-        rules: {
-          required: value => !!value || 'Required.'
-        }
-      },
-      dialog: false,
+
       dialog2: false
     }
   },
@@ -126,10 +125,15 @@ export default {
       }
     }
   },
+  asyncData() {
+    //GET request to get all skillsts
+  },
 
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
-      showArchive: true
+      showArchive: true,
+      // active: false
+      hideArchive: false
     })
   },
 
@@ -144,12 +148,12 @@ export default {
     },
     async deleteSkillset(skillsetId) {
       console.log('test test')
-      if (skillsetId === null) return false
-      await skillsetId.splice(skillsetId, 1)
-      return true
+      // if (skillsetId === null) return false
+      // await skillsetId.splice(skillsetId, 1)
+      // return true
     },
     async unAarchiveSkillset(skill) {
-      console.log('can call method')
+      console.log(skill.id)
       // await this.$store.dispatch(skillsetsModule(ADD_SKILLSET))
       this.dialog2 = false
 

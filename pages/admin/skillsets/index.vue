@@ -82,7 +82,12 @@
 
               <v-dialog v-model="dialog2" width="290">
                 <template v-slot:activator="{ on }">
-                  <v-icon small class="mb-2" v-on="on">
+                  <v-icon
+                    small
+                    class="mb-2"
+                    v-on="on"
+                    @click="test(props.item)"
+                  >
                     delete
                   </v-icon>
                 </template>
@@ -240,7 +245,7 @@ export default {
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
       hideArchived: true
-      // showArchive: true
+      // showArchive: false
     })
     //call programs programs?skillsetId= whatever
     //call workshop for each program within the same skillsetworkshop?programId = whatever
@@ -285,6 +290,9 @@ export default {
         this.editNew.shortTitle = skill.shortTitle.id
         this.dialog3 = false
       }
+    },
+    async test(skill) {
+      console.log(skill.id)
     },
     async archiveSkillset(skill) {
       console.log(skill.id)
