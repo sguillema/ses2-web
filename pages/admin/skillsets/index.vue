@@ -68,7 +68,6 @@
           class="elevation-1"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.no }}</td>
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.shortTitle }}</td>
@@ -81,19 +80,21 @@
               </v-icon> -->
               <!-- </router-link> -->
 
-              <v-dialog v-model="dialog2" max-width="290">
+              <v-dialog v-model="dialog2" width="290">
                 <template v-slot:activator="{ on }">
-                  <v-icon small v-on="on">
-                    archive
+                  <v-icon small class="mb-2" v-on="on">
+                    delete
                   </v-icon>
                 </template>
-                <v-card>
+
+                <v-card class="dialog2">
                   <v-card-title class="headline">
                     Are you sure you want to archive this skillset?
                   </v-card-title>
                   <v-card-text>
                     Agree will archive the skillset.
                   </v-card-text>
+                  <v-divider />
                   <v-card-actions>
                     <v-btn color="#ff0000" flat @click="dialog2 = false">
                       Cancel
@@ -108,11 +109,62 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <router-link :to="`/admin/skillsets/${props.item.id}`">
-                <v-icon small @click="editItem(props.item)">
+
+              <v-dialog v-model="dialog3" width="800">
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    small
+                    class="mb-2"
+                    v-on="on"
+                    @click="editItem(props.item)"
+                  >
+                    edit
+                  </v-icon>
+                </template>
+
+                <v-card class="dialog">
+                  <v-card-title class="dialog-title-card">
+                    <h1 class="dialog-title">Edit Skillset</h1>
+                  </v-card-title>
+                  <v-card-title class="dialog-title-card2">
+                    <h1 class="dialog-title2">Skillset Details Form</h1>
+                  </v-card-title>
+                  <v-divider />
+                  <v-form ef="form" lazy-validation>
+                    <div class="form">
+                      <v-text-field
+                        v-model="editNew.title"
+                        class="input"
+                        label="Title"
+                        outline
+                      />
+                      <v-text-field
+                        v-model="editNew.shortTitle"
+                        class="input"
+                        label="Short Title"
+                        outline
+                      />
+                    </div>
+                    <v-card-actions class="step-buttons">
+                      <v-btn
+                        depressed
+                        color="primary"
+                        @click="updateSkillset(props.item)"
+                      >
+                        Confirm
+                      </v-btn>
+                    </v-card-actions>
+                  </v-form>
+                </v-card>
+              </v-dialog>
+
+              <!-- <v-icon small @click="editItem(props.item)"> -->
+
+              <!-- <router-link :to="`/admin/skillsets/${props.item.id}`">
+                <v-icon small v-on="on">
                   edit
                 </v-icon>
-              </router-link>
+              </router-link> -->
             </td>
           </template>
         </v-data-table>
@@ -130,7 +182,8 @@ import {
   SKILLSETS,
   ADD_SKILLSET,
   REMOVE_SKILLSET,
-  ARCHIVE
+  ARCHIVE,
+  EDIT_SKILLSETS
   // NO_OF_ID
 } from '../../../store/skillsets/methods'
 import Sheet from '../../../components/Sheet/Sheet'
@@ -143,13 +196,14 @@ export default {
     return {
       search: '',
       headers: [
-        { text: 'No.', value: 'no' },
         { text: 'ID', value: 'id' },
         { text: 'Skill-set', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
         { text: '#', value: 'noOfWorkshops' },
         { text: 'Actions', value: 'actions' }
       ],
+      valid: true,
+
       addNew: {
         title: '',
         shortTitle: '',
@@ -157,8 +211,15 @@ export default {
           required: value => !!value || 'Required.'
         }
       },
+      editNew: {
+        title: '',
+        shortTitle: '',
+        skillsetId: ''
+      },
+
       dialog: false,
-      dialog2: false
+      dialog2: false,
+      dialog3: false
     }
   },
   computed: {
@@ -167,7 +228,11 @@ export default {
         return this.$store.getters[skillsetsModule(SKILLSETS)]
       }
     }
+    // formTitle() {
+    //   return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    // }
   },
+
   asyncData() {
     //GET request to get all skillsts
   },
@@ -175,7 +240,7 @@ export default {
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
       hideArchived: true
-      // showArchive: truexxx
+      // showArchive: true
     })
     //call programs programs?skillsetId= whatever
     //call workshop for each program within the same skillsetworkshop?programId = whatever
@@ -194,6 +259,31 @@ export default {
         console.log(
           'You must enter a title and short title in order to add a skillset'
         )
+      }
+    },
+    // async editItem() {
+    //   console.log('YAYYYY')
+    // },
+    async editItem(skill) {
+      this.editNew.title = skill.title
+      this.editNew.shortTitle = skill.shortTitle
+      this.editNew.skillsetId = skill.id
+      this.dialog = false
+    },
+
+    async updateSkillset(skill) {
+      console.log(skill.id)
+      let { title, shortTitle } = this.editNew
+
+      if (title !== '' && shortTitle !== '') {
+        await this.$store.dispatch(
+          skillsetsModule(EDIT_SKILLSETS),
+          this.editNew
+        )
+
+        this.editNew.title = skill.title.id
+        this.editNew.shortTitle = skill.shortTitle.id
+        this.dialog3 = false
       }
     },
     async archiveSkillset(skill) {

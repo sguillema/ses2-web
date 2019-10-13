@@ -20,13 +20,12 @@
           class="elevation-1"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.no }}</td>
             <td>{{ props.item.id }}</td>
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noWorkshop }}</td>
             <td>
-              <!-- <v-dialog v-model="dialog2" max-width="290">
+              <v-dialog v-model="dialog2" max-width="290">
                 <template v-slot:activator="{ on }">
                   <v-icon small v-on="on">
                     delete
@@ -43,20 +42,24 @@
                     <v-btn color="#ff0000" flat @click="dialog2 = false">
                       Cancel
                     </v-btn>
-                    <v-btn color="#ff0000" flat @click="deleteSnackbar">
+                    <v-btn
+                      color="#ff0000"
+                      flat
+                      @click="unAarchiveSkillset(props.item)"
+                    >
                       Yes
                     </v-btn>
                   </v-card-actions>
                 </v-card>
-              </v-dialog> -->
+              </v-dialog>
 
               <!-- <v-icon small>
                 archive
-              </v-icon> -->
-              <!-- <v-icon small @click="deleteSkillset(skillsetId)"> -->
-              <v-icon small @click="unAarchiveSkillset()">
-                delete
               </v-icon>
+               <v-icon small @click="deleteSkillset(skillsetId)" @click="deleteSnackbar"> -->
+              <!-- <v-icon small @click="unAarchiveSkillset(props.item)">
+                delete
+              </v-icon> -->
               <!-- @click="deleteItem(item)" -->
               <!-- <v-icon small @click="editSnackbar">
                 edit
@@ -77,7 +80,9 @@ import {
   REQUEST,
   SKILLSETS,
   ADD_SKILLSET,
-  ARCHIVE
+  ARCHIVE,
+  DELETE,
+  UNARCHIVE
 } from '../../store/skillsets/methods'
 
 export default {
@@ -96,7 +101,6 @@ export default {
 
       search: '',
       headers: [
-        { text: 'No.', value: 'no' },
         { text: 'ID', value: 'id' },
         { text: 'Skill-set', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
@@ -140,13 +144,16 @@ export default {
     },
     async deleteSkillset(skillsetId) {
       console.log('test test')
-      // if (skillsetId === null) return false
-      // await skillsetId.splice(skillsetId, 1)
-      // return true
+      if (skillsetId === null) return false
+      await skillsetId.splice(skillsetId, 1)
+      return true
     },
-    async unAarchiveSkillset(skillsetId) {
+    async unAarchiveSkillset(skill) {
       console.log('can call method')
       // await this.$store.dispatch(skillsetsModule(ADD_SKILLSET))
+      this.dialog2 = false
+
+      await this.$store.dispatch(skillsetsModule(UNARCHIVE), skill.id)
     }
   }
 }

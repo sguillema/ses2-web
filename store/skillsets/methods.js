@@ -23,5 +23,7 @@ export const SHORT_TITLE = 'skillset.shortTitle'
 export const ADD_SKILLSET = 'addSkillset'
 export const REMOVE_SKILLSET = 'removeSkillset'
 export const ARCHIVE = 'archive'
+export const EDIT_SKILLSETS = 'editSkillsets'
+export const UNARCHIVE = 'unArchive'
 
 export const skillsetsModule = method => storeModule(MODULE, method)

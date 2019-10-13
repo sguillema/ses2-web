@@ -9,7 +9,9 @@ import {
   DELETE,
   ADD_SKILLSET,
   REMOVE_SKILLSET,
-  ARCHIVE
+  ARCHIVE,
+  EDIT_SKILLSETS,
+  UNARCHIVE
 } from './methods'
 
 const emptyState = () => ({
@@ -98,12 +100,40 @@ export const actions = {
         reject(e)
       }
     }),
-
+  [UNARCHIVE]: ({ commit, dispatch }, skillsetId) =>
+    new Promise(async (resolve, reject) => {
+      commit(REQUEST)
+      try {
+        const response = await SkillsetApi.updateSkillset(skillsetId, {
+          active: true
+        })
+        dispatch(REQUEST, { hideArchived: true })
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
   [ADD_SKILLSET]: ({ commit, dispatch }, skillset) =>
     new Promise(async (resolve, reject) => {
       commit(ADD_SKILLSET)
       try {
         const response = await SkillsetApi.addSkillset(skillset)
+        dispatch(REQUEST, { hideArchived: true })
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
+  [EDIT_SKILLSETS]: ({ commit, dispatch }, editNew) =>
+    new Promise(async (resolve, reject) => {
+      commit(EDIT_SKILLSETS)
+      try {
+        const response = await SkillsetApi.updateSkillset(
+          editNew.skillsetId,
+          editNew
+        )
         dispatch(REQUEST, { hideArchived: true })
         resolve(response)
       } catch (e) {
