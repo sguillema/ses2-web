@@ -29,16 +29,15 @@
 <script>
 import _ from 'lodash'
 import moment from 'moment'
-import { authModule, TYPE, USER } from '~/store/auth/methods'
 import {
   BookingApi,
   SessionApi,
   WorkshopApi,
   BookingDetailsApi
 } from '../../core/Api'
-
 import Sheet from '../../components/Sheet/Sheet'
 import Attendance from '../ViewBookings/attendance'
+import { authModule, TYPE, USER } from '~/store/auth/methods'
 
 export default {
   components: { Sheet, Attendance },
