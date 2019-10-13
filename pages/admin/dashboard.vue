@@ -551,22 +551,24 @@ K
                         v-model="date"
                         :min="calendarMinDate"
                         :max="calendarMaxDate"
+                        :events="calendarEvents"
                         event-color="primary"
                         header-color="black"
                         @input="menu2 = false"
                       />
-                      <template>
+                      <!-- <template>
                         <v-row align="center">
                           <v-date-picker
                             v-model="date"
                             :min="calendarMinDate"
                             :max="calendarMaxDate"
+                            :events="calendarEvents"
                             event-color="primary"
                             header-color="black"
                             type="month"
                           />
                         </v-row>
-                      </template>
+                      </template> -->
                     </v-menu>
                     <!-- </v-col> -->
                   </div>
