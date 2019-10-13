@@ -599,7 +599,7 @@
                   </td>
                   <td>
                     <router-link
-                      v-if="props.item.type === 'consultation'"
+                      v-if="props.item.type === 'Consultation'"
                       :to="`/admin/consultations/${props.item.id}`"
                     >
                       View
@@ -608,7 +608,7 @@
                       v-else
                       :to="`/admin/workshops/${props.item.id}`"
                     >
-                      View
+                      View2
                     </router-link>
                   </td>
                 </template>
@@ -626,7 +626,7 @@
 import moment from 'moment'
 // import { authModule, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
-import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
+// import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 
 export default {
   middleware: adminAuthenticated,
@@ -723,7 +723,7 @@ export default {
       let filteredSessions = this.sessions.filter(session => {
         switch (this.sheetViewType) {
           case 'daily': {
-            console.log('daily')
+            // console.log('daily')
             if (moment(session.startTime).isSame(this.date, 'date')) {
               return true
             } else {
@@ -731,7 +731,7 @@ export default {
             }
           }
           case 'weekly': {
-            console.log('weekly')
+            // console.log('weekly')
             if (moment(session.startTime).isSame(this.date, 'week')) {
               return true
             } else {
@@ -739,7 +739,7 @@ export default {
             }
           }
           case 'monthly': {
-            console.log('monthly')
+            // console.log('monthly')
             if (moment(session.startTime).isSame(this.date, 'month')) {
               return true
             } else {
@@ -846,7 +846,7 @@ export default {
       })
       this.sessions = newSessions
       this.sessionsLoading = false
-      console.log('gettin bitches')
+      // console.log('gettin bitches')
     },
     async getConsultationSessions() {
       this.sessionsLoading = true
@@ -923,8 +923,8 @@ export default {
         this.stepCount = nextStep
         this.dialogBookConsultation.stepTwoA.consultationSessions.session = session
       }
-      console.log(this.stepCount)
-      console.log(this.dialogBookConsultation.stepTwoA.session)
+      // console.log(this.stepCount)
+      // console.log(this.dialogBookConsultation.stepTwoA.session)
     },
     getBookingType(bookingType, stepCount) {
       // console.log(bookingType)
@@ -936,12 +936,6 @@ export default {
         this.stepCount = 5
       }
     },
-    getSessionType(type) {
-      return this.session.type
-    },
-    // getAvailableSession() {
-    //   console.log()
-    // },
     clearConsultationBooking() {
       this.stepCount = 1
       // this.dialogConsultationBooking.active = false
