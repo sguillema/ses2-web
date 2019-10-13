@@ -33,16 +33,22 @@ export default {
     return {
       listSections: [
         {
+          title: 'Home',
+          links: [
+            { title: 'Dashboard', icon: 'receipt', to: '/admin/dashboard' }
+          ]
+        },
+        {
           title: 'Bookings',
           links: [
+            { title: 'Skill Sets', icon: 'receipt', to: '/admin/skillsets' },
+            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
+            { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
             {
               title: 'Consultations',
               icon: 'forum',
               to: '/admin/consultations'
-            },
-            { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
-            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
-            { title: 'Skill Sets', icon: 'receipt', to: '/admin/skillsets' }
+            }
           ]
         },
         {
@@ -53,21 +59,16 @@ export default {
               icon: 'supervised_user_circle',
               to: '/admin/advisors'
             },
-            { title: 'Students', icon: 'recent_actors', to: '/admin/students' },
-            {
-              title: 'Waiting Lists',
-              icon: 'list',
-              to: '/admin/waitinglists'
-            }
+            { title: 'Students', icon: 'recent_actors', to: '/admin/students' }
           ]
         },
         {
           title: 'Miscellaneous',
           links: [
             { title: 'Emails', icon: 'email', to: '/admin/emails' },
-            { title: 'Reports', icon: 'book', to: '/admin/reports' },
+            { title: 'Messages', icon: 'chat', to: '/admin/messages' },
             { title: 'Rooms', icon: 'home', to: '/admin/rooms' },
-            { title: 'Messages', icon: 'chat', to: '/admin/messages' }
+            { title: 'Reports', icon: 'book', to: '/admin/reports' }
           ]
         }
       ]
