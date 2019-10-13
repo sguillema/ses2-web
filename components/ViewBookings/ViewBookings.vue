@@ -16,7 +16,20 @@
         <td>{{ props.item.session.room }}</td>
         <td>{{ props.item.session.createdBy }}</td>
         <td>
-          <i class="material-icons" color="red">school</i>
+          <i
+            v-if="!props.item.session.attended && isSessionOpen"
+            class="material-icons"
+            color="gray"
+          >
+            school
+          </i>
+          <i
+            v-else-if="props.item.session.attended"
+            class="material-icons"
+            color="green"
+          >
+            school
+          </i>
         </td>
       </template>
     </v-data-table>
@@ -56,6 +69,11 @@ export default {
       workshops: [],
       bookingDetails: [],
       bookingsWithData: []
+    }
+  },
+  computed: {
+    IsSessionOpen() {
+      return true
     }
   },
   async mounted() {
