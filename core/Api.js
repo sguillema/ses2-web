@@ -78,10 +78,9 @@ export class BookingApi {
   }
 
   static async getBookings(params) {
-    const query = querystring.stringify(params)
     return await axios({
       method: 'get',
-      url: `${BOOKINGS_ENDPOINT}?${query}`
+      url: `${BOOKINGS_ENDPOINT}?${params}`
     })
   }
 
