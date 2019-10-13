@@ -544,11 +544,29 @@ K
                           prepend-icon="event"
                           class="calendar"
                           show-current="showCurrent"
-                          readonly
                           v-on="on"
                         />
                       </template>
-                      <v-date-picker v-model="date" @input="menu2 = false" />
+                      <v-date-picker
+                        v-model="date"
+                        :min="calendarMinDate"
+                        :max="calendarMaxDate"
+                        event-color="primary"
+                        header-color="black"
+                        @input="menu2 = false"
+                      />
+                      <template>
+                        <v-row align="center">
+                          <v-date-picker
+                            v-model="date"
+                            :min="calendarMinDate"
+                            :max="calendarMaxDate"
+                            event-color="primary"
+                            header-color="black"
+                            type="month"
+                          />
+                        </v-row>
+                      </template>
                     </v-menu>
                     <!-- </v-col> -->
                   </div>
@@ -719,7 +737,7 @@ export default {
         switch (this.sheetViewType) {
           case 'daily': {
             console.log('daily')
-            if (moment(session.startTime).date() === moment().date()) {
+            if (moment(session.startTime).isSame(this.date, 'date')) {
               return true
             } else {
               return false
@@ -727,7 +745,7 @@ export default {
           }
           case 'weekly': {
             console.log('weekly')
-            if (moment(session.startTime).week() === moment().week()) {
+            if (moment(session.startTime).isSame(this.date, 'week')) {
               return true
             } else {
               return false
@@ -735,7 +753,7 @@ export default {
           }
           case 'monthly': {
             console.log('monthly')
-            if (moment(session.startTime).month() === moment().month()) {
+            if (moment(session.startTime).isSame(this.date, 'month')) {
               return true
             } else {
               return false
@@ -780,6 +798,26 @@ export default {
     //     return 'Upcoming Consultations (monthly)'
     //   }
     // }
+    calendarEvents() {
+      let calendarEvents = []
+      this.sessions.forEach(session => {
+        let date = this.getFormattedDate(session.startTime)
+        if (!calendarEvents.includes(date)) {
+          calendarEvents.push(date)
+        }
+      })
+      return calendarEvents
+    },
+    calendarMinDate() {
+      return moment(this.today)
+        .subtract(1, 'year')
+        .toISOString()
+    },
+    calendarMaxDate() {
+      return moment(this.today)
+        .add(1, 'year')
+        .toISOString()
+    },
     sheetViewType() {
       if (this.sheetViewToggle == 'daily') {
         return 'daily'
