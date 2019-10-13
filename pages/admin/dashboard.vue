@@ -1,4 +1,3 @@
-K
 <template>
   <div id="page-authenticated">
     <!-- <div>Hello this is an authenticated route :) with type {{ type }}</div> -->
@@ -628,7 +627,7 @@ K
                     }}
                   </td>
                   <td>{{ props.item.room }}</td>
-                  <td>{{ props.item.topic }}</td>
+                  <!-- <td>{{ props.item.topic }}</td> -->
                   <td>
                     <router-link
                       v-if="getArrayLength(props.item.bookings) > 0"
@@ -638,13 +637,28 @@ K
                     >
                       {{ props.item.bookings[0].studentId }}
                     </router-link>
-                    <a
+                    <!-- <a
                       v-else
                       class="book-link"
                       @click="activateBookingDialog(props.item)"
-                    >
-                      Book now
+                    > -->
+                    <a v-else class="vacant">
+                      Available
                     </a>
+                  </td>
+                  <td>
+                    <router-link
+                      v-if="props.item.type === 'consultation'"
+                      :to="`/admin/consultations/${props.item.id}`"
+                    >
+                      View
+                    </router-link>
+                    <router-link
+                      v-else
+                      :to="`/admin/workshops/${props.item.id}`"
+                    >
+                      View
+                    </router-link>
                   </td>
                 </template>
               </v-data-table>
@@ -658,11 +672,8 @@ K
 </template>
 
 <script>
-<<<<<<< HEAD
 import moment from 'moment'
 // import { authModule, LOGOUT } from '~/store/auth/methods'
-=======
->>>>>>> 9a9a78d7d4a750267ebddde8c480e7a064d30da2
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 
@@ -680,6 +691,7 @@ export default {
       // consultations: [],
       // sessions: [],
       // -> End
+      dialog: false,
       dialog2: false,
       stepCount: 0,
       sessions: ['yeet'],
@@ -726,7 +738,7 @@ export default {
         { text: 'Type', value: 'type' },
         { text: 'Time', value: 'time' },
         { text: 'Room', value: 'room' },
-        { text: 'Topic', value: 'topic' },
+        // { text: 'Topic', value: 'topic' },
         { text: 'Booking By', value: 'bokings[0].studentID' }
       ],
       colors: ['red', 'blue', 'green', 'yellow', 'purple'],
@@ -927,7 +939,7 @@ export default {
       return array.length
     },
     getSessionDate(date) {
-      return moment(date).format('DD/MM/YYYY')
+      return moment(date).format('DD/MM/YY')
     },
     getFormattedSessionTime(start) {
       return moment(start).format('kk:mm')
@@ -1161,6 +1173,9 @@ export default {
           }
           &:hover {
             text-decoration: underline;
+          }
+          &.vacant {
+            color: green;
           }
         }
       }
