@@ -77,6 +77,28 @@
           </div>
         </Sheet>
       </div>
+      <div class="container">
+        <Sheet header="Consultation Attatchments">
+          <div class="table">
+            <v-data-table
+              class="table-wrapper"
+              :headers="fileHeaders"
+              :items="files"
+              hide-actions
+            >
+              <template v-slot:items="props">
+                <td>{{ props.item.title }}</td>
+                <td>{{ getMomentDateFormat(props.item.createdAt) }}</td>
+              </template>
+            </v-data-table>
+          </div>
+          <div class="action row" align="center">
+            <v-btn color="primary" dark depressed>
+              Download
+            </v-btn>
+          </div>
+        </Sheet>
+      </div>
     </section>
     <section class="right">
       <div class="container">
@@ -118,6 +140,27 @@ export default {
         { text: 'Last Name', value: 'lName' },
         { text: 'First Name', value: 'fName' },
         { text: '', value: '' }
+      ],
+      fileHeaders: [
+        { text: 'Title', value: 'title' },
+        { text: 'Sent Date', value: 'createdAt' }
+      ],
+      files: [
+        {
+          title: 'form1.docx',
+          path: '/files/form1.docx',
+          createdAt: '2019-10-24T15:00:00+10:00'
+        },
+        {
+          title: 'form2.docx',
+          path: '/files/form1.docx',
+          createdAt: '2019-10-24T15:00:00+10:00'
+        },
+        {
+          title: 'form3.docx',
+          path: '/files/form1.docx',
+          createdAt: '2019-10-24T15:00:00+10:00'
+        }
       ],
       addNew: {
         attendance: '',
