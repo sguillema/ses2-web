@@ -2,7 +2,7 @@
   <div id="page-programs">
     <section class="container">
       <div class="column-right">
-        <Sheet class="sheet" header=" Upcoming Programs">
+        <Sheet class="sheet" header=" Upcoming Programs" alt>
           <v-toolbar flat color="white">
             <v-text-field
               v-model="search"
@@ -80,7 +80,6 @@
             :headers="headers"
             :items="programs"
             :search="search"
-            hide-actions
           >
             <template v-slot:items="props">
               <td>{{ props.item.title }}</td>

@@ -2,7 +2,7 @@
   <div id="page-workshops">
     <section class="container">
       <div class="column-right">
-        <Sheet class="sheet" header="Upcoming Workshops">
+        <Sheet class="sheet" header="Upcoming Workshops" alt>
           <v-toolbar flat color="white">
             <v-text-field
               v-model="search"
@@ -81,7 +81,6 @@
             :headers="headers"
             :items="workshops"
             :search="search"
-            hide-actions
             :expand="expand"
           >
             <template v-slot:items="props">
@@ -208,7 +207,6 @@ export default {
       ) {
         return false
       }
-      console.log(this.newWorkshop)
       await this.$store.dispatch(workshopsModule(CREATE), this.newWorkshop)
       this.dialog = false
       this.newWorkshop = emptyWorkshopForm()

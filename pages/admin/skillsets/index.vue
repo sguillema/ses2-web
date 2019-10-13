@@ -1,7 +1,7 @@
 <template>
   <div id="page-skillset">
     <section class="container">
-      <Sheet header="Skill-set">
+      <Sheet header="Skill-set" alt>
         <div>
           <v-toolbar flat color="white">
             <v-text-field
@@ -62,7 +62,6 @@
           :items="skillsets"
           :search="search"
           item-key="name"
-          class="elevation-1"
         >
           <template v-slot:items="props">
             <td>{{ props.item.id }}</td>

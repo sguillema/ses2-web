@@ -7,7 +7,7 @@
           Close
         </v-btn>
       </v-snackbar> -->
-      <Sheet header="Available Advisors">
+      <Sheet header="Available Advisors" alt>
         <v-text-field
           v-model="search"
           class="input-spacing"
