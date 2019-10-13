@@ -1073,6 +1073,7 @@ export default {
     activateBookingDialog(session) {
       this.dialogBooking.active = true
       this.dialogBooking.session = session
+      console.log(session)
     }
   }
 }

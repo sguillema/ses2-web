@@ -3,13 +3,8 @@
     <!-- <div>Hello this is an authenticated route :) with type {{ type }}</div> -->
     <section class="container">
       <div class="column-left">
-        <div class="section-heading">
+        <!-- <div class="section-heading">
           Your Shortcuts
-          <span class="right">
-            <!-- <v-icon @click="editItem(props.item)">
-              add
-            </v-icon> -->
-          </span>
         </div>
         <template>
           <v-dialog v-model="dialog" persistent width="800">
@@ -70,7 +65,6 @@
                       </v-btn>
                     </div>
                   </v-stepper-content>
-                  <!-- Start of Student Consultation -->
                   <v-stepper-content step="2">
                     <div class="step-content step2a">
                       <h2>Student Consultation</h2>
@@ -87,8 +81,8 @@
                             dialogBookConsultation.stepTwoA.consultationSessions
                           "
                           :items="consultationSessions"
-                          item-value="id"
-                          item-text="id"
+                          item-value="startTime"
+                          item-text="startTime"
                           :rules="
                             dialogBookConsultation.stepTwoA
                               .consultationSessionRules
@@ -101,7 +95,6 @@
                         />
                       </v-form>
                     </div>
-                    <!-- TODO: Get Available Sessions and Validate Continue Button -->
                     <v-btn depressed @click="clearConsultationBooking()">
                       Back
                     </v-btn>
@@ -144,10 +137,10 @@
                           v-model="
                             dialogBookConsultation.stepTwoA.consultationSessions
                           "
-                          label="Consultation Session ID"
+                          label="Consultation Date and Time"
                           disabled
                         />
-                        <!-- <v-text-field
+                        <v-text-field
                           v-model="computedBookingDialogDate"
                           label="Date"
                           disabled
@@ -156,7 +149,7 @@
                           v-model="computedBookingDialogTime"
                           label="Time"
                           disabled
-                        /> -->
+                        />
                         <v-text-field
                           v-model="computerBookingDialogAdvisor"
                           label="Advisor Name"
@@ -190,10 +183,10 @@
                         v-model="
                           dialogBookConsultation.stepTwoA.consultationSessions
                         "
-                        label="Consultation Session ID"
+                        label="Consultation Date and Time"
                         disabled
                       />
-                      <!-- <v-text-field
+                      <v-text-field
                         v-model="dialogBookConsultation.stepThreeA.date"
                         label="Date"
                         disabled
@@ -202,13 +195,12 @@
                         v-model="dialogBookConsultation.stepThreeA.time"
                         label="Time"
                         disabled
-                      /> -->
+                      />
                       <v-text-field
-                        v-model="dialogBookConsultation.stepThreeA.advisor"
+                        v-model="computerBookingDialogAdvisor"
                         label="Advisor"
                         disabled
                       />
-                      <!-- Butts -->
                       <v-btn depressed @click="stepCount = 3">
                         Back
                       </v-btn>
@@ -220,8 +212,6 @@
                       </v-btn>
                     </div>
                   </v-stepper-content>
-                  <!-- End of Student Consultation -->
-                  <!-- Start of Worskhop Enrollment -->
                   <v-stepper-content step="5">
                     <v-card class="mb-12" height="100%">
                       <h2 class="dialog-title">
@@ -340,50 +330,13 @@
                       </v-btn>
                     </v-card>
                   </v-stepper-content>
-                  <!-- End of Workshop Enrollment -->
                 </v-stepper-items>
               </v-stepper>
             </template>
-            <!-- <v-card>
-                <div>
-                  
-                </div>
-              </v-card-text>
-              <v-divider :inset="inset" />
-              <v-card-actions>
-                <div class="flex-grow-1"></div>
-                <v-btn
-                  class="v-btn v-btn--flat v-btn--text theme--light v-size--default green--text text--darken-1"
-                  text
-                  @click="dialog = false"
-                >
-                  Close
-                </v-btn>
-              </v-card-actions>
-            </v-card>
           </v-dialog>
-          <v-dialog v-model="dialog2" max-width="500px">
-            <v-card>
-              <v-card-title>
-                <h1 class="dialog-title">Book a Student Consultation</h1>
-              </v-card-title>
-            </v-card>
-          </v-dialog>
-          <v-dialog v-model="dialog3" max-width="500px">
-            <v-card>
-              <v-card-title>
-                <h1 class="dialog-title">Workshop Enrollment</h1>
-              </v-card-title>
-            </v-card> -->
-          </v-dialog>
-        </template>
+        </template> -->
         <div class="section-heading">
           Your Statistics
-          <span class="right">
-            <!-- <v-icon @click="editItem(props.item)">
-              add
-            </v-icon> -->
-          </span>
         </div>
         <div class="box">
           <div class="sub-box">
@@ -470,14 +423,12 @@
         </div>
         <div class="advertisement">
           <template>
-            <v-carousel cycle height="300" hide-delimiters show-arrows-on-hover>
-              <v-carousel-item v-for="(slide, i) in slides" :key="i">
-                <v-sheet :color="colors[i]" height="100%">
-                  <v-row class="fill-height" align="center" justify="center">
-                    <div class="display-custom">{{ slide }} owo</div>
-                  </v-row>
-                </v-sheet>
-              </v-carousel-item>
+            <v-carousel cycle height="218" hide-delimiters show-arrows-on-hover>
+              <v-carousel-item
+                v-for="(item, i) in items"
+                :key="i"
+                :src="item.src"
+              />
             </v-carousel>
           </template>
         </div>
@@ -702,8 +653,10 @@ export default {
       // consultations: ['Test1', 'Test2'],
       dialogBookConsultation: {
         active: false,
+        session: {},
         stepTwoA: {
           consultationSessions: {},
+          session: {},
           consultationSessionRules: [v => !!v || 'Session is required']
         },
         stepThreeA: {
@@ -741,8 +694,24 @@ export default {
         // { text: 'Topic', value: 'topic' },
         { text: 'Booking By', value: 'bokings[0].studentID' }
       ],
-      colors: ['red', 'blue', 'green', 'yellow', 'purple'],
-      slides: ['monkaS', 'pepega', 'commit', 'progfund', 'bouldering']
+      items: [
+        {
+          src:
+            'https://cdn.discordapp.com/attachments/573024870145851395/632976150221553710/summer.png'
+        },
+        {
+          src:
+            'https://cdn.discordapp.com/attachments/573024870145851395/632976150716743703/autumn.png'
+        },
+        {
+          src:
+            'https://cdn.discordapp.com/attachments/573024870145851395/632976149269708811/winter.png'
+        },
+        {
+          src:
+            'https://cdn.discordapp.com/attachments/573024870145851395/632976149944860692/spring.png'
+        }
+      ]
     }
   },
   computed: {
@@ -952,8 +921,10 @@ export default {
     validateStep(nextStep, form, session) {
       if (!form || this.$refs[form].validate()) {
         this.stepCount = nextStep
+        this.dialogBookConsultation.stepTwoA.consultationSessions.session = session
       }
-      console.log(session)
+      console.log(this.stepCount)
+      console.log(this.dialogBookConsultation.stepTwoA.session)
     },
     getBookingType(bookingType, stepCount) {
       // console.log(bookingType)
@@ -964,6 +935,9 @@ export default {
       if (bookingType == 'workshop') {
         this.stepCount = 5
       }
+    },
+    getSessionType(type) {
+      return this.session.type
     },
     // getAvailableSession() {
     //   console.log()
@@ -992,13 +966,7 @@ export default {
     },
     getNumberOfWorkshops() {
       return this.workshopSessions.length
-    },
-    gettest() {
-      console.log(this.sheetViewType)
     }
-    // changeCalendarView() {
-    //   if (view = 'weekly')
-    // }
   }
 }
 </script>
@@ -1147,7 +1115,7 @@ export default {
         margin-bottom: 25px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
         margin-top: 3px;
-        height: 300px;
+        height: 218px;
         .display-custom {
           display: flex;
           font-size: 2vw;
