@@ -46,7 +46,10 @@ export default {
           action: () => this.$router.push({ path: '/admin/dashboard' })
         }
       ],
-      bottomItem: { icon: 'settings', action: () => console.log('settings') }
+      bottomItem: [
+        { icon: '', action: () => console.log('') },
+        { icon: 'logout', action: () => console.log('logout') }
+      ]
     }
   },
   computed: {

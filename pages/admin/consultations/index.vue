@@ -16,7 +16,7 @@
           >
             <template v-slot:activator="{ on }">
               <v-btn class="header-button" depressed v-on="on">
-                Create Session
+                <v-icon class="header-button-icon">add</v-icon>
               </v-btn>
             </template>
             <v-card class="dialog">
@@ -358,49 +358,56 @@
             </v-card>
           </v-dialog>
         </div>
-        <v-sheet class="filter-container" elevation="3">
-          <v-switch
-            v-model="calendarToggle"
-            class="calendar-toggle"
-            label="Select by day"
-            color="red"
-            dark
-            hide-details
-            flat
-          />
-          <v-date-picker
-            v-model="value"
-            class="calendar"
-            :min="calendarMinDate"
-            :max="calendarMaxDate"
-            :events="calendarEvents"
-            event-color="primary"
-            header-color="black"
-            color="red"
-            width="290"
-            :type="calendarType"
-          />
-        </v-sheet>
+        <v-menu offset-x>
+          <template v-slot:activator="{ on }">
+            <v-btn class="calendar-button" depressed v-on="on">
+              <v-icon class="calendar-button-icon">calendar_today</v-icon>
+            </v-btn>
+          </template>
+          <div class="filter-container">
+            <v-switch
+              v-model="calendarToggle"
+              class="calendar-toggle"
+              label="Select by day"
+              color="red"
+              dark
+              hide-details
+              flat
+            />
+            <v-date-picker
+              v-model="value"
+              class="calendar"
+              :min="calendarMinDate"
+              :max="calendarMaxDate"
+              :events="calendarEvents"
+              event-color="primary"
+              header-color="black"
+              color="red"
+              width="290"
+              :type="calendarType"
+            />
+          </div>
+        </v-menu>
       </div>
       <div class="column-right">
         <Sheet :header="sheetHeader" alt>
-          <div class="section-header">
+          <v-toolbar flat color="white">
             <v-text-field
               v-model="search"
-              class="input-spacing"
               append-icon="search"
               label="Search"
               placeholder="Search"
               single-line
               hide-details
             />
-          </div>
+          </v-toolbar>
           <v-data-table
             class="table-wrapper"
             :headers="headers"
             :items="filteredSessions"
             :search="search"
             :loading="sessionsLoading"
+            :items-per-page="-1"
           >
             <template v-if="!sessionsLoading" v-slot:items="props">
               <td>{{ props.item.id }}</td>
@@ -883,8 +890,11 @@ export default {
       return moment(date).format('YYYY-MM-DD')
     },
     validateStep(nextStep, form) {
+      console.log(nextStep)
+      console.log(form)
       if (!form || this.$refs[form].validate()) {
         this.stepCount = nextStep
+        console.log(nextStep)
       }
     },
     createSessionCalendarSelectTime({ date, time }) {
@@ -1014,7 +1024,7 @@ export default {
           endTime: session.endTime,
           size: '1',
           room: 'CB11.00.201',
-          type: 'consultation',
+          type: 'Consultation',
           createdBy: this.dialogCreateSession.stepOne.advisor,
           cutoff: '24'
         })
@@ -1027,12 +1037,13 @@ export default {
     },
     async submitConsultationBooking() {
       // Ideally this should be done in one call.
-      const bookingId = await BookingApi.addBooking({
+      const addBookingResponse = await BookingApi.addBooking({
         studentId: this.dialogBooking.stepOne.studentIdName,
         sessionId: this.dialogBooking.session.id,
         booked: true,
         attended: false
       })
+      const bookingId = addBookingResponse.data
       const { stepTwo } = this.dialogBooking
       let helpRadios = [
         stepTwo.help0,
@@ -1069,6 +1080,7 @@ export default {
     activateBookingDialog(session) {
       this.dialogBooking.active = true
       this.dialogBooking.session = session
+      console.log(session)
     }
   }
 }
@@ -1077,20 +1089,60 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 
+.filter-container {
+  position: relative;
+  .calendar-toggle {
+    position: absolute;
+    right: 0;
+    color: white;
+    z-index: 1;
+    margin-top: 7px;
+    transform: scale(0.8);
+  }
+  .filters {
+    padding: 14px;
+  }
+  .calendar {
+    box-shadow: none;
+  }
+}
+
 #page-consultations {
+  .calendar-button,
+  .header-button {
+    min-width: unset;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 15px;
+    margin-top: 0;
+    width: 100%;
+    height: 80px;
+    color: $color-white;
+    .calendar-button-icon {
+      font-size: 60px;
+    }
+  }
+  .header-button {
+    background: $color-red2;
+    .header-button-icon {
+      font-size: 60px;
+    }
+  }
+  .calendar-button {
+    background: $color-black;
+  }
   .container {
     display: flex;
     > .column-left {
-      min-width: 290px;
-      width: 290px;
+      width: 80px;
       margin-right: 27px;
       .header-button {
-        margin-left: 0;
-        margin-right: 0;
+        // margin-left: 0;
+        // margin-right: 0;
         margin-bottom: 15px;
-        margin-top: 0;
+        // margin-top: 0;
         width: 100%;
-        height: 60px;
+        height: 80px;
         font-size: $font-subheading;
         color: $color-white;
         background: $color-red2;

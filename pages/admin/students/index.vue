@@ -1,13 +1,15 @@
 <template>
   <div id="page-students">
     <section class="container">
-      <Sheet header="Registered Students">
-        <v-text-field
-          v-model="search"
-          class="input-spacing"
-          append-icon="search"
-          placeholder="Search"
-        />
+      <Sheet header="Registered Students" alt>
+        <v-toolbar flat color="white">
+          <v-text-field
+            v-model="search"
+            class="input-spacing"
+            append-icon="search"
+            placeholder="Search"
+          />
+        </v-toolbar>
         <v-data-table
           class="table-wrapper"
           :headers="headers"
@@ -22,9 +24,9 @@
               <router-link :to="`/admin/students/${props.item.id}`">
                 Edit
               </router-link>
-              <router-link :to="`/admin/students/${props.item.id}/history`">
+              <!-- <router-link :to="`/admin/students/${props.item.id}/history`">
                 View History
-              </router-link>
+              </router-link> -->
             </td>
           </template>
         </v-data-table>
@@ -65,6 +67,7 @@
 
 <script>
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
+
 import {
   studentsModule,
   REQUEST,
@@ -121,16 +124,10 @@ export default {
 }
 
 .table-wrapper {
-  border-bottom: 2px solid $color-divider;
   margin-bottom: 12px;
 
   thead {
     background: black;
-    tr {
-      &:first-child {
-        border-bottom: 2px solid $color-divider;
-      }
-    }
   }
 }
 

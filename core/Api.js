@@ -16,6 +16,7 @@ const BOOKINGDETAIL_ENDPOINT = `${ENDPOINT}/booking-details`
 const ROOMS_ENDPOINT = `${ENDPOINT}/rooms`
 const EMAILS_ENDPOINT = `${ENDPOINT}/emails`
 const EMAILPLACEHOLDERS_ENDPOINT = `${ENDPOINT}/email-placeholders`
+const MESSAGES_ENDPOINT = `${ENDPOINT}/messages`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -98,6 +99,20 @@ export class BookingApi {
       data: booking
     })
   }
+
+  static async cancelBooking(id) {
+    return await axios({
+      method: 'post',
+      url: `${BOOKINGS_ENDPOINT}/${id}/cancel`
+    })
+  }
+
+  static async deleteBooking(body) {
+    return await axios({
+      method: 'delete',
+      url: `${BOOKINGS_ENDPOINT}/${body}`
+    })
+  }
 }
 //Booking details API
 export class BookingDetailsApi {
@@ -133,6 +148,12 @@ export class SessionApi {
     })
   }
 
+  static async getSessionsByWorkshopId(workshopId) {
+    return await this.getSessions({
+      workshopId
+    })
+  }
+
   static async getConsultationSessions() {
     const params = {
       type: 'consultation'
@@ -146,12 +167,11 @@ export class SessionApi {
       url: `${SESSIONS_ENDPOINT}/${sessionId}`
     })
   }
-
-  static async addSession(session) {
+  static async addSession(data) {
     return await axios({
       method: 'post',
       url: `${SESSIONS_ENDPOINT}`,
-      data: session
+      data: data
     })
   }
 
@@ -207,6 +227,13 @@ export class SkillsetApi {
     return await axios({
       method: 'get',
       url: `${SKILLSETS_ENDPOINT}?type=active`
+    })
+  }
+
+  static async getArchiveSkillsets() {
+    return await axios({
+      method: 'get',
+      url: `${SKILLSETS_ENDPOINT}?type=archived`
     })
   }
 }
@@ -302,11 +329,7 @@ export class WorkshopApi {
   }
 
   static async getSessionsByWorkshopId(id) {
-    return await axios({
-      method: 'get',
-      url: `${SESSIONS_ENDPOINT}/?workshopId=${id}`,
-      data: id
-    })
+    return await SessionApi.getSessionsByWorkshopId(id)
   }
 }
 
@@ -402,6 +425,39 @@ export class EmailsApi {
     return await axios({
       method: 'get',
       url: `${EMAILPLACEHOLDERS_ENDPOINT}?type=${type}`
+    })
+  }
+}
+
+export class MessagesApi {
+  static async getMessages() {
+    return await axios({
+      method: 'get',
+      url: `${MESSAGES_ENDPOINT}`
+    })
+  }
+
+  static async getMessage(id) {
+    return await axios({
+      method: 'get',
+      url: `${MESSAGES_ENDPOINT}/${id}`
+    })
+  }
+
+  static async updateMessageTemplate(message) {
+    const { id, template } = message
+    const data = { template }
+    return await axios({
+      method: 'patch',
+      url: `${MESSAGES_ENDPOINT}/${id}`,
+      data
+    })
+  }
+
+  static async publishMessage(id) {
+    return await axios({
+      method: 'post',
+      url: `${MESSAGES_ENDPOINT}/${id}/publish`
     })
   }
 }

@@ -6,11 +6,9 @@
           <v-toolbar flat color="white">
             <v-text-field
               v-model="search"
-              class="input-spacing"
               append-icon="search"
               placeholder="Search for Room"
             />
-            <v-spacer />
           </v-toolbar>
           <v-data-table
             :headers="headers"
@@ -94,7 +92,7 @@ export default {
         margin-bottom: 0;
         margin-top: 15px;
         width: 100%;
-        height: 60px;
+        height: 80px;
         font-size: $font-reee;
         color: $color-white;
         background: $color-red2;
