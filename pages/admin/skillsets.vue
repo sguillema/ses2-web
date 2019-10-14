@@ -1,8 +1,11 @@
 <template>
   <div id="page-skillset">
+    <v-snackbar v-model="snackbar.active" :timeout="2000" top>
+      {{ snackbar.message }}
+    </v-snackbar>
     <section class="container">
       <div class="column-left">
-        <v-dialog v-model="dialog" width="800">
+        <v-dialog v-model="dialogAdd" width="800">
           <template v-slot:activator="{ on }">
             <v-btn class="header-button" color="primary" depressed v-on="on">
               <v-icon class="header-button-icon">add</v-icon>
@@ -45,9 +48,25 @@
             </v-card-text>
           </v-card>
         </v-dialog>
+        <v-btn
+          class="header-button"
+          color="secondary"
+          depressed
+          @click="toggleArchive"
+        >
+          <v-icon v-if="!isArchive" class="header-button-icon">
+            archive
+          </v-icon>
+          <v-icon v-else class="header-button-icon">
+            unarchive
+          </v-icon>
+        </v-btn>
       </div>
       <div class="column-right">
-        <Sheet header="Skill-sets" alt>
+        <Sheet
+          :header="isArchive ? 'Archived Skill-sets' : 'Active Skill-sets'"
+          alt
+        >
           <div>
             <v-toolbar flat color="white">
               <v-text-field
@@ -68,40 +87,64 @@
               <td>{{ props.item.id }}</td>
               <td>{{ props.item.title }}</td>
               <td>{{ props.item.shortTitle }}</td>
-              <td>{{ props.item.noWorkshop }}</td>
               <td>
-                <router-link :to="`/admin/skillsets/${props.item.id}`">
-                  <v-icon small @click="editItem(props.item)">
-                    edit
-                  </v-icon>
-                </router-link>
-                <v-dialog v-model="dialog2" max-width="290">
+                <v-dialog v-model="dialogEdit[props.item.id]" width="800">
                   <template v-slot:activator="{ on }">
-                    <v-icon small v-on="on">
-                      delete
+                    <v-icon small v-on="on" @click="setEditItem(props.item)">
+                      edit
                     </v-icon>
                   </template>
-                  <v-card>
-                    <v-card-title class="headline">
-                      Are you sure you want to archive this skillset?
+                  <v-card class="dialog">
+                    <v-card-title class="dialog-title-card">
+                      <h1 class="dialog-title">Edit Skillset</h1>
                     </v-card-title>
+                    <v-card-title class="dialog-title-card2">
+                      <h1 class="dialog-title2">Skillset Details Form</h1>
+                    </v-card-title>
+                    <v-divider />
+                    <v-form ef="form" lazy-validation>
+                      <div class="form">
+                        <v-text-field
+                          v-model="editNew.title"
+                          class="input"
+                          label="Title"
+                          outline
+                        />
+                        <v-text-field
+                          v-model="editNew.shortTitle"
+                          class="input"
+                          label="Short Title"
+                          outline
+                        />
+                      </div>
+                    </v-form>
                     <v-card-text>
-                      Agree will archive the skillset.
+                      <v-card-actions class="step-buttons">
+                        <v-btn
+                          depressed
+                          color="primary"
+                          @click="updateSkillset(editNew)"
+                        >
+                          Update Skillset
+                        </v-btn>
+                      </v-card-actions>
                     </v-card-text>
-                    <v-card-actions>
-                      <v-btn color="#ff0000" flat @click="dialog2 = false">
-                        Cancel
-                      </v-btn>
-                      <v-btn
-                        color="#ff0000"
-                        flat
-                        @click="archiveSkillset(props.item)"
-                      >
-                        Agree
-                      </v-btn>
-                    </v-card-actions>
                   </v-card>
                 </v-dialog>
+                <v-icon
+                  v-if="!isArchive"
+                  small
+                  @click="archiveSkillset(props.item)"
+                >
+                  delete
+                </v-icon>
+                <v-icon
+                  v-if="isArchive"
+                  small
+                  @click="unAarchiveSkillset(props.item)"
+                >
+                  add
+                </v-icon>
               </td>
             </template>
           </v-data-table>
@@ -112,17 +155,18 @@
 </template>
 
 <script>
-//skill store
-import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
+import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
 import {
   skillsetsModule,
   REQUEST,
   SKILLSETS,
   ADD_SKILLSET,
   REMOVE_SKILLSET,
-  ARCHIVE
-} from '../../../store/skillsets/methods'
-import Sheet from '../../../components/Sheet/Sheet'
+  ARCHIVE,
+  UNARCHIVE,
+  EDIT_SKILLSETS
+} from '../../store/skillsets/methods'
+import Sheet from '../../components/Sheet/Sheet'
 
 export default {
   components: { Sheet },
@@ -130,14 +174,16 @@ export default {
   layout: 'admin',
   data() {
     return {
+      isArchive: false,
       search: '',
       headers: [
         { text: 'ID', value: 'id' },
-        { text: 'Title', value: 'title' },
+        { text: 'Skill-set', value: 'title' },
         { text: 'Short Title', value: 'shortTitle' },
-        { text: 'No. of Workshops', value: 'noWorkshops' },
         { text: 'Actions', value: 'actions' }
       ],
+      valid: true,
+
       addNew: {
         title: '',
         shortTitle: '',
@@ -145,8 +191,18 @@ export default {
           required: value => !!value || 'Required.'
         }
       },
-      dialog: false,
-      dialog2: false
+      editNew: {
+        title: '',
+        shortTitle: '',
+        skillsetId: ''
+      },
+
+      dialogAdd: false,
+      dialogEdit: {},
+      snackbar: {
+        active: false,
+        message: ''
+      }
     }
   },
   computed: {
@@ -158,7 +214,9 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch(skillsetsModule(REQUEST), { hideArchived: true })
+    this.fetchSkillsets()
+    //call programs programs?skillsetId= whatever
+    //call workshop for each program within the same skillsetworkshop?programId = whatever
   },
 
   methods: {
@@ -166,19 +224,57 @@ export default {
       let { title, shortTitle } = this.addNew
       if (title !== '' && shortTitle !== '') {
         await this.$store.dispatch(skillsetsModule(ADD_SKILLSET), this.addNew)
+
         this.addNew.title = ''
         this.addNew.shortTitle = ''
-        this.dialog = false
+        this.dialogAdd = false
       } else {
         console.log(
           'You must enter a title and short title in order to add a skillset'
         )
       }
     },
+    fetchSkillsets() {
+      if (this.isArchive) {
+        this.fetchArchivedSkillsets()
+      } else {
+        this.fetchUnarchivedSkillsets()
+      }
+    },
+    async fetchUnarchivedSkillsets() {
+      this.$store.dispatch(skillsetsModule(REQUEST), {
+        hideArchived: true
+      })
+    },
+    async fetchArchivedSkillsets() {
+      this.$store.dispatch(skillsetsModule(REQUEST), {
+        showArchive: true
+      })
+    },
+    setEditItem(item) {
+      console.log(item)
+      this.editNew = { ...item }
+    },
+    async updateSkillset(skill) {
+      await this.$store.dispatch(skillsetsModule(EDIT_SKILLSETS), skill)
+      this.dialogEdit[skill.id] = false
+      this.fetchSkillsets()
+    },
     async archiveSkillset(skill) {
-      console.log(skill.id)
       this.dialog2 = false
       await this.$store.dispatch(skillsetsModule(ARCHIVE), skill.id)
+      this.snackbar.active = true
+      this.snackbar.message = 'Skillset(s) Successfully Deleted!'
+    },
+    async unAarchiveSkillset(skill) {
+      this.dialog2 = false
+      await this.$store.dispatch(skillsetsModule(UNARCHIVE), skill.id)
+      this.snackbar.active = true
+      this.snackbar.message = 'Skillset(s) Successfully Unarchived!'
+    },
+    toggleArchive() {
+      this.isArchive = !this.isArchive
+      this.fetchSkillsets()
     }
   }
 }

@@ -391,17 +391,16 @@
       </div>
       <div class="column-right">
         <Sheet :header="sheetHeader" alt>
-          <div class="section-header">
+          <v-toolbar flat color="white">
             <v-text-field
               v-model="search"
-              class="input-spacing"
               append-icon="search"
               label="Search"
               placeholder="Search"
               single-line
               hide-details
             />
-          </div>
+          </v-toolbar>
           <v-data-table
             class="table-wrapper"
             :headers="headers"
@@ -890,8 +889,11 @@ export default {
       return moment(date).format('YYYY-MM-DD')
     },
     validateStep(nextStep, form) {
+      console.log(nextStep)
+      console.log(form)
       if (!form || this.$refs[form].validate()) {
         this.stepCount = nextStep
+        console.log(nextStep)
       }
     },
     createSessionCalendarSelectTime({ date, time }) {
@@ -1077,6 +1079,7 @@ export default {
     activateBookingDialog(session) {
       this.dialogBooking.active = true
       this.dialogBooking.session = session
+      console.log(session)
     }
   }
 }
@@ -1132,6 +1135,34 @@ export default {
     > .column-left {
       width: 80px;
       margin-right: 27px;
+      .header-button {
+        // margin-left: 0;
+        // margin-right: 0;
+        margin-bottom: 15px;
+        // margin-top: 0;
+        width: 100%;
+        height: 60px;
+        font-size: $font-subheading;
+        color: $color-white;
+        background: $color-red2;
+      }
+      .filter-container {
+        position: relative;
+        .calendar-toggle {
+          position: absolute;
+          right: 0;
+          color: white;
+          z-index: 1;
+          margin-top: 7px;
+          transform: scale(0.8);
+        }
+        .filters {
+          padding: 14px;
+        }
+        .calendar {
+          box-shadow: none;
+        }
+      }
     }
     > .column-right {
       width: 100%;

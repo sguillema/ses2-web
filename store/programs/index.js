@@ -17,11 +17,6 @@ export const mutations = {
     state.status = 'loading'
   },
 
-  [CREATE]: (state, program) => {
-    state.status = 'create'
-    state.programs.push = program
-  },
-
   [SUCCESS]: (state, { programs }) => {
     state.status = 'success'
     state.programs = programs
@@ -59,7 +54,7 @@ export const actions = {
 
   [CREATE]: ({ commit, dispatch }, data) =>
     new Promise(async (resolve, reject) => {
-      commit(CREATE)
+      commit(REQUEST)
       try {
         const response = await ProgramApi.createProgram(data)
         dispatch(REQUEST)

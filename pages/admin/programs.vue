@@ -89,6 +89,66 @@
               </td>
               <td>{{ setTargetGroup(props.item.targetGroup) }}</td>
               <td>{{ props.item.description }}</td>
+              <td>
+                <v-dialog v-model="editDialog[props.item.id]" width="800">
+                  <template v-slot:activator="{ on }">
+                    <v-icon small v-on="on">
+                      edit
+                    </v-icon>
+                  </template>
+                  <v-card class="dialog">
+                    <v-card-title class="dialog-title-card">
+                      <h1 class="dialog-title">Edit Program</h1>
+                    </v-card-title>
+                    <v-divider />
+                    <v-card-text>
+                      <v-form>
+                        <v-text-field
+                          v-model="props.item.title"
+                          class="input"
+                          label="Title"
+                          outline
+                        />
+                        <v-select
+                          v-model="props.item.skillsetId"
+                          label="Skillset"
+                          :items="skillsets"
+                          item-value="id"
+                          item-text="title"
+                          outline
+                        />
+                        <v-select
+                          v-model="props.item.targetGroup"
+                          :items="targetGroups"
+                          item-value="value"
+                          item-text="text"
+                          label="Target Group"
+                          outline
+                        />
+                        <v-textarea
+                          id="programDescription"
+                          v-model="props.item.description"
+                          class="input"
+                          label="Description"
+                          outline
+                          rows="2"
+                          auto-grow
+                          box
+                        />
+                        <div class="step-buttons">
+                          <v-btn
+                            color="primary"
+                            depressed
+                            @click="updateProgram(props.item)"
+                          >
+                            Edit Program
+                          </v-btn>
+                        </div>
+                      </v-form>
+                    </v-card-text>
+                  </v-card>
+                </v-dialog>
+              </td>
             </template>
           </v-data-table>
         </Sheet>
@@ -99,13 +159,8 @@
 
 <script>
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
-import {
-  programsModule,
-  REQUEST,
-  PROGRAMS,
-  CREATE
-} from '../../store/programs/methods'
 import Sheet from '../../components/Sheet/Sheet'
+import { ProgramApi, SkillsetApi } from '../../core/Api'
 
 export default {
   components: { Sheet },
@@ -118,7 +173,8 @@ export default {
         { text: 'Title', value: 'title' },
         { text: 'Skillset', value: 'skillsetId' },
         { text: 'Target Group', value: 'targetGroup', sortable: false },
-        { text: 'Description', value: 'description', sortable: false }
+        { text: 'Description', value: 'description', sortable: false },
+        { text: 'Actions', value: 'actions', sortable: false }
       ],
       targetGroups: [
         {
@@ -136,6 +192,7 @@ export default {
       ],
       programsLoading: false,
       dialog: false,
+      editDialog: {},
       skillsets: [],
       newProgram: {
         title: '',
@@ -148,16 +205,9 @@ export default {
       }
     }
   },
-  computed: {
-    programs: {
-      get() {
-        return this.$store.getters[programsModule(PROGRAMS)]
-      }
-    }
-  },
   async mounted() {
-    this.$store.dispatch(programsModule(REQUEST))
-    this.skillsets = await this.$axios.$get('http://localhost:4000/skillsets')
+    this.programs = (await ProgramApi.getPrograms()).data
+    this.skillsets = (await SkillsetApi.getSkillsets()).data
   },
   methods: {
     async addProgram() {
@@ -169,7 +219,7 @@ export default {
       ) {
         return false
       }
-      await this.$store.dispatch(programsModule(CREATE), this.newProgram)
+      await ProgramApi.createProgram(this.newProgram)
       this.dialog = false
       this.newProgram = {
         title: '',
@@ -180,6 +230,12 @@ export default {
           required: value => !!value || 'Required.'
         }
       }
+      this.programs = (await ProgramApi.getPrograms()).data
+    },
+    async updateProgram(program) {
+      await ProgramApi.updateProgram(program)
+      this.editDialog[program.id] = false
+      this.programs = (await ProgramApi.getPrograms()).data
     },
     setTargetGroup(targetGroup) {
       if (targetGroup === 'all') return 'All Students'
@@ -236,7 +292,6 @@ export default {
     width: 100%;
   }
 }
-
 .form {
   padding-left: 40px;
   padding-right: 40px;
