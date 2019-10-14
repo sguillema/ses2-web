@@ -1,5 +1,5 @@
-import { SessionApi } from '../../core/api'
-import { REQUEST, SUCCESS, ERROR, CLEAR, ADD_SESSION } from './methods'
+import { SessionApi } from '../../core/Api'
+import { REQUEST, SUCCESS, ERROR, SESSIONS, CLEAR } from './methods'
 
 const emptyState = () => ({
   status: '',
@@ -8,13 +8,13 @@ const emptyState = () => ({
 
 export const state = () => emptyState()
 
+export const getters = {
+  [SESSIONS]: state => state.sessions
+}
+
 export const mutations = {
   [REQUEST]: state => {
     state.status = 'loading'
-  },
-
-  [ADD_SESSION]: state => {
-    state.status = 'adding session'
   },
 
   [SUCCESS]: (state, { sessions }) => {
@@ -44,19 +44,5 @@ export const actions = {
         reject(e)
       }
     })
-  },
-
-  [ADD_SESSION]: ({ commit }, data) =>
-    new Promise(async (resolve, reject) => {
-      commit(ADD_SESSION)
-      try {
-        console.log(data)
-        const response = await SessionApi.addSession(data)
-        commit(SUCCESS, { session: response.data })
-        resolve(response)
-      } catch (e) {
-        commit(ERROR)
-        reject(e)
-      }
-    })
+  }
 }
