@@ -125,9 +125,74 @@
             </div>
           </div>
           <div class="action row">
-            <v-btn color="primary" dark depressed>
-              Edit Booking
-            </v-btn>
+            <v-dialog v-model="bookingDetailDialog" width="800">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" depressed dark v-on="on">
+                  Edit Booking
+                </v-btn>
+              </template>
+              <v-card class="dialog">
+                <v-row>
+                  <v-card-title class="dialog-title-card">
+                    <h1 class="dialog-title">Edit Consultation Information</h1>
+                  </v-card-title>
+                </v-row>
+                <v-card-text class="form">
+                  <v-form>
+                    <div>
+                      <v-text-field
+                        v-model="bookingDetails.appointmentFor"
+                        class="input"
+                        label="Topic"
+                        outline
+                      />
+                      <v-text-field
+                        v-model="bookingDetails.subjectName"
+                        label="Subject Name"
+                        item-value="id"
+                        item-text="title"
+                        outline
+                        :rules="[required]"
+                      />
+                      <v-text-field
+                        v-model="bookingDetails.assignmentType"
+                        item-value="id"
+                        item-text="id"
+                        label="Assignment Type"
+                        outline
+                        :rules="[required]"
+                      />
+                      <v-checkbox
+                        v-model="bookingDetails.groupAssignment"
+                        label="Is this a group assignment?"
+                      />
+                    </div>
+                    <v-divider dark />
+                    <div>
+                      <p class="help-text">Need help with...</p>
+                      <v-layout row wrap>
+                        <v-flex
+                          v-for="num in [0, 1, 2, 3, 4, 5]"
+                          :key="num"
+                          xs12
+                          sm6
+                        >
+                          <v-checkbox
+                            v-model="helpWith[num]"
+                            :label="getHelpWithType(num)"
+                          />
+                        </v-flex>
+                      </v-layout>
+                    </div>
+                    <div class="step-buttons">
+                      <v-btn color="primary" @click="updateBookingDetails">
+                        Update
+                      </v-btn>
+                    </div>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
           </div>
         </Sheet>
       </div>
@@ -188,10 +253,12 @@ export default {
       search: '',
       session: null,
       dialog: false,
+      bookingDetailDialog: false,
       rooms: [],
       bookedBooking: null,
       waitlist: [],
       bookingDetails: null,
+      helpWith: {},
       headers: [
         { text: 'Attendance', value: 'att' },
         { text: 'StudentID', value: 'id' },
@@ -269,7 +336,17 @@ export default {
           this.bookedBooking.id
         )
         this.bookingDetails = res.data
+        this.bookingDetails.helpWith.forEach(help => {
+          this.helpWith[help] = true
+        })
       }
+    },
+    async updateBookingDetails() {
+      await BookingDetailsApi.updateBookingDetailByBookingId(
+        this.bookingDetails.id,
+        this.bookingDetails
+      )
+      this.bookingDetailDialog = false
     }
   }
 }

@@ -114,7 +114,7 @@ export class BookingApi {
     })
   }
 }
-//Booking details API
+// Booking details API
 export class BookingDetailsApi {
   static async getBookingDetail(bookingDetailsId) {
     return await axios({
@@ -127,6 +127,13 @@ export class BookingDetailsApi {
     return await axios({
       method: 'get',
       url: `${BOOKINGDETAIL_ENDPOINT}?bookingId=${bookingId}`
+    })
+  }
+  static async updateBookingDetailByBookingId(bookingId, body) {
+    return await axios({
+      method: 'patch',
+      url: `${BOOKINGS_ENDPOINT}/${bookingId}`,
+      data: body
     })
   }
 
