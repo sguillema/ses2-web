@@ -3,11 +3,13 @@
     <div class="sheet-content">
       <h3 align="center">Add students to the Waiting List</h3>
     </div>
-    <v-text-field
+    <v-autocomplete
       v-model="addStudentId"
-      style="padding:10px"
-      label="Student ID/Name"
-      placeholder="Enter Student ID/Name"
+      :items="students"
+      item-text="id"
+      item-value="id"
+      style="padding-top:10px"
+      label="Student ID"
       outline
     />
     <div class="action row" align="center">
@@ -52,6 +54,7 @@ import {
   ADD_STUDENT,
   REMOVE_STUDENT
 } from '../../store/waitlist/methods'
+import { StudentApi } from '../../core/Api'
 export default {
   components: { Sheet },
   props: {
@@ -59,6 +62,7 @@ export default {
   },
   data() {
     return {
+      students: [],
       singleSelect: false,
       headers: [
         {},
@@ -90,10 +94,11 @@ export default {
       return this.$store.getters[waitListModule(BOOKINGS_LENGTH)]
     }
   },
-  mounted() {
+  async mounted() {
     this.$store.dispatch(waitListModule(REQUEST), {
       sessionId: this.sessionId
     })
+    this.students = (await StudentApi.getStudents()).data
   },
   methods: {
     async addStudent() {

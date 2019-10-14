@@ -24,9 +24,11 @@
             <v-btn color="primary" dark depressed>
               Edit Session
             </v-btn>
-            <v-btn class="ma-2" depressed @click="test()">
-              Cancel
-            </v-btn>
+            <router-link to="/admin/consultations">
+              <v-btn class="ma-2" depressed>
+                Cancel
+              </v-btn>
+            </router-link>
           </div>
         </Sheet>
       </div>
@@ -102,7 +104,7 @@
     </section>
     <section class="right">
       <div class="container">
-        <attendance-key-generator />
+        <attendance-key-generator :session-id="$route.params.id" />
       </div>
       <div class="container"><WaitList :session-id="$route.params.id" /></div>
     </section>

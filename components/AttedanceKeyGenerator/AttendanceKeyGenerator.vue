@@ -36,6 +36,9 @@ import Sheet from '../Sheet/Sheet'
 
 export default {
   components: { Sheet },
+  props: {
+    sessionId: { type: String, required: true }
+  },
   data() {
     return {
       attendanceHeading: 'Attendance',
@@ -51,7 +54,7 @@ export default {
   async mounted() {
     try {
       let result = await this.$axios.$get(
-        `http://localhost:4000/codes?sessionId=${this.$route.params.id}&action=get`
+        `http://localhost:4000/codes?sessionId=${this.sessionId}&action=get`
       )
       if (result) {
         this.code = result
@@ -69,7 +72,7 @@ export default {
       this.loading = true
       try {
         const result = await this.$axios.$post(`http://localhost:4000/codes`, {
-          sessionId: this.$route.params.id
+          sessionId: this.sessionId
         })
         this.code = result.code
         this.codeExists = true
