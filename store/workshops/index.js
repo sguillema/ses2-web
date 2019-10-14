@@ -1,4 +1,4 @@
-import { WorkshopApi } from '../../core/Api'
+import { WorkshopApi, SessionApi } from '../../core/Api'
 import {
   REQUEST,
   SUCCESS,
@@ -7,7 +7,8 @@ import {
   CLEAR,
   CREATE,
   SESSIONS,
-  REQUEST_SESSIONS
+  REQUEST_SESSIONS,
+  EDIT_SESSIONS
 } from './methods'
 
 const emptyState = () => ({
@@ -70,6 +71,21 @@ export const actions = {
       try {
         const response = await WorkshopApi.getSessionsByWorkshopId(id)
         commit(SESSIONS, { sessions: response.data })
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
+  [EDIT_SESSIONS]: ({ commit, dispatch }, editNew) =>
+    new Promise(async (resolve, reject) => {
+      commit(EDIT_SESSIONS)
+      try {
+        const response = await SessionApi.updateSessionBySessionId(
+          editNew.sessionId,
+          editNew
+        )
+        dispatch(REQUEST)
         resolve(response)
       } catch (e) {
         commit(ERROR)
