@@ -21,9 +21,61 @@
             <div class="field">{{ session.room }}</div>
           </div>
           <div class="action row">
-            <v-btn color="primary" dark depressed>
-              Edit Session
-            </v-btn>
+            <v-dialog v-model="dialog" width="800">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" depressed dark class="mb-2" v-on="on">
+                  Edit Session
+                </v-btn>
+              </template>
+              <v-card class="dialog">
+                <v-card-title class="dialog-title-card">
+                  <h1 class="dialog-title">Edit Consultation Information</h1>
+                </v-card-title>
+                <v-card-text class="form">
+                  <v-form>
+                    <div>
+                      <v-text-field
+                        v-model="session.startTime"
+                        class="input"
+                        label="Date"
+                        outline
+                        :rules="[required]"
+                      />
+                      <v-text-field
+                        v-model="session.startTime"
+                        class="input"
+                        label="Time"
+                        outline
+                        :rules="[required]"
+                      />
+                      <v-text-field
+                        v-model="session.endTime"
+                        class="input"
+                        label="Time"
+                        outline
+                        :rules="[required]"
+                      />
+                      <v-select
+                        v-model="session.room"
+                        class="input"
+                        label="Room"
+                        :items="rooms"
+                        item-text="id"
+                        item-value="id"
+                        outline
+                        :rules="[required]"
+                      />
+                    </div>
+                    <v-divider dark />
+                    <div class="step-buttons">
+                      <v-btn color="primary" depressed @click="updateSession">
+                        Update
+                      </v-btn>
+                    </div>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
             <router-link to="/admin/consultations">
               <v-btn class="ma-2" depressed>
                 Cancel
@@ -121,7 +173,8 @@ import {
   SessionApi,
   BookingApi,
   BookingDetailsApi,
-  WorkshopApi
+  WorkshopApi,
+  RoomApi
 } from '../../../core/Api'
 import ViewConsultation from '../../../components/ViewConsultation/ViewConsultation'
 import { getHelpWithType } from '../../../core/helpers'
@@ -134,6 +187,8 @@ export default {
     return {
       search: '',
       session: null,
+      dialog: false,
+      rooms: [],
       bookedBooking: null,
       waitlist: [],
       bookingDetails: null,
@@ -183,6 +238,7 @@ export default {
     await this.fetchAndSetSession(this.$route.params.id)
     await this.fetchAndSetBookingsAndWaitlist(this.$route.params.id)
     await this.fetchAndSetBookingDetails()
+    this.rooms = (await RoomApi.getRooms()).data
   },
   methods: {
     getHelpWithType,
@@ -191,6 +247,11 @@ export default {
     },
     getMomentTimeFormat(date) {
       return moment(date).format('h:mm a')
+    },
+    async updateSession() {
+      await SessionApi.updateSessionBySessionId(this.session.id, this.session)
+      this.fetchAndSetSession()
+      this.dialog = false
     },
     async fetchAndSetSession() {
       const res = await SessionApi.getSession(this.$route.params.id)
@@ -250,5 +311,58 @@ label {
 }
 
 .field {
+}
+
+.form {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 25px;
+}
+.dialog {
+  .dialog-title {
+    margin: 0;
+    padding-left: 25px;
+    color: #ffffff;
+    font-size: 20px;
+  }
+  .dialog-title2 {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 20px;
+  }
+  .dialog-title-card {
+    background: #ff1818;
+    height: 70px;
+  }
+  .dialog-title-card2 {
+    background: #ffffff;
+    height: 70px;
+  }
+  .step-content {
+    padding: 0 20px;
+  }
+  .step-buttons {
+    display: flex;
+    justify-content: center;
+  }
+  .stepForm2 {
+    display: flex;
+    flex-direction: column;
+    > div {
+      flex: 1;
+      display: flex;
+    }
+    .input {
+      width: 340px;
+    }
+  }
+  .step-review {
+    padding: 10px;
+    border: 1px solid black;
+    margin-bottom: 40px;
+    > div {
+      display: flex;
+    }
+  }
 }
 </style>
