@@ -402,10 +402,34 @@ export class EmailsApi {
 }
 
 export class MessagesApi {
+  static async getMessages() {
+    return await axios({
+      method: 'get',
+      url: `${MESSAGES_ENDPOINT}`
+    })
+  }
+
   static async getMessage(id) {
     return await axios({
       method: 'get',
       url: `${MESSAGES_ENDPOINT}/${id}`
+    })
+  }
+
+  static async updateMessageTemplate(message) {
+    const { id, template } = message
+    const data = { template }
+    return await axios({
+      method: 'patch',
+      url: `${MESSAGES_ENDPOINT}/${id}`,
+      data
+    })
+  }
+
+  static async publishMessage(id) {
+    return await axios({
+      method: 'post',
+      url: `${MESSAGES_ENDPOINT}/${id}/publish`
     })
   }
 }
