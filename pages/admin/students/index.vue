@@ -1,7 +1,7 @@
 <template>
   <div id="page-students">
     <section class="container">
-      <Sheet header="Registered Students">
+      <Sheet header="Registered Students" alt>
         <v-text-field
           v-model="search"
           class="input-spacing"
@@ -121,16 +121,10 @@ export default {
 }
 
 .table-wrapper {
-  border-bottom: 2px solid $color-divider;
   margin-bottom: 12px;
 
   thead {
     background: black;
-    tr {
-      &:first-child {
-        border-bottom: 2px solid $color-divider;
-      }
-    }
   }
 }
 

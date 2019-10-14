@@ -16,7 +16,7 @@
           >
             <template v-slot:activator="{ on }">
               <v-btn class="header-button" depressed v-on="on">
-                Create Session
+                <v-icon class="header-button-icon">add</v-icon>
               </v-btn>
             </template>
             <v-card class="dialog">
@@ -358,29 +358,36 @@
             </v-card>
           </v-dialog>
         </div>
-        <v-sheet class="filter-container" elevation="3">
-          <v-switch
-            v-model="calendarToggle"
-            class="calendar-toggle"
-            label="Select by day"
-            color="red"
-            dark
-            hide-details
-            flat
-          />
-          <v-date-picker
-            v-model="value"
-            class="calendar"
-            :min="calendarMinDate"
-            :max="calendarMaxDate"
-            :events="calendarEvents"
-            event-color="primary"
-            header-color="black"
-            color="red"
-            width="290"
-            :type="calendarType"
-          />
-        </v-sheet>
+        <v-menu offset-x>
+          <template v-slot:activator="{ on }">
+            <v-btn class="calendar-button" depressed v-on="on">
+              <v-icon class="calendar-button-icon">calendar_today</v-icon>
+            </v-btn>
+          </template>
+          <div class="filter-container">
+            <v-switch
+              v-model="calendarToggle"
+              class="calendar-toggle"
+              label="Select by day"
+              color="red"
+              dark
+              hide-details
+              flat
+            />
+            <v-date-picker
+              v-model="value"
+              class="calendar"
+              :min="calendarMinDate"
+              :max="calendarMaxDate"
+              :events="calendarEvents"
+              event-color="primary"
+              header-color="black"
+              color="red"
+              width="290"
+              :type="calendarType"
+            />
+          </div>
+        </v-menu>
       </div>
       <div class="column-right">
         <Sheet :header="sheetHeader" alt>
@@ -1082,13 +1089,54 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 
+.filter-container {
+  position: relative;
+  .calendar-toggle {
+    position: absolute;
+    right: 0;
+    color: white;
+    z-index: 1;
+    margin-top: 7px;
+    transform: scale(0.8);
+  }
+  .filters {
+    padding: 14px;
+  }
+  .calendar {
+    box-shadow: none;
+  }
+}
+
 #page-consultations {
+  .calendar-button,
+  .header-button {
+    min-width: unset;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 15px;
+    margin-top: 0;
+    width: 100%;
+    height: 80px;
+    color: $color-white;
+    .calendar-button-icon {
+      font-size: 60px;
+    }
+  }
+  .header-button {
+    background: $color-red2;
+    .header-button-icon {
+      font-size: 60px;
+    }
+  }
+  .calendar-button {
+    background: $color-black;
+  }
   .container {
     display: flex;
     > .column-left {
-      min-width: 290px;
-      width: 290px;
+      width: 80px;
       margin-right: 27px;
+<<<<<<< HEAD
       .header-button {
         // margin-left: 0;
         // margin-right: 0;
@@ -1117,6 +1165,8 @@ export default {
           box-shadow: none;
         }
       }
+=======
+>>>>>>> b6b6ffb3fc093c0374cb6ed68588b867f6f8252e
     }
     > .column-right {
       width: 100%;
