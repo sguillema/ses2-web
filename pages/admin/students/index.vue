@@ -2,12 +2,15 @@
   <div id="page-students">
     <section class="container">
       <Sheet header="Registered Students" alt>
-        <v-text-field
-          v-model="search"
-          class="input-spacing"
-          append-icon="search"
-          placeholder="Search"
-        />
+        <div>
+          <v-toolbar flat color="white">
+            <v-text-field
+              v-model="search"
+              append-icon="search"
+              placeholder="Search for Student ID/Name"
+            />
+          </v-toolbar>
+        </div>
         <v-data-table
           class="table-wrapper"
           :headers="headers"
@@ -22,9 +25,9 @@
               <router-link :to="`/admin/students/${props.item.id}`">
                 Edit
               </router-link>
-              <router-link :to="`/admin/students/${props.item.id}/history`">
+              <!-- <router-link :to="`/admin/students/${props.item.id}/history`">
                 View History
-              </router-link>
+              </router-link> -->
             </td>
           </template>
         </v-data-table>

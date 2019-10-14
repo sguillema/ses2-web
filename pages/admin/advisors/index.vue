@@ -13,7 +13,7 @@
             <v-text-field
               v-model="search"
               append-icon="search"
-              placeholder="Search for Advisors"
+              placeholder="Search for Advisor ID/Name"
             />
           </v-toolbar>
         </div>
@@ -31,9 +31,9 @@
               <router-link :to="`/admin/advisors/${props.item.id}`">
                 Edit
               </router-link>
-              <router-link :to="`/admin/advisors/${props.item.id}/history`">
+              <!-- <router-link :to="`/admin/advisors/${props.item.id}/history`">
                 View History
-              </router-link>
+              </router-link> -->
             </td>
           </template>
         </v-data-table>
