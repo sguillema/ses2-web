@@ -1,72 +1,72 @@
 <template>
   <div id="page-workshops">
     <section class="container">
-      <!-- <div class="column-left"> -->
-      <v-dialog v-model="dialog" width="800">
-        <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark class="mb-2" v-on="on">
-            +
-          </v-btn>
-        </template>
-        <v-card class="dialog">
-          <v-card-title class="dialog-title-card">
-            <h1 class="dialog-title">Create Workshop Information</h1>
-          </v-card-title>
-          <v-card-title class="dialog-title-card2">
-            <h1 class="dialog-title2">Workshop Details Form</h1>
-          </v-card-title>
-          <v-divider />
-          <v-card-text class="form">
-            <v-form>
-              <div>
-                <v-text-field
-                  id="workshopTitle"
-                  v-model="newWorkshop.title"
-                  class="input"
-                  label="Title"
-                  outline
-                  :rules="[required]"
-                />
-                <v-select
-                  v-model="newWorkshop.programId"
-                  label="Program"
-                  :items="programs"
-                  item-value="id"
-                  item-text="title"
-                  outline
-                  :rules="[required]"
-                />
-                <v-select
-                  v-model="newWorkshop.staffId"
-                  :items="staff"
-                  item-value="id"
-                  item-text="id"
-                  label="Staff ID"
-                  outline
-                  :rules="[required]"
-                />
-                <v-textarea
-                  id="workshopDescription"
-                  v-model="newWorkshop.description"
-                  class="input"
-                  label="Description"
-                  outline
-                  rows="1"
-                  auto-grow
-                  box
-                  :rules="[required]"
-                />
-              </div>
-              <div class="step-buttons">
-                <v-btn color="primary" @click="addWorkshop">
-                  Create Workshop
-                </v-btn>
-              </div>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
-      <!--</div> -->
+      <div class="column-left">
+        <v-dialog v-model="dialog" width="800">
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark class="mb-2" v-on="on">
+              +
+            </v-btn>
+          </template>
+          <v-card class="dialog">
+            <v-card-title class="dialog-title-card">
+              <h1 class="dialog-title">Create Workshop Information</h1>
+            </v-card-title>
+            <v-card-title class="dialog-title-card2">
+              <h1 class="dialog-title2">Workshop Details Form</h1>
+            </v-card-title>
+            <v-divider />
+            <v-card-text class="form">
+              <v-form>
+                <div>
+                  <v-text-field
+                    id="workshopTitle"
+                    v-model="newWorkshop.title"
+                    class="input"
+                    label="Title"
+                    outline
+                    :rules="[required]"
+                  />
+                  <v-select
+                    v-model="newWorkshop.programId"
+                    label="Program"
+                    :items="programs"
+                    item-value="id"
+                    item-text="title"
+                    outline
+                    :rules="[required]"
+                  />
+                  <v-select
+                    v-model="newWorkshop.staffId"
+                    :items="staff"
+                    item-value="id"
+                    item-text="id"
+                    label="Staff ID"
+                    outline
+                    :rules="[required]"
+                  />
+                  <v-textarea
+                    id="workshopDescription"
+                    v-model="newWorkshop.description"
+                    class="input"
+                    label="Description"
+                    outline
+                    rows="1"
+                    auto-grow
+                    box
+                    :rules="[required]"
+                  />
+                </div>
+                <div class="step-buttons">
+                  <v-btn color="primary" @click="addWorkshop">
+                    Create Workshop
+                  </v-btn>
+                </div>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </div>
       <div class="column-right">
         <Sheet class="sheet" header="Upcoming Workshops" alt>
           <v-toolbar flat color="white">
@@ -94,7 +94,7 @@
                   <v-dialog width="800">
                     <template v-slot:activator="{ on }">
                       <v-btn depressed v-on="on">
-                        <v-icon>plus</v-icon>
+                        Add
                       </v-btn>
                     </template>
                     <v-card class="dialog">
@@ -118,41 +118,67 @@
 
                       <v-card-text>
                         <v-container>
-                          <v-row>
-                            <v-col cols="12" sm="6" md="4">
+                          <v-layout>
+                            <v-flex sm12 md6>
                               <v-text-field
+                                v-model="newSession.date"
                                 label="Date"
                                 placeholder="Today's Date"
                                 outline
                               />
+                            </v-flex>
+                            <v-flex sm12 md6>
                               <v-select
-                                :items="selectItems"
+                                v-model="newSession.room"
+                                :items="rooms"
                                 label="Room"
                                 outline
                               />
+                            </v-flex>
+                          </v-layout>
+                          <v-layout>
+                            <v-flex sm12 md6>
                               <v-text-field
+                                v-model="newSession.startTime"
                                 label="Start Time"
                                 placeholder="Start Time"
                                 outline
                               />
+                            </v-flex>
+                            <v-flex sm12 md6>
                               <v-text-field
+                                v-model="newSession.endTime"
                                 label="End Time"
                                 placeholder="End Time"
                                 outline
                               />
+                            </v-flex>
+                          </v-layout>
+                          <v-layout>
+                            <v-flex sm12 md6>
                               <v-checkbox
+                                v-model="newSession.emailStudent"
                                 class="studentEmail"
                                 label="Email Student Consultation Update"
                               />
+                            </v-flex>
+                            <v-flex sm12 md6>
                               <v-checkbox
+                                v-model="newSession.emailAdvisor"
                                 class="advisorEmail"
                                 label="Email Advisor Consultation Update"
                               />
-                              <v-btn depressed color="primary">
-                                Add
-                              </v-btn>
-                            </v-col>
-                          </v-row>
+                            </v-flex>
+                          </v-layout>
+                          <v-layout>
+                            <v-btn
+                              depressed
+                              color="primary"
+                              @click="addSession(props.item.id)"
+                            >
+                              Add Session
+                            </v-btn>
+                          </v-layout>
                         </v-container>
                       </v-card-text>
                     </v-card>
@@ -205,6 +231,7 @@ import {
   WORKSHOPS,
   CREATE
 } from '../../store/workshops/methods'
+import { sessionsModule, ADD_SESSION } from '../../store/sessions/methods'
 import Sheet from '../../components/Sheet/Sheet'
 
 const emptyWorkshopForm = () => ({
@@ -212,6 +239,15 @@ const emptyWorkshopForm = () => ({
   staffId: null,
   programId: null,
   description: ''
+})
+
+const emptySessionForm = () => ({
+  id: null,
+  date: '',
+  startTime: '',
+  endTime: '',
+  emailStudent: false,
+  emailAdvisor: false
 })
 
 export default {
@@ -236,9 +272,12 @@ export default {
       sessions: [],
       workshopsLoading: false,
       dialog: false,
+      sessionDialog: false,
       programs: [],
       staff: [],
+      rooms: ['CB05B.04.036', 'CB05B.04.037'],
       newWorkshop: emptyWorkshopForm(),
+      newSession: emptySessionForm(),
       expand: false,
       workshopId: 1
     }
@@ -279,11 +318,29 @@ export default {
       }
       console.log(this.newWorkshop)
       await this.$store.dispatch(workshopsModule(CREATE), this.newWorkshop)
-      this.dialog = false
       this.newWorkshop = emptyWorkshopForm()
     },
-    async addSession() {
-      console.log('Called addSession function')
+    async addSession(id) {
+      this.newSession.id = id
+      if (
+        this.newSession.id === null ||
+        this.newSession.date === '' ||
+        this.newSession.startTime === '' ||
+        this.newSession.endTime === ''
+      ) {
+        return false
+      }
+      if (this.newSession.emailStudent) {
+        //email student
+      }
+      if (this.newSession.emailAdvisor) {
+        //email advisor
+      }
+
+      console.log(this.newSession)
+      await this.$store.dispatch(sessionsModule(ADD_SESSION), this.newSession)
+      this.dialog = false
+      this.newSession = emptySessionForm()
     },
     getMomentDateFormat(date) {
       return moment(date).format('DD/MM/YYYY')
