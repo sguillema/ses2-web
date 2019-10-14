@@ -436,7 +436,7 @@
           Your Schedule
         </div>
         <div class="form">
-          <Sheet :header="sheetHeader" alt>
+          <Sheet alt>
             <div class="header">
               Upcoming All Sessions
             </div>
@@ -529,7 +529,7 @@
                 </div>
                 <div class="right">
                   <v-btn-toggle
-                    v-model="toggle_one_calendar"
+                    v-model="toggle_one"
                     mandatory
                     :type="sheetViewType"
                   >
@@ -563,7 +563,7 @@
                 :search="search"
                 :items="filteredSessions"
                 class="table-wrapper"
-                :loading="sessionsloading"
+                :loading="sessionsLoading"
                 :items-per-page="-1"
               >
                 <template v-if="!sessionsLoading" v-slot:items="props">
@@ -656,6 +656,7 @@ export default {
       // consultations: [],
       // sessions: [],
       // -> End
+      toggle_one: 0,
       dialog: false,
       dialog2: false,
       stepCount: 0,
