@@ -2,15 +2,14 @@
   <div id="page-students">
     <section class="container">
       <Sheet header="Registered Students" alt>
-        <div>
-          <v-toolbar flat color="white">
-            <v-text-field
-              v-model="search"
-              append-icon="search"
-              placeholder="Search for Student ID/Name"
-            />
-          </v-toolbar>
-        </div>
+        <v-toolbar flat color="white">
+          <v-text-field
+            v-model="search"
+            class="input-spacing"
+            append-icon="search"
+            placeholder="Search"
+          />
+        </v-toolbar>
         <v-data-table
           class="table-wrapper"
           :headers="headers"
