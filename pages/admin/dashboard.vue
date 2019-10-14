@@ -608,7 +608,7 @@
                       v-else
                       :to="`/admin/workshops/${props.item.id}`"
                     >
-                      View2
+                      View
                     </router-link>
                   </td>
                 </template>
