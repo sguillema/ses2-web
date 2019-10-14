@@ -1,5 +1,5 @@
 <template>
-  <Sheet class="sheet" align="center" header="Waiting List">
+  <Sheet class="sheet" color="red" alt centered header="Waiting List">
     <div class="sheet-content">
       <h3 align="center">Add students to the Waiting List</h3>
     </div>
