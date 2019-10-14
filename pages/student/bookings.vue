@@ -6,7 +6,7 @@
         <v-spacer />
         <WorkshopRegisterDialog />
       </h1>
-      <ViewCurrentBookings />
+      <ViewFutureBookings />
       <h1></h1>
       <ViewPastBookings />
     </section>
@@ -16,12 +16,12 @@
 <script>
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import WorkshopRegisterDialog from '../../components/WorkshopRegisterDialog/WorkshopRegisterDialog'
-import ViewCurrentBookings from '../../components/ViewBookings/ViewCurrentBookings'
+import ViewFutureBookings from '../../components/ViewBookings/ViewFutureBookings'
 import ViewPastBookings from '../../components/ViewBookings/ViewPastBookings'
 import { authModule, TYPE } from '~/store/auth/methods'
 
 export default {
-  components: { WorkshopRegisterDialog, ViewCurrentBookings, ViewPastBookings },
+  components: { WorkshopRegisterDialog, ViewFutureBookings, ViewPastBookings },
   middleware: studentAuthenticated,
   layout: 'student',
   data() {
