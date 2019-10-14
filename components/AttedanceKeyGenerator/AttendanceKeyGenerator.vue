@@ -21,6 +21,7 @@
           block
           depressed
           :disabled="codeExists"
+          :loading="loading"
           @click="generateKey"
         >
           Generate
@@ -40,6 +41,7 @@ export default {
       attendanceHeading: 'Attendance',
       code: '',
       codeExists: true, // we assume code exists until server response
+      loading: false,
       snackbar: {
         active: false,
         message: ''
@@ -64,6 +66,7 @@ export default {
   },
   methods: {
     async generateKey() {
+      this.loading = true
       try {
         const result = await this.$axios.$post(`http://localhost:4000/codes`, {
           sessionId: this.$route.params.id
@@ -75,6 +78,8 @@ export default {
       } catch {
         this.code = ''
         this.codeExists = false
+      } finally {
+        this.loading = false
       }
     }
   }
