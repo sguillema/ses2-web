@@ -6,7 +6,9 @@
         <v-spacer />
         <WorkshopRegisterDialog />
       </h1>
-      <ViewBookings />
+      <ViewCurrentBookings />
+      <h1></h1>
+      <ViewPastBookings />
     </section>
   </div>
 </template>
@@ -14,11 +16,12 @@
 <script>
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import WorkshopRegisterDialog from '../../components/WorkshopRegisterDialog/WorkshopRegisterDialog'
-import ViewBookings from '../../components/ViewBookings/ViewBookings'
+import ViewCurrentBookings from '../../components/ViewBookings/ViewCurrentBookings'
+import ViewPastBookings from '../../components/ViewBookings/ViewPastBookings'
 import { authModule, TYPE } from '~/store/auth/methods'
 
 export default {
-  components: { WorkshopRegisterDialog, ViewBookings },
+  components: { WorkshopRegisterDialog, ViewCurrentBookings, ViewPastBookings },
   middleware: studentAuthenticated,
   layout: 'student',
   data() {
@@ -39,41 +42,11 @@ export default {
         { text: 'Type', value: 'type2' }
       ],
       selected: [],
-      bookings: [
-        {
-          name: '20/05/2019',
-          type: 'Consultation',
-          time: '10:00 AM - 1:30 PM',
-          room: 'CB11.03.301',
-          advisor: 'John Smith',
-          type2: 'How to write a Report'
-        },
-        {
-          name: '15/05/2019',
-          type: 'Program 1',
-          time: '11:00 AM - 12:30 PM',
-          room: 'TBA',
-          advisor: 'Andrew Smith',
-          type2: 'Part 1 of Program Name'
-        },
-        {
-          name: '12/05/2019',
-          type: 'Program 2',
-          time: '10:00 AM - 1:30 PM',
-          room: 'CB05.03.301',
-          advisor: 'John Wick',
-          type2: 'How to Draw with a Pencil'
-        },
-        {
-          name: '18/05/2019',
-          type: 'Workshop',
-          time: '11:30 AM - 12:30 PM',
-          room: 'CB11.00.201',
-          advisor: 'Graham Smith',
-          type2: 'Part 2 of Program Name'
-        }
-      ]
+      bookings: []
     }
+  },
+  async mounted() {
+    this.bookings = await this.$axios.$get('http://localhost:4000/bookings')
   },
   methods: {}
 }
