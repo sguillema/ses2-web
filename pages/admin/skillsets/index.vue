@@ -10,6 +10,10 @@
               append-icon="search"
               placeholder="Search for a skill-set"
             />
+            <v-snackbar v-model="snackbar.active" :timeout="2000" top>
+              {{ snackbar.message }}
+            </v-snackbar>
+
             <v-spacer />
             <v-dialog v-model="dialog" width="800">
               <template v-slot:activator="{ on }">
@@ -73,13 +77,6 @@
             <td>{{ props.item.shortTitle }}</td>
             <td>{{ props.item.noOfWorkshops }}</td>
             <td>
-              <!-- <router-link :to="`/admin/skillsets/archiveSkillset`"> -->
-              <!-- <router-link :to="`/admin/skillsets/${props.item.id}`"> -->
-              <!-- <v-icon small @click="archiveSkillset(props.item)">
-                add
-              </v-icon> -->
-              <!-- </router-link> -->
-
               <v-dialog v-model="dialog2" width="290">
                 <template v-slot:activator="{ on }">
                   <v-icon
@@ -162,14 +159,6 @@
                   </v-form>
                 </v-card>
               </v-dialog>
-
-              <!-- <v-icon small @click="editItem(props.item)"> -->
-
-              <!-- <router-link :to="`/admin/skillsets/${props.item.id}`">
-                <v-icon small v-on="on">
-                  edit
-                </v-icon>
-              </router-link> -->
             </td>
           </template>
         </v-data-table>
@@ -224,7 +213,11 @@ export default {
 
       dialog: false,
       dialog2: false,
-      dialog3: false
+      dialog3: false,
+      snackbar: {
+        active: false,
+        message: ''
+      }
     }
   },
   computed: {
@@ -233,9 +226,6 @@ export default {
         return this.$store.getters[skillsetsModule(SKILLSETS)]
       }
     }
-    // formTitle() {
-    //   return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-    // }
   },
 
   asyncData() {
@@ -245,7 +235,6 @@ export default {
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
       hideArchived: true
-      // showArchive: false
     })
     //call programs programs?skillsetId= whatever
     //call workshop for each program within the same skillsetworkshop?programId = whatever
@@ -266,9 +255,7 @@ export default {
         )
       }
     },
-    // async editItem() {
-    //   console.log('YAYYYY')
-    // },
+
     async editItem(skill) {
       this.editNew.title = skill.title
       this.editNew.shortTitle = skill.shortTitle
@@ -298,6 +285,8 @@ export default {
       console.log(skill.id)
       this.dialog2 = false
       await this.$store.dispatch(skillsetsModule(ARCHIVE), skill.id)
+      this.snackbar.active = true
+      this.snackbar.message = 'Skillset(s) Successfully Deleted!'
     }
   }
 }

@@ -52,24 +52,6 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <!-- @click="deleteSnackbar" -->
-              <!-- <v-icon small>
-                archive
-              </v-icon>
-               <v-icon small @click="deleteSkillset(skillsetId)" > -->
-              <!-- <v-btn
-                small
-                depressed
-                class="mb-2"
-                v-on="on"
-                @click="unAarchiveSkillset(props.item)"
-              >
-                Unarchive
-              </v-btn> -->
-              <!-- @click="deleteItem(item)" -->
-              <!-- <v-icon small @click="editSnackbar">
-                edit
-              </v-icon> -->
             </td>
           </template>
         </v-data-table>
@@ -79,7 +61,6 @@
 </template>
 
 <script>
-// import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../components/Sheet/Sheet'
 import {
   skillsetsModule,
@@ -93,7 +74,6 @@ import {
 
 export default {
   components: { Sheet },
-  // middleware: adminAuthenticated,
 
   layout: 'admin',
 
@@ -101,7 +81,6 @@ export default {
     return {
       snackbar: {
         active: false,
-        // applies on every button
         message: ''
       },
 
@@ -132,32 +111,19 @@ export default {
   mounted() {
     this.$store.dispatch(skillsetsModule(REQUEST), {
       showArchive: true,
-      // active: false
+
       hideArchive: false
     })
   },
 
   methods: {
-    async deleteSnackbar() {
-      this.snackbar.active = true
-      this.snackbar.message = 'Deleted ## Skill-sets'
-    },
-    async editSnackbar() {
-      this.snackbar.active = true
-      this.snackbar.message = 'Archived ## items'
-    },
-    async deleteSkillset(skillsetId) {
-      console.log('test test')
-      // if (skillsetId === null) return false
-      // await skillsetId.splice(skillsetId, 1)
-      // return true
-    },
     async unAarchiveSkillset(skill) {
       console.log(skill.id)
-      // await this.$store.dispatch(skillsetsModule(ADD_SKILLSET))
       this.dialog2 = false
 
       await this.$store.dispatch(skillsetsModule(UNARCHIVE), skill.id)
+      this.snackbar.active = true
+      this.snackbar.message = 'Skillset(s) Successfully Unarchived!'
     }
   }
 }
