@@ -98,7 +98,7 @@ export default {
     const promises = this.bookings.map(async booking => {
       let title
       const session = (await SessionApi.getSession(booking.sessionId)).data
-      if (session.type === 'consultation') {
+      if (session.workshopId === null) {
         const bookingDetails = (await BookingDetailsApi.getBookingDetailByBookingId(
           booking.id
         )).data
