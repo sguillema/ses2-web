@@ -33,16 +33,21 @@ export default {
     return {
       listSections: [
         {
-          title: 'Make a Booking',
+          title: 'Create Session & Booking',
           links: [
-            { title: 'Skill Sets', icon: 'extension', to: '/admin/skillsets' },
-            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
             { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
             {
               title: 'Consultations',
               icon: 'forum',
               to: '/admin/consultations'
             }
+          ]
+        },
+        {
+          title: 'Edit Content',
+          links: [
+            { title: 'Skill Sets', icon: 'extension', to: '/admin/skillsets' },
+            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' }
           ]
         },
         {
@@ -53,20 +58,20 @@ export default {
               icon: 'supervised_user_circle',
               to: '/admin/advisors'
             },
-            { title: 'Students', icon: 'recent_actors', to: '/admin/students' },
-            {
-              title: 'Waiting Lists',
-              icon: 'timeline',
-              to: '/admin/waitinglists'
-            }
+            { title: 'Students', icon: 'recent_actors', to: '/admin/students' }
+            // {
+            //   title: 'Waiting Lists',
+            //   icon: 'timeline',
+            //   to: '/admin/waitinglists'
+            // }
           ]
         },
         {
           title: 'Others',
           links: [
-            { title: 'Emails', icon: 'email', to: '/admin/emails' },
-            { title: 'Reports', icon: 'book', to: '/admin/reports' },
             { title: 'Rooms', icon: 'meeting_rooms', to: '/admin/rooms' },
+            { title: 'Emails', icon: 'email', to: '/admin/emails' },
+            // { title: 'Reports', icon: 'book', to: '/admin/reports' },
             { title: 'Annoucements', icon: 'chat', to: '/admin/messages' }
           ]
         }

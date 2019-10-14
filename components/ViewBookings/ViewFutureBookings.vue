@@ -1,10 +1,10 @@
 <template>
   <Sheet class="sheet">
-    <h2>Your Bookings</h2>
+    <h2>Future Bookings</h2>
     <v-data-table
       class="bookings-data-table"
       :headers="headers"
-      :items="bookingsWithData"
+      :items="futureBookings"
       hide-actions
     >
       <template v-slot:items="props">
@@ -85,6 +85,7 @@ export default {
       workshops: [],
       bookingDetails: [],
       bookingsWithData: [],
+      futureBookings: [],
       dialog: false,
       activeBookingId: ''
     }
@@ -113,10 +114,19 @@ export default {
         title
       }
     })
-    const bookingsWithData = await Promise.all(promises)
-    this.bookingsWithData = _.sortBy(
-      bookingsWithData,
-      bookingWithData => bookingWithData.session.startTime
+    let bookingsWithData = await Promise.all(promises)
+
+    const futureBookings = []
+    for (let i = 0; i < bookingsWithData.length; i++) {
+      const bookingWithData = bookingsWithData[i]
+      if (moment().isBefore(bookingWithData.session.startTime)) {
+        futureBookings.push(bookingWithData)
+      }
+    }
+
+    this.futureBookings = _.sortBy(
+      futureBookings,
+      futureBooking => futureBooking.session.startTime
     )
   },
   methods: {

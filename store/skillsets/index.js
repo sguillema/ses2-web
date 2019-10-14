@@ -9,7 +9,9 @@ import {
   DELETE,
   ADD_SKILLSET,
   REMOVE_SKILLSET,
-  ARCHIVE
+  ARCHIVE,
+  EDIT_SKILLSETS,
+  UNARCHIVE
 } from './methods'
 
 const emptyState = () => ({
@@ -46,21 +48,26 @@ export const mutations = {
 
   [CLEAR]: state => {
     state = emptyState()
+  },
+  [DELETE]: state => {
+    state.status = 'deleted'
   }
 }
 
 export const actions = {
-  [REQUEST]: ({ commit }, { hideArchived }) =>
+  [REQUEST]: ({ commit }, { hideArchived, showArchive }) =>
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
         let response
         if (hideArchived) response = await SkillsetApi.getActiveSkillsets()
+        else if (showArchive) response = await SkillsetApi.getArchiveSkillsets()
         else response = await SkillsetApi.getSkillsets()
         commit(SUCCESS, { skillsets: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)
+        console.error(e)
         reject(e)
       }
     }),
@@ -94,13 +101,37 @@ export const actions = {
         reject(e)
       }
     }),
-
+  [UNARCHIVE]: ({ commit, dispatch }, skillsetId) =>
+    new Promise(async (resolve, reject) => {
+      commit(REQUEST)
+      try {
+        const response = await SkillsetApi.updateSkillset(skillsetId, {
+          active: true
+        })
+        dispatch(REQUEST, { showArchive: true })
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
   [ADD_SKILLSET]: ({ commit, dispatch }, skillset) =>
     new Promise(async (resolve, reject) => {
       commit(ADD_SKILLSET)
       try {
         const response = await SkillsetApi.addSkillset(skillset)
         dispatch(REQUEST, { hideArchived: true })
+        resolve(response)
+      } catch (e) {
+        commit(ERROR)
+        reject(e)
+      }
+    }),
+  [EDIT_SKILLSETS]: ({ commit, dispatch }, editNew) =>
+    new Promise(async (resolve, reject) => {
+      commit(REQUEST)
+      try {
+        const response = await SkillsetApi.updateSkillset(editNew.id, editNew)
         resolve(response)
       } catch (e) {
         commit(ERROR)
