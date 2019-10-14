@@ -17,11 +17,6 @@ export const mutations = {
     state.status = 'loading'
   },
 
-  [CREATE]: (state, program) => {
-    state.status = 'create'
-    state.programs.push = program
-  },
-
   [SUCCESS]: (state, { programs }) => {
     state.status = 'success'
     state.programs = programs
@@ -57,12 +52,12 @@ export const actions = {
       }
     }),
 
-  [CREATE]: ({ commit }, data) =>
+  [CREATE]: ({ commit, dispatch }, data) =>
     new Promise(async (resolve, reject) => {
-      commit(CREATE)
+      commit(REQUEST)
       try {
         const response = await ProgramApi.createProgram(data)
-        commit(SUCCESS, { student: response.data })
+        dispatch(REQUEST)
         resolve(response)
       } catch (e) {
         commit(ERROR)

@@ -230,6 +230,7 @@ export default {
           required: value => !!value || 'Required.'
         }
       }
+      this.programs = (await ProgramApi.getPrograms()).data
     },
     async updateProgram(program) {
       await ProgramApi.updateProgram(program)
