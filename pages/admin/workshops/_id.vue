@@ -226,6 +226,7 @@
       </div>
       <div class="container">
         <BookedStudentList :session-id="session.id" />
+        <WaitList :session-id="session.id" />
       </div>
     </section>
   </div>
@@ -233,6 +234,7 @@
 
 <script>
 import moment from 'moment'
+import WaitList from '../../../components/WaitList/WaitList'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
 import {
@@ -248,7 +250,7 @@ import BookedStudentList from '../../../components/BookedStudentList'
 export default {
   middleware: adminAuthenticated,
   layout: 'admin',
-  components: { Sheet, BookedStudentList },
+  components: { Sheet, BookedStudentList, WaitList },
 
   data() {
     return {
