@@ -70,12 +70,10 @@
               <td>{{ props.item.shortTitle }}</td>
               <td>{{ props.item.noWorkshop }}</td>
               <td>
-                <router-link :to="`/admin/skillsets/${props.item.id}`">
-                  <v-icon small @click="editItem(props.item)">
-                    edit
-                  </v-icon>
-                </router-link>
-                <v-dialog v-model="dialog2" max-width="290">
+                <v-icon small @click="editItem(props.item)">
+                  edit
+                </v-icon>
+                <v-dialog v-model="dialog2[props.item.id]" max-width="290">
                   <template v-slot:activator="{ on }">
                     <v-icon small v-on="on">
                       delete
@@ -89,7 +87,11 @@
                       Agree will archive the skillset.
                     </v-card-text>
                     <v-card-actions>
-                      <v-btn color="#ff0000" flat @click="dialog2 = false">
+                      <v-btn
+                        color="#ff0000"
+                        flat
+                        @click="dialog2[props.item.id] = false"
+                      >
                         Cancel
                       </v-btn>
                       <v-btn
@@ -146,7 +148,7 @@ export default {
         }
       },
       dialog: false,
-      dialog2: false
+      dialog2: {}
     }
   },
   computed: {
@@ -179,6 +181,9 @@ export default {
       console.log(skill.id)
       this.dialog2 = false
       await this.$store.dispatch(skillsetsModule(ARCHIVE), skill.id)
+    },
+    editItem(item) {
+      console.log(item)
     }
   }
 }

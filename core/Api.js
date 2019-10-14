@@ -153,12 +153,11 @@ export class SessionApi {
       url: `${SESSIONS_ENDPOINT}/${sessionId}`
     })
   }
-
-  static async addSession(session) {
+  static async addSession(data) {
     return await axios({
       method: 'post',
       url: `${SESSIONS_ENDPOINT}`,
-      data: session
+      data: data
     })
   }
 }

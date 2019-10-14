@@ -1,5 +1,5 @@
 import { SessionApi } from '../../core/Api'
-import { REQUEST, SUCCESS, ERROR, SESSIONS, CLEAR, CREATE } from './methods'
+import { REQUEST, SUCCESS, ERROR, SESSIONS, CLEAR } from './methods'
 
 const emptyState = () => ({
   status: '',
@@ -17,10 +17,6 @@ export const mutations = {
     state.status = 'loading'
   },
 
-  [CREATE]: state => {
-    state.status = 'creating sessions'
-  },
-
   [SUCCESS]: (state, { sessions }) => {
     state.status = 'success'
     state.sessions = sessions
@@ -36,7 +32,7 @@ export const mutations = {
 }
 
 export const actions = {
-  [REQUEST]: ({ commit }) =>
+  [REQUEST]: ({ commit }) => {
     new Promise(async (resolve, reject) => {
       commit(REQUEST)
       try {
@@ -48,4 +44,5 @@ export const actions = {
         reject(e)
       }
     })
+  }
 }
