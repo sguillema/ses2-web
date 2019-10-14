@@ -4,7 +4,11 @@
       <div
         v-if="!!header"
         class="header"
-        :class="{ red: color == 'red', black: color == 'black' }"
+        :class="{
+          red: color == 'red',
+          black: color == 'black',
+          centered
+        }"
       >
         <h2>{{ header }}</h2>
       </div>
@@ -12,7 +16,7 @@
     <slot></slot>
   </v-sheet>
   <v-sheet v-else class="sheet" elevation="3">
-    <div v-if="!!header" class="header">
+    <div v-if="!!header" class="header" :class="{ centered }">
       <h2>{{ header }}</h2>
     </div>
     <slot></slot>
@@ -24,7 +28,8 @@ export default {
   props: {
     header: { type: String, required: false, default: '' },
     alt: { type: Boolean, required: false, default: false },
-    color: { type: String, require: false, default: 'black' }
+    color: { type: String, require: false, default: 'black' },
+    centered: { type: Boolean, required: false, default: false }
   }
 }
 </script>
@@ -39,6 +44,10 @@ export default {
     background-color: $color-primary;
     width: 100%;
     margin-bottom: 16px;
+    &.centered {
+      padding-right: 30px;
+      text-align: center;
+    }
     h2 {
       color: $color-white;
       font-size: $font-cardtitle;
@@ -63,10 +72,13 @@ export default {
       display: flex;
       align-items: center;
       &.black {
-        background: $color-black;
+        background-color: $color-black !important;
       }
       &.red {
-        background: $color-red2;
+        background-color: $color-primary !important;
+      }
+      &.centered {
+        justify-content: center;
       }
       h2 {
         color: $color-white;

@@ -184,7 +184,6 @@ import { createHelpers } from 'vuex-map-fields'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import EdBackgroundDialog from '../../components/EdBackgroundDialog/EdBackgroundDialog'
 import Sheet from '../Sheet/Sheet'
-import DatePicker from '~/components/DatePicker/DatePicker'
 import countries from '../../core/data/countries'
 import languages from '../../core/data/languages'
 import genders from '../../core/data/genders'
@@ -217,6 +216,7 @@ import {
   REMOVE_BACKGROUND,
   SUBMIT
 } from '../../store/student/methods'
+import DatePicker from '~/components/DatePicker/DatePicker'
 
 const { mapFields } = createHelpers({
   getterType: studentModule('getField'),

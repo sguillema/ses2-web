@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import { authModule, TYPE } from '~/store/auth/methods'
 import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
+import { authModule, TYPE } from '~/store/auth/methods'
 import Sheet from '~/components/Sheet/Sheet'
 
 export default {
