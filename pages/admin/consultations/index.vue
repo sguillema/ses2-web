@@ -391,16 +391,17 @@
       </div>
       <div class="column-right">
         <Sheet :header="sheetHeader" alt>
-          <div class="section-header">
-            <v-text-field
-              v-model="search"
-              class="input-spacing"
-              append-icon="search"
-              label="Search"
-              placeholder="Search"
-              single-line
-              hide-details
-            />
+          <div>
+            <v-toolbar flat color="white">
+              <v-text-field
+                v-model="search"
+                append-icon="search"
+                label="Search"
+                placeholder="Search"
+                single-line
+                hide-details
+              />
+            </v-toolbar>
           </div>
           <v-data-table
             class="table-wrapper"
