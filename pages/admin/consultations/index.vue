@@ -1024,7 +1024,7 @@ export default {
           endTime: session.endTime,
           size: '1',
           room: 'CB11.00.201',
-          type: 'consultation',
+          type: 'Consultation',
           createdBy: this.dialogCreateSession.stepOne.advisor,
           cutoff: '24'
         })
@@ -1142,7 +1142,7 @@ export default {
         margin-bottom: 15px;
         // margin-top: 0;
         width: 100%;
-        height: 60px;
+        height: 80px;
         font-size: $font-subheading;
         color: $color-white;
         background: $color-red2;
