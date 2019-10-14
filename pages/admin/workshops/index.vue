@@ -397,6 +397,10 @@ export default {
   }
 }
 
+a {
+  color: #0f4beb;
+}
+
 .form {
   padding-left: 40px;
   padding-right: 40px;

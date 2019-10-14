@@ -90,9 +90,9 @@ import {
   PUBLISH,
   emailsModule
 } from '../../store/emails/methods'
+import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
 import Sheet from '~/components/Sheet/Sheet'
 import Editor from '~/components/Editor/Editor'
-import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
 
 export default {
   components: { Sheet, Editor },

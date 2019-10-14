@@ -638,8 +638,8 @@
 
 <script>
 import moment from 'moment'
-// import { authModule, LOGOUT } from '~/store/auth/methods'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+// import { authModule, LOGOUT } from '~/store/auth/methods'
 // import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 
 export default {

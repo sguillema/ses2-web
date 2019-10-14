@@ -14,13 +14,16 @@ export const DELETE = 'delete'
 export const ACTIVESKILLSETS = 'activeSkillsets'
 export const SKILLSETS = 'skillsets'
 export const SKILLSET = 'skillset'
-// export const TITLE = 'skillset.title'
-// export const SHORT_TITLE = 'skillset.shortTitle'
+export const TITLE = 'skillset.title'
+export const SHORT_TITLE = 'skillset.shortTitle'
+// export const NO_OF_ID = 'skillset.no'
 // export const NO_OF_WORKSHOPS = 'skillset.noOfWorkshops'
 
 // methods
 export const ADD_SKILLSET = 'addSkillset'
 export const REMOVE_SKILLSET = 'removeSkillset'
 export const ARCHIVE = 'archive'
+export const EDIT_SKILLSETS = 'editSkillsets'
+export const UNARCHIVE = 'unArchive'
 
 export const skillsetsModule = method => storeModule(MODULE, method)
