@@ -154,6 +154,14 @@ export class SessionApi {
       data: session
     })
   }
+
+  static async updateSessionBySessionId(sessionId, body) {
+    return await axios({
+      method: 'patch',
+      url: `${SESSIONS_ENDPOINT}/${sessionId}`,
+      data: body
+    })
+  }
 }
 
 //Skillset API
