@@ -16,6 +16,7 @@ const BOOKINGDETAIL_ENDPOINT = `${ENDPOINT}/booking-details`
 const ROOMS_ENDPOINT = `${ENDPOINT}/rooms`
 const EMAILS_ENDPOINT = `${ENDPOINT}/emails`
 const EMAILPLACEHOLDERS_ENDPOINT = `${ENDPOINT}/email-placeholders`
+const MESSAGES_ENDPOINT = `${ENDPOINT}/messages`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -396,6 +397,15 @@ export class EmailsApi {
     return await axios({
       method: 'get',
       url: `${EMAILPLACEHOLDERS_ENDPOINT}?type=${type}`
+    })
+  }
+}
+
+export class MessagesApi {
+  static async getMessage(id) {
+    return await axios({
+      method: 'get',
+      url: `${MESSAGES_ENDPOINT}/${id}`
     })
   }
 }
