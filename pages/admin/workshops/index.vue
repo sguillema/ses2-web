@@ -83,6 +83,7 @@
             :items="workshops"
             :search="search"
             :expand="expand"
+            :items-per-page="-1"
           >
             <template v-slot:items="props">
               <tr @click="props.expanded = !props.expanded">

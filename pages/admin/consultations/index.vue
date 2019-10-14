@@ -408,6 +408,7 @@
             :items="filteredSessions"
             :search="search"
             :loading="sessionsLoading"
+            :items-per-page="-1"
           >
             <template v-if="!sessionsLoading" v-slot:items="props">
               <td>{{ props.item.id }}</td>

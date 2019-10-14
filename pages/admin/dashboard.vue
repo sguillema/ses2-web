@@ -564,6 +564,7 @@
                 :items="filteredSessions"
                 class="table-wrapper"
                 :loading="sessionsloading"
+                :items-per-page="-1"
               >
                 <template v-if="!sessionsLoading" v-slot:items="props">
                   <td>
