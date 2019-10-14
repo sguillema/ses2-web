@@ -100,6 +100,13 @@ export class BookingApi {
     })
   }
 
+  static async cancelBooking(id) {
+    return await axios({
+      method: 'post',
+      url: `${BOOKINGS_ENDPOINT}/${id}/cancel`
+    })
+  }
+
   static async deleteBooking(body) {
     return await axios({
       method: 'delete',

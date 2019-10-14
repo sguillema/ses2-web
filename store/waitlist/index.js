@@ -80,10 +80,9 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(REMOVE_STUDENT)
       try {
-        console.log(body.bookingId + 'wow')
-        await BookingApi.deleteBooking(body.bookingId)
-      } catch (e) {
+        await BookingApi.cancelBooking(body.bookingId)
         dispatch(REQUEST, { sessionId: body.sessionId })
+      } catch (e) {
         commit(ERROR)
         reject(e)
       }
