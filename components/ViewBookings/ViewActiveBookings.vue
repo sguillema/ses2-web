@@ -1,10 +1,10 @@
 <template>
   <Sheet class="sheet">
-    <h2>Your Bookings</h2>
+    <h2>Active Bookings</h2>
     <v-data-table
       class="bookings-data-table"
       :headers="headers"
-      :items="bookingsWithData"
+      :items="activeBookings"
       hide-actions
     >
       <template v-slot:items="props">
@@ -85,6 +85,7 @@ export default {
       workshops: [],
       bookingDetails: [],
       bookingsWithData: [],
+      activeBookings: [],
       dialog: false,
       activeBookingId: ''
     }
@@ -98,7 +99,7 @@ export default {
     const promises = this.bookings.map(async booking => {
       let title
       const session = (await SessionApi.getSession(booking.sessionId)).data
-      if (session.workshopId === null) {
+      if (session.type === 'consultation') {
         const bookingDetails = (await BookingDetailsApi.getBookingDetailByBookingId(
           booking.id
         )).data
@@ -113,10 +114,24 @@ export default {
         title
       }
     })
-    const bookingsWithData = await Promise.all(promises)
-    this.bookingsWithData = _.sortBy(
-      bookingsWithData,
-      bookingWithData => bookingWithData.session.startTime
+    let bookingsWithData = await Promise.all(promises)
+
+    const activeBookings = []
+    for (let i = 0; i < bookingsWithData.length; i++) {
+      const bookingWithData = bookingsWithData[i]
+      if (
+        moment().isBetween(
+          bookingWithData.session.startTime,
+          bookingWithData.session.endTime
+        )
+      ) {
+        activeBookings.push(bookingWithData)
+      }
+    }
+
+    this.activeBookings = _.sortBy(
+      activeBookings,
+      activeBooking => activeBooking.session.startTime
     )
   },
   methods: {

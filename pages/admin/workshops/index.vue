@@ -82,6 +82,8 @@
             :headers="headers"
             :items="workshops"
             :search="search"
+            :expand="expand"
+            :items-per-page="-1"
           >
             <template v-slot:items="props">
               <tr @click="props.expanded = !props.expanded">
@@ -393,6 +395,10 @@ export default {
   .column-right {
     width: 100%;
   }
+}
+
+a {
+  color: #0f4beb;
 }
 
 .form {
