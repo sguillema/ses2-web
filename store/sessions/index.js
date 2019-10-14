@@ -50,6 +50,7 @@ export const actions = {
     new Promise(async (resolve, reject) => {
       commit(ADD_SESSION)
       try {
+        console.log(data)
         const response = await SessionApi.addSession(data)
         commit(SUCCESS, { session: response.data })
         resolve(response)

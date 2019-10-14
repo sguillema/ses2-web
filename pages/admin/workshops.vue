@@ -174,7 +174,7 @@
                             <v-btn
                               depressed
                               color="primary"
-                              @click="addSession(props.item.id)"
+                              @click="addSession(props.item)"
                             >
                               Add Session
                             </v-btn>
@@ -233,6 +233,7 @@ import {
 } from '../../store/workshops/methods'
 import { sessionsModule, ADD_SESSION } from '../../store/sessions/methods'
 import Sheet from '../../components/Sheet/Sheet'
+import { SessionApi } from '../../core/Api'
 
 const emptyWorkshopForm = () => ({
   title: '',
@@ -321,25 +322,24 @@ export default {
       this.dialog = false
       this.newWorkshop = emptyWorkshopForm()
     },
-    async addSession(id) {
-      this.newSession.id = id
-      if (
-        this.newSession.id === null ||
-        this.newSession.date === '' ||
-        this.newSession.startTime === '' ||
-        this.newSession.endTime === ''
-      ) {
-        return false
-      }
-      if (this.newSession.emailStudent) {
-        //email student
-      }
-      if (this.newSession.emailAdvisor) {
-        //email advisor
+    async addSession(workshop) {
+      const newSession = {
+        workshopId: workshop.id,
+        createdBy: workshop.staffId, // TODO: get current user's id
+        startTime: this.getDateTime(
+          this.newSession.date,
+          this.newSession.startTime
+        ),
+        endTime: this.getDateTime(
+          this.newSession.date,
+          this.newSession.endTime
+        ),
+        size: '30',
+        cutoff: '24',
+        type: 'Workshop'
       }
 
-      console.log(this.newSession)
-      await this.$store.dispatch(sessionsModule(ADD_SESSION), this.newSession)
+      await SessionApi.addSession(newSession)
       this.newSession = emptySessionForm()
     },
     getMomentDateFormat(date) {
@@ -347,6 +347,10 @@ export default {
     },
     getMomentTimeFormat(date) {
       return moment(date).format('h:mm a')
+    },
+    getDateTime(dayDate, time) {
+      // TODO: fix me
+      return time
     }
   }
 }
