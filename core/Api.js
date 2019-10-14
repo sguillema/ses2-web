@@ -99,6 +99,20 @@ export class BookingApi {
       data: booking
     })
   }
+
+  static async cancelBooking(id) {
+    return await axios({
+      method: 'post',
+      url: `${BOOKINGS_ENDPOINT}/${id}/cancel`
+    })
+  }
+
+  static async deleteBooking(body) {
+    return await axios({
+      method: 'delete',
+      url: `${BOOKINGS_ENDPOINT}/${body}`
+    })
+  }
 }
 //Booking details API
 export class BookingDetailsApi {

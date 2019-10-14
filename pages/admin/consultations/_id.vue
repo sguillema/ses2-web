@@ -24,9 +24,11 @@
             <v-btn color="primary" dark depressed>
               Edit Session
             </v-btn>
-            <v-btn class="ma-2" depressed>
-              Cancel
-            </v-btn>
+            <router-link to="/admin/consultations">
+              <v-btn class="ma-2" depressed>
+                Cancel
+              </v-btn>
+            </router-link>
           </div>
         </Sheet>
       </div>
@@ -102,8 +104,9 @@
     </section>
     <section class="right">
       <div class="container">
-        <attendance-key-generator />
+        <attendance-key-generator :session-id="$route.params.id" />
       </div>
+      <div class="container"><WaitList :session-id="$route.params.id" /></div>
     </section>
   </section>
 </template>
@@ -111,6 +114,7 @@
 <script>
 import moment from 'moment'
 import AttendanceKeyGenerator from '../../../components/AttedanceKeyGenerator/AttendanceKeyGenerator'
+import WaitList from '../../../components/WaitList/WaitList'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
 import {
@@ -123,7 +127,7 @@ import ViewConsultation from '../../../components/ViewConsultation/ViewConsultat
 import { getHelpWithType } from '../../../core/helpers'
 
 export default {
-  components: { Sheet, AttendanceKeyGenerator },
+  components: { Sheet, AttendanceKeyGenerator, WaitList },
   middleware: adminAuthenticated,
   layout: 'admin',
   data() {
