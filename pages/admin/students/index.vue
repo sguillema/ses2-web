@@ -67,6 +67,7 @@
 
 <script>
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
+
 import {
   studentsModule,
   REQUEST,

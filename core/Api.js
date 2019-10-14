@@ -207,6 +207,13 @@ export class SkillsetApi {
       url: `${SKILLSETS_ENDPOINT}?type=active`
     })
   }
+
+  static async getArchiveSkillsets() {
+    return await axios({
+      method: 'get',
+      url: `${SKILLSETS_ENDPOINT}?type=archived`
+    })
+  }
 }
 
 export class ProgramApi {
