@@ -318,6 +318,7 @@ export default {
       }
       console.log(this.newWorkshop)
       await this.$store.dispatch(workshopsModule(CREATE), this.newWorkshop)
+      this.dialog = false
       this.newWorkshop = emptyWorkshopForm()
     },
     async addSession(id) {
@@ -339,7 +340,6 @@ export default {
 
       console.log(this.newSession)
       await this.$store.dispatch(sessionsModule(ADD_SESSION), this.newSession)
-      this.dialog = false
       this.newSession = emptySessionForm()
     },
     getMomentDateFormat(date) {
