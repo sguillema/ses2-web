@@ -24,9 +24,9 @@
               <router-link :to="`/admin/students/${props.item.id}`">
                 Edit
               </router-link>
-              <router-link :to="`/admin/students/${props.item.id}/history`">
+              <!-- <router-link :to="`/admin/students/${props.item.id}/history`">
                 View History
-              </router-link>
+              </router-link> -->
             </td>
           </template>
         </v-data-table>

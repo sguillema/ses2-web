@@ -436,7 +436,7 @@
           Your Schedule
         </div>
         <div class="form">
-          <Sheet :header="sheetHeader" alt>
+          <Sheet alt>
             <div class="header">
               Upcoming All Sessions
             </div>
@@ -444,7 +444,6 @@
               <v-toolbar flat color="white">
                 <v-text-field
                   v-model="search"
-                  class="input-spacing"
                   append-icon="search"
                   placeholder="Search for Sessions"
                 />
@@ -485,7 +484,7 @@
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
-                      min-width="290px"
+                      width="500px"
                     >
                       <template v-slot:activator="{ on }">
                         <v-text-field
@@ -530,7 +529,7 @@
                 </div>
                 <div class="right">
                   <v-btn-toggle
-                    v-model="toggle_one_calendar"
+                    v-model="toggle_one"
                     mandatory
                     :type="sheetViewType"
                   >
@@ -564,7 +563,8 @@
                 :search="search"
                 :items="filteredSessions"
                 class="table-wrapper"
-                :loading="sessionsloading"
+                :loading="sessionsLoading"
+                :items-per-page="-1"
               >
                 <template v-if="!sessionsLoading" v-slot:items="props">
                   <td>
@@ -580,14 +580,28 @@
                   <td>{{ props.item.room }}</td>
                   <!-- <td>{{ props.item.topic }}</td> -->
                   <td>
-                    <router-link
-                      v-if="getArrayLength(props.item.bookings) > 0"
+                    <a
+                      v-if="
+                        getArrayLength(props.item.bookings) == props.item.size
+                      "
+                      class="full"
+                    >
+                      Full
+                    </a>
+                    <a
+                      v-else-if="getArrayLength(props.item.bookings) > 0"
+                      class="few"
+                    >
+                      Few
+                    </a>
+                    <!-- <router-link
+                      v-else-if="getArrayLength(props.item.bookings) > 0"
                       :to="
                         `/admin/students/${props.item.bookings[0].studentId}`
                       "
                     >
                       {{ props.item.bookings[0].studentId }}
-                    </router-link>
+                    </router-link> -->
                     <!-- <a
                       v-else
                       class="book-link"
@@ -642,6 +656,7 @@ export default {
       // consultations: [],
       // sessions: [],
       // -> End
+      toggle_one: 0,
       dialog: false,
       dialog2: false,
       stepCount: 0,
@@ -686,13 +701,14 @@ export default {
       },
       search: '',
       headers: [
-        { text: 'Date', value: 'date' },
-        { text: 'ID', value: 'id' },
-        { text: 'Type', value: 'type' },
-        { text: 'Time', value: 'time' },
-        { text: 'Room', value: 'room' },
+        { text: 'Date', value: 'date', sortable: false },
+        { text: 'ID', value: 'id', sortable: true },
+        { text: 'Type', value: 'type', sortable: true },
+        { text: 'Time', value: 'time', sortable: false },
+        { text: 'Room', value: 'room', sortable: true },
         // { text: 'Topic', value: 'topic' },
-        { text: 'Booking By', value: 'bokings[0].studentID' }
+        { text: 'Status', value: 'status', sortable: false },
+        { text: '', value: '', sortable: false }
       ],
       items: [
         {
@@ -1140,6 +1156,12 @@ export default {
           &.vacant {
             color: green;
           }
+          &.few {
+            color: goldenrod;
+          }
+          &.full {
+            color: $color-red2;
+          }
         }
       }
       .form {
@@ -1188,13 +1210,14 @@ export default {
           }
           .right {
             display: flex;
-            border: solid;
+            // border: solid;
             align-items: center;
             justify-content: center;
             border-width: 1px;
             border-color: $color-border-gray;
             margin-top: 20px;
             margin-bottom: 20px;
+            margin-right: 10px;
             .display {
               display: inline-flex;
               width: 60px;
