@@ -13,7 +13,7 @@
             <v-text-field
               v-model="search"
               append-icon="search"
-              placeholder="Search for Advisor ID/Name"
+              placeholder="Search for Advisor"
             />
           </v-toolbar>
         </div>
@@ -22,7 +22,7 @@
           :headers="headers"
           :items="advisors"
           :search="search"
-          :items-per-page-options="-1"
+          :items-per-page="-1"
         >
           <template v-slot:items="props">
             <td>{{ props.item.id }}</td>
