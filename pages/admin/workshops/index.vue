@@ -82,7 +82,6 @@
             :headers="headers"
             :items="workshops"
             :search="search"
-            :expand="expand"
           >
             <template v-slot:items="props">
               <tr @click="props.expanded = !props.expanded">
@@ -90,6 +89,100 @@
                 <td>{{ props.item.staffId }}</td>
                 <td>{{ getProgramTitle(props.item.programId) }}</td>
                 <td>{{ props.item.description }}</td>
+                <td>
+                  <v-dialog v-model="editDialog[props.item.id]" width="800">
+                    <template v-slot:activator="{ on }">
+                      <a>
+                        <v-icon small class="header-button-icon" v-on="on">
+                          add
+                        </v-icon>
+                      </a>
+                    </template>
+                    <v-card class="dialog">
+                      <v-card-title class="dialog-title-card">
+                        <h1 class="dialog-title">
+                          Add Session Information
+                        </h1>
+                      </v-card-title>
+                      <v-divider class="divider" />
+                      <v-card-text>
+                        <b>Please Note:</b>
+                        When changing the session form credentials you must
+                        notify the advisor and/or student through email of the
+                        change at least 24hr prior to the start time.
+                      </v-card-text>
+
+                      <v-card-text>
+                        <v-layout row wrap>
+                          <v-flex sm12 md6>
+                            <v-text-field
+                              v-model="newSession.date"
+                              label="Date"
+                              outline
+                            />
+                          </v-flex>
+                          <v-flex sm12 md6>
+                            <v-select
+                              v-model="newSession.room"
+                              :items="rooms"
+                              label="Room"
+                              outline
+                            />
+                          </v-flex>
+                        </v-layout>
+                        <v-layout row wrap>
+                          <v-flex sm12 md6>
+                            <v-text-field
+                              v-model="newSession.startTime"
+                              label="Start Time"
+                              outline
+                            />
+                          </v-flex>
+                          <v-flex sm12 md6>
+                            <v-text-field
+                              v-model="newSession.endTime"
+                              label="End Time"
+                              outline
+                            />
+                          </v-flex>
+                        </v-layout>
+                        <v-layout row wrap>
+                          <v-flex sm12 md6>
+                            <v-checkbox
+                              v-model="newSession.emailStudent"
+                              class="studentEmail"
+                              label="Email Student Consultation Update"
+                            />
+                          </v-flex>
+                          <v-flex sm12 md6>
+                            <v-checkbox
+                              v-model="newSession.emailAdvisor"
+                              class="advisorEmail"
+                              label="Email Advisor Consultation Update"
+                            />
+                          </v-flex>
+                        </v-layout>
+                        <v-layout row wrap>
+                          <v-btn
+                            depressed
+                            color="primary"
+                            @click="addSession(props.item)"
+                          >
+                            Add Session
+                          </v-btn>
+                        </v-layout>
+                      </v-card-text>
+                    </v-card>
+                  </v-dialog>
+                  <a>
+                    <v-icon v-if="!props.expanded" small>
+                      keyboard_arrow_down
+                    </v-icon>
+                    <v-icon v-else small>
+                      keyboard_arrow_up
+                    </v-icon>
+                  </a>
+                </td>
               </tr>
             </template>
             <template v-slot:expand="props">
@@ -101,18 +194,18 @@
                 >
                   <template v-slot:items="props">
                     <tr>
-                      <!-- <td>{{ props.item.room }}</td> -->
-                      <td>
-                        <router-link :to="`/admin/workshops/${props.item.id}`">
-                          {{ props.item.id }}
-                        </router-link>
-                      </td>
+                      <td>{{ props.item.id }}</td>
                       <td style="padding:22px">
                         {{ getMomentDateFormat(props.item.startTime) }}
                       </td>
                       <td>{{ getMomentTimeFormat(props.item.startTime) }}</td>
                       <td>{{ getMomentTimeFormat(props.item.endTime) }}</td>
                       <td>{{ props.item.room }}</td>
+                      <td>
+                        <router-link :to="`/admin/workshops/${props.item.id}`">
+                          View
+                        </router-link>
+                      </td>
                     </tr>
                   </template>
                 </v-data-table>
@@ -136,12 +229,22 @@ import {
   CREATE
 } from '../../../store/workshops/methods'
 import Sheet from '../../../components/Sheet/Sheet'
+import { SessionApi } from '../../../core/Api'
 
 const emptyWorkshopForm = () => ({
   title: '',
   staffId: null,
   programId: null,
   description: ''
+})
+
+const emptySessionForm = () => ({
+  id: null,
+  date: '',
+  startTime: '',
+  endTime: '',
+  emailStudent: false,
+  emailAdvisor: false
 })
 
 export default {
@@ -155,21 +258,27 @@ export default {
         { text: 'Title', value: 'title' },
         { text: 'Staff ID', value: 'skillsetId' },
         { text: 'Program', value: 'programId' },
-        { text: 'Description', value: 'description', sortable: false }
+        { text: 'Description', value: 'description', sortable: false },
+        { text: 'Actions', value: '', sortable: false }
       ],
       sessionsHeaders: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Date', value: 'date', sortable: false },
         { text: 'Start Time', value: 'startTime', sortable: false },
         { text: 'Finish Time', value: 'finishTime', sortable: false },
-        { text: 'Room', value: 'room', sortable: false }
+        { text: 'Room', value: 'room', sortable: false },
+        { text: 'Actions', value: '', sortable: false }
       ],
       sessions: [],
       workshopsLoading: false,
       dialog: false,
+      editDialog: {},
+      sessionDialog: false,
       programs: [],
       staff: [],
+      rooms: ['CB05B.04.036', 'CB05B.04.037'],
       newWorkshop: emptyWorkshopForm(),
+      newSession: emptySessionForm(),
       expand: false,
       workshopId: 1
     }
@@ -212,11 +321,36 @@ export default {
       this.dialog = false
       this.newWorkshop = emptyWorkshopForm()
     },
+    async addSession(workshop) {
+      const newSession = {
+        workshopId: workshop.id,
+        createdBy: workshop.staffId, // TODO: get current user's id
+        startTime: this.getDateTime(
+          this.newSession.date,
+          this.newSession.startTime
+        ),
+        endTime: this.getDateTime(
+          this.newSession.date,
+          this.newSession.endTime
+        ),
+        size: '30',
+        cutoff: '24',
+        type: 'Workshop'
+      }
+
+      await SessionApi.addSession(newSession)
+      this.newSession = emptySessionForm()
+      this.editDialog[workshop.id] = false
+    },
     getMomentDateFormat(date) {
       return moment(date).format('DD/MM/YYYY')
     },
     getMomentTimeFormat(date) {
       return moment(date).format('h:mm a')
+    },
+    getDateTime(dayDate, time) {
+      // TODO: fix me
+      return time
     }
   }
 }
@@ -279,12 +413,18 @@ export default {
     font-size: 20px;
   }
   .dialog-title-card {
-    background: #ff1818;
+    background-color: #ff1818;
     height: 70px;
   }
   .dialog-title-card2 {
     background: #ffffff;
     height: 70px;
+  }
+  .headline {
+    color: #ffffff;
+  }
+  .headline2 {
+    font-size: 20px;
   }
   .step-content {
     padding: 0 20px;
