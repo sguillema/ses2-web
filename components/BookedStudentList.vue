@@ -1,6 +1,6 @@
 <template>
   <Sheet class="sheet" header="Student list">
-    <h3 align="center">Add Student to the Workshop Attendance List</h3>
+    <!-- <h3 align="center">Add Student to the Workshop Attendance List</h3>
     <v-text-field
       v-model="studentNumber"
       label="Enter Student ID/Name"
@@ -9,7 +9,7 @@
     />
     <v-btn block color="primary" depressed @click="bookStudentIntoWorkshop">
       Add
-    </v-btn>
+    </v-btn> -->
     <v-data-table
       :headers="headers"
       :items="studentBookings"

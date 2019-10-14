@@ -218,9 +218,11 @@
                 </v-stepper>
               </v-card>
             </v-dialog>
-            <v-btn class="ma-2" depressed>
-              Cancel
-            </v-btn>
+            <router-link to="/admin/workshops">
+              <v-btn class="ma-2" depressed>
+                Cancel
+              </v-btn>
+            </router-link>
           </div>
         </Sheet>
       </div>
@@ -228,11 +230,21 @@
         <BookedStudentList :session-id="session.id" />
       </div>
     </section>
+    <section class="right">
+      <div class="container">
+        <attendance-key-generator :session-id="$route.params.id" />
+      </div>
+      <div class="container">
+        <WaitList :session-id="session.id" />
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import WaitList from '../../../components/WaitList/WaitList'
+import AttendanceKeyGenerator from '../../../components/AttedanceKeyGenerator/AttendanceKeyGenerator'
 import { adminAuthenticated } from '../../../middleware/authenticatedRoutes'
 import Sheet from '../../../components/Sheet/Sheet'
 import {
@@ -248,7 +260,7 @@ import BookedStudentList from '../../../components/BookedStudentList'
 export default {
   middleware: adminAuthenticated,
   layout: 'admin',
-  components: { Sheet, BookedStudentList },
+  components: { Sheet, BookedStudentList, WaitList, AttendanceKeyGenerator },
 
   data() {
     return {

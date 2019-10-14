@@ -99,6 +99,20 @@ export class BookingApi {
       data: booking
     })
   }
+
+  static async cancelBooking(id) {
+    return await axios({
+      method: 'post',
+      url: `${BOOKINGS_ENDPOINT}/${id}/cancel`
+    })
+  }
+
+  static async deleteBooking(body) {
+    return await axios({
+      method: 'delete',
+      url: `${BOOKINGS_ENDPOINT}/${body}`
+    })
+  }
 }
 // Booking details API
 export class BookingDetailsApi {
@@ -167,6 +181,14 @@ export class SessionApi {
       data: data
     })
   }
+
+  static async updateSessionBySessionId(sessionId, body) {
+    return await axios({
+      method: 'patch',
+      url: `${SESSIONS_ENDPOINT}/${sessionId}`,
+      data: body
+    })
+  }
 }
 
 //Skillset API
@@ -212,6 +234,13 @@ export class SkillsetApi {
     return await axios({
       method: 'get',
       url: `${SKILLSETS_ENDPOINT}?type=active`
+    })
+  }
+
+  static async getArchiveSkillsets() {
+    return await axios({
+      method: 'get',
+      url: `${SKILLSETS_ENDPOINT}?type=archived`
     })
   }
 }
