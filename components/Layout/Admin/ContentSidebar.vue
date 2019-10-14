@@ -33,33 +33,16 @@ export default {
     return {
       listSections: [
         {
-<<<<<<< HEAD
           title: 'Make a Booking',
-=======
-          title: 'Home',
           links: [
-            { title: 'Dashboard', icon: 'receipt', to: '/admin/dashboard' }
-          ]
-        },
-        {
-          title: 'Bookings',
->>>>>>> b6b6ffb3fc093c0374cb6ed68588b867f6f8252e
-          links: [
-            { title: 'Skill Sets', icon: 'receipt', to: '/admin/skillsets' },
+            { title: 'Skill Sets', icon: 'extension', to: '/admin/skillsets' },
             { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
             { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
             {
               title: 'Consultations',
               icon: 'forum',
               to: '/admin/consultations'
-<<<<<<< HEAD
-            },
-            { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
-            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' },
-            { title: 'Skill Sets', icon: 'extension', to: '/admin/skillsets' }
-=======
             }
->>>>>>> b6b6ffb3fc093c0374cb6ed68588b867f6f8252e
           ]
         },
         {
@@ -70,16 +53,12 @@ export default {
               icon: 'supervised_user_circle',
               to: '/admin/advisors'
             },
-<<<<<<< HEAD
             { title: 'Students', icon: 'recent_actors', to: '/admin/students' },
             {
               title: 'Waiting Lists',
               icon: 'timeline',
               to: '/admin/waitinglists'
             }
-=======
-            { title: 'Students', icon: 'recent_actors', to: '/admin/students' }
->>>>>>> b6b6ffb3fc093c0374cb6ed68588b867f6f8252e
           ]
         },
         {
@@ -88,11 +67,7 @@ export default {
             { title: 'Emails', icon: 'email', to: '/admin/emails' },
             { title: 'Messages', icon: 'chat', to: '/admin/messages' },
             { title: 'Rooms', icon: 'home', to: '/admin/rooms' },
-<<<<<<< HEAD
             { title: 'Annoucements', icon: 'chat', to: '/admin/messages' }
-=======
-            { title: 'Reports', icon: 'book', to: '/admin/reports' }
->>>>>>> b6b6ffb3fc093c0374cb6ed68588b867f6f8252e
           ]
         }
       ]

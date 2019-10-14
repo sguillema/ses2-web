@@ -1136,7 +1136,6 @@ export default {
     > .column-left {
       width: 80px;
       margin-right: 27px;
-<<<<<<< HEAD
       .header-button {
         // margin-left: 0;
         // margin-right: 0;
@@ -1165,8 +1164,6 @@ export default {
           box-shadow: none;
         }
       }
-=======
->>>>>>> b6b6ffb3fc093c0374cb6ed68588b867f6f8252e
     }
     > .column-right {
       width: 100%;
