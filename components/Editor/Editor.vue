@@ -88,6 +88,7 @@
         </button>
 
         <v-select
+          v-if="fieldData.length > 0"
           v-model="selected"
           :items="fieldData"
           dense
