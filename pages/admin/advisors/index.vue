@@ -7,13 +7,16 @@
           Close
         </v-btn>
       </v-snackbar> -->
-      <Sheet header="Available Advisors">
-        <v-text-field
-          v-model="search"
-          class="input-spacing"
-          append-icon="search"
-          placeholder="Search"
-        />
+      <Sheet header="Available Advisors" alt>
+        <div>
+          <v-toolbar flat color="white">
+            <v-text-field
+              v-model="search"
+              append-icon="search"
+              placeholder="Search for Advisors"
+            />
+          </v-toolbar>
+        </div>
         <v-data-table
           class="table-wrapper"
           :headers="headers"
@@ -43,26 +46,32 @@
             All the fields are compulsory, otherwise that advisor will not be
             added.
           </p>
-          <div class="inputs">
-            <v-text-field
-              v-model="addNew.id"
-              label="Advisor ID"
-              class="input-spacing"
-              :rules="[addNew.rules.required]"
-            />
-            <v-text-field
-              v-model="addNew.name"
-              label="Name"
-              class="input-spacing"
-              :rules="[addNew.rules.required]"
-            />
-            <v-text-field
-              v-model="addNew.email"
-              label="Email"
-              class="input-spacing"
-              :rules="[addNew.rules.required]"
-            />
-          </div>
+          <v-layout row wrap>
+            <v-flex sm12 md4>
+              <v-text-field
+                v-model="addNew.id"
+                label="Advisor ID"
+                class="input-spacing"
+                :rules="[addNew.rules.required]"
+              />
+            </v-flex>
+            <v-flex sm12 md4>
+              <v-text-field
+                v-model="addNew.name"
+                label="Name"
+                class="input-spacing"
+                :rules="[addNew.rules.required]"
+              />
+            </v-flex>
+            <v-flex sm12 md4>
+              <v-text-field
+                v-model="addNew.email"
+                label="Email"
+                class="input-spacing"
+                :rules="[addNew.rules.required]"
+              />
+            </v-flex>
+          </v-layout>
           <v-btn depressed color="primary" @click="addAdvisor">
             Add
           </v-btn>
@@ -135,10 +144,13 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
 
-.input-spacing {
-  @include input-spacing();
+.layout.wrap {
+  width: 100%;
 }
-
+.input-spacing {
+  margin-left: 10px;
+  margin-right: 10px;
+}
 .table-wrapper {
   border-bottom: 2px solid $color-divider;
   margin-bottom: 12px;

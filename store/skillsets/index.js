@@ -61,12 +61,13 @@ export const actions = {
       try {
         let response
         if (hideArchived) response = await SkillsetApi.getActiveSkillsets()
+        else if (showArchive) response = await SkillsetApi.getArchiveSkillsets()
         else response = await SkillsetApi.getSkillsets()
-        if (showArchive) response = await SkillsetApi.getArchiveSkillsets()
         commit(SUCCESS, { skillsets: response.data })
         resolve(response)
       } catch (e) {
         commit(ERROR)
+        console.error(e)
         reject(e)
       }
     }),
@@ -128,13 +129,9 @@ export const actions = {
     }),
   [EDIT_SKILLSETS]: ({ commit, dispatch }, editNew) =>
     new Promise(async (resolve, reject) => {
-      commit(EDIT_SKILLSETS)
+      commit(REQUEST)
       try {
-        const response = await SkillsetApi.updateSkillset(
-          editNew.skillsetId,
-          editNew
-        )
-        dispatch(REQUEST, { hideArchived: true })
+        const response = await SkillsetApi.updateSkillset(editNew.id, editNew)
         resolve(response)
       } catch (e) {
         commit(ERROR)

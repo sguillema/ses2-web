@@ -13,8 +13,10 @@ const WORKSHOPS_ENDPOINT = `${ENDPOINT}/workshops`
 const STAFF_ENDPOINT = `${ENDPOINT}/staff`
 const SESSIONS_ENDPOINT = `${ENDPOINT}/sessions`
 const BOOKINGDETAIL_ENDPOINT = `${ENDPOINT}/booking-details`
+const ROOMS_ENDPOINT = `${ENDPOINT}/rooms`
 const EMAILS_ENDPOINT = `${ENDPOINT}/emails`
 const EMAILPLACEHOLDERS_ENDPOINT = `${ENDPOINT}/email-placeholders`
+const MESSAGES_ENDPOINT = `${ENDPOINT}/messages`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -84,7 +86,13 @@ export class BookingApi {
     })
   }
 
-  static async createBooking(booking) {
+  static async getBookingsBySessionId(sessionId) {
+    return await this.getBookings({
+      sessionId
+    })
+  }
+
+  static async addBooking(booking) {
     return await axios({
       method: 'post',
       url: `${BOOKINGS_ENDPOINT}`,
@@ -94,26 +102,62 @@ export class BookingApi {
 }
 //Booking details API
 export class BookingDetailsApi {
+  static async getBookingDetail(bookingDetailsId) {
+    return await axios({
+      method: 'get',
+      url: `${BOOKINGDETAIL_ENDPOINT}/${bookingDetailsId}`
+    })
+  }
+
   static async getBookingDetailByBookingId(bookingId) {
     return await axios({
       method: 'get',
       url: `${BOOKINGDETAIL_ENDPOINT}?bookingId=${bookingId}`
     })
   }
+
+  static async addBookingDetails(bookingDetails) {
+    return await axios({
+      method: 'post',
+      url: `${BOOKINGDETAIL_ENDPOINT}`,
+      data: bookingDetails
+    })
+  }
 }
 //Session API
 export class SessionApi {
-  static async getSessions() {
+  static async getSessions(params) {
+    const query = querystring.stringify(params)
     return await axios({
       method: 'get',
-      url: SESSIONS_ENDPOINT
+      url: `${SESSIONS_ENDPOINT}?${query}`
     })
+  }
+
+  static async getSessionsByWorkshopId(workshopId) {
+    return await this.getSessions({
+      workshopId
+    })
+  }
+
+  static async getConsultationSessions() {
+    const params = {
+      type: 'consultation'
+    }
+    return await this.getSessions(params)
   }
 
   static async getSession(sessionId) {
     return await axios({
       method: 'get',
       url: `${SESSIONS_ENDPOINT}/${sessionId}`
+    })
+  }
+  static async addSession(data) {
+    return await axios({
+      method: 'post',
+      url: `${SESSIONS_ENDPOINT}`,
+      data: data
     })
   }
 }
@@ -263,11 +307,7 @@ export class WorkshopApi {
   }
 
   static async getSessionsByWorkshopId(id) {
-    return await axios({
-      method: 'get',
-      url: `${SESSIONS_ENDPOINT}/?workshopId=${id}`,
-      data: id
-    })
+    return await SessionApi.getSessionsByWorkshopId(id)
   }
 }
 
@@ -309,6 +349,30 @@ export class AdvisorApi {
   }
 }
 
+//Rooms API
+export class RoomApi {
+  static async getRooms() {
+    return await axios({
+      method: 'get',
+      url: ROOMS_ENDPOINT
+    })
+  }
+
+  static async getRoom(id) {
+    return await axios({
+      method: 'get',
+      url: `${ROOMS_ENDPOINT}/${id}`
+    })
+  }
+
+  static async updateRoom(room) {
+    return await axios({
+      method: 'patch',
+      url: `${ROOMS_ENDPOINT}/${room.id}`
+    })
+  }
+}
+
 // Emails Api
 export class EmailsApi {
   static async getEmails() {
@@ -339,6 +403,39 @@ export class EmailsApi {
     return await axios({
       method: 'get',
       url: `${EMAILPLACEHOLDERS_ENDPOINT}?type=${type}`
+    })
+  }
+}
+
+export class MessagesApi {
+  static async getMessages() {
+    return await axios({
+      method: 'get',
+      url: `${MESSAGES_ENDPOINT}`
+    })
+  }
+
+  static async getMessage(id) {
+    return await axios({
+      method: 'get',
+      url: `${MESSAGES_ENDPOINT}/${id}`
+    })
+  }
+
+  static async updateMessageTemplate(message) {
+    const { id, template } = message
+    const data = { template }
+    return await axios({
+      method: 'patch',
+      url: `${MESSAGES_ENDPOINT}/${id}`,
+      data
+    })
+  }
+
+  static async publishMessage(id) {
+    return await axios({
+      method: 'post',
+      url: `${MESSAGES_ENDPOINT}/${id}/publish`
     })
   }
 }

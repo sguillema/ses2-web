@@ -16,10 +16,38 @@
         <td>{{ props.item.session.room }}</td>
         <td>{{ props.item.session.createdBy }}</td>
         <td>
-          <i class="material-icons" color="red">school</i>
+          <i
+            v-if="props.item.booking.attended"
+            class="material-icons green--text"
+          >
+            school
+          </i>
+          <i
+            v-else-if="
+              !props.item.booking.attended && isSessionOpen(props.item.session)
+            "
+            class="material-icons grey--text available"
+            @click="openDialog(props.item.booking.id)"
+          >
+            school
+          </i>
+          <i
+            v-else-if="
+              !props.item.booking.attended &&
+                isSessionPassed(props.item.session)
+            "
+            class="material-icons primary--text"
+          >
+            school
+          </i>
         </td>
       </template>
     </v-data-table>
+    <ViewBookingsVerifyAttendance
+      :dialog="dialog"
+      :booking-id="activeBookingId"
+      @toggle-dialog="closeDialog()"
+    />
   </Sheet>
 </template>
 
@@ -32,12 +60,12 @@ import {
   WorkshopApi,
   BookingDetailsApi
 } from '../../core/Api'
-
 import Sheet from '../../components/Sheet/Sheet'
+import ViewBookingsVerifyAttendance from '../ViewBookings/ViewBookingsVerifyAttendance'
 import { authModule, TYPE, USER } from '~/store/auth/methods'
 
 export default {
-  components: { Sheet },
+  components: { Sheet, ViewBookingsVerifyAttendance },
   data() {
     return {
       type: this.$store.getters[authModule(TYPE)],
@@ -56,7 +84,9 @@ export default {
       bookings: [],
       workshops: [],
       bookingDetails: [],
-      bookingsWithData: []
+      bookingsWithData: [],
+      dialog: false,
+      activeBookingId: ''
     }
   },
   async mounted() {
@@ -68,7 +98,7 @@ export default {
     const promises = this.bookings.map(async booking => {
       let title
       const session = (await SessionApi.getSession(booking.sessionId)).data
-      if (session.type === 'consultation') {
+      if (session.workshopId === null) {
         const bookingDetails = (await BookingDetailsApi.getBookingDetailByBookingId(
           booking.id
         )).data
@@ -95,6 +125,30 @@ export default {
     },
     getMomentTimeFormat(date) {
       return moment(date).format('h:mm a')
+    },
+    isSessionOpen(session) {
+      const expirationDate = moment(session.endTime)
+        .add(30, 'minutes')
+        .format()
+      const startDate = session.startTime
+      if (moment().isBetween(startDate, expirationDate)) {
+        return true
+      }
+      return false
+    },
+    isSessionPassed(session) {
+      const endDate = moment(session.endTime).format()
+      if (moment().isAfter(endDate)) {
+        return true
+      }
+      return false
+    },
+    openDialog(bookingId) {
+      this.activeBookingId = bookingId
+      this.dialog = true
+    },
+    closeDialog() {
+      this.dialog = false
     }
   }
 }
@@ -102,32 +156,42 @@ export default {
 
 <style lang="scss" scoped>
 @import '~assets/styles/variables';
+
 .sheet {
   padding: 24px;
 }
+
 h2 {
   margin-left: 24px;
   margin-bottom: 20px;
 }
+
 h1 {
   text-align: center;
   font-size: 24px;
   font-weight: 500;
   margin: 70px 0px 60px;
 }
+
 .section-container {
   height: inherit;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
+i.available {
+  cursor: pointer;
+}
 </style>
 
 <style lang="scss">
 @import '~assets/styles/variables';
+
 .bookings-data-table {
   thead {
     background: $color-divider;
+
     tr {
       border-bottom: none !important;
     }

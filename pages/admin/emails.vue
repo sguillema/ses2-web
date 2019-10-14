@@ -70,7 +70,7 @@
           </div>
         </div>
       </Sheet>
-      <v-snackbar v-model="snackbar.active" top color="blue" timeout="3000">
+      <v-snackbar v-model="snackbar.active" top color="blue" :timeout="3000">
         {{ snackbar.text }}
         <v-btn class="v-btn--flat b-btn--text" @click="snackbar.active = false">
           Close
