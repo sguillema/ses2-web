@@ -51,9 +51,7 @@ export default {
   async mounted() {
     try {
       let result = await this.$axios.$get(
-        `http://localhost:4000/codes?sessionId=${
-          this.$route.params.id
-        }&action=get`
+        `http://localhost:4000/codes?sessionId=${this.$route.params.id}&action=get`
       )
       if (result) {
         this.code = result

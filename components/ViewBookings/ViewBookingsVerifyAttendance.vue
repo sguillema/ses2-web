@@ -82,9 +82,7 @@ export default {
       try {
         // The code service only needs the bookingId to confirm session as it will perform the session lookup there
         let result = await this.$axios.$get(
-          `http://localhost:4000/codes?bookingId=${
-            this.bookingId
-          }&action=verify&code=${this.code}`
+          `http://localhost:4000/codes?bookingId=${this.bookingId}&action=verify&code=${this.code}`
         )
         if (result) {
           this.snackbar.active = true
