@@ -65,8 +65,8 @@ export default {
           title: 'Others',
           links: [
             { title: 'Emails', icon: 'email', to: '/admin/emails' },
-            { title: 'Messages', icon: 'chat', to: '/admin/messages' },
-            { title: 'Rooms', icon: 'home', to: '/admin/rooms' },
+            { title: 'Reports', icon: 'book', to: '/admin/reports' },
+            { title: 'Rooms', icon: 'meeting_rooms', to: '/admin/rooms' },
             { title: 'Annoucements', icon: 'chat', to: '/admin/messages' }
           ]
         }
