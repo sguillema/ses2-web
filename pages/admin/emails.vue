@@ -70,7 +70,7 @@
           </div>
         </div>
       </Sheet>
-      <v-snackbar v-model="snackbar.active" top color="blue" timeout="3000">
+      <v-snackbar v-model="snackbar.active" top color="blue" :timeout="3000">
         {{ snackbar.text }}
         <v-btn class="v-btn--flat b-btn--text" @click="snackbar.active = false">
           Close
@@ -83,9 +83,6 @@
 <script>
 import moment from 'moment'
 import { EmailsApi } from '../../core/Api'
-import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
-import Sheet from '~/components/Sheet/Sheet'
-import Editor from '~/components/Editor/Editor'
 import {
   REQUEST,
   EMAILS,
@@ -93,6 +90,9 @@ import {
   PUBLISH,
   emailsModule
 } from '../../store/emails/methods'
+import Sheet from '~/components/Sheet/Sheet'
+import Editor from '~/components/Editor/Editor'
+import { adminAuthenticated } from '~/middleware/authenticatedRoutes'
 
 export default {
   components: { Sheet, Editor },

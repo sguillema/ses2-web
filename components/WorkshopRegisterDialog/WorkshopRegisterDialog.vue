@@ -43,48 +43,7 @@
         <v-stepper-items>
           <v-stepper-content :step="1" class="step-container">
             <div class="step-content">
-              <h3>Important Information:</h3>
-              <ul>
-                <li>
-                  <b>Follow</b>
-                  each site complete your booking.
-                </li>
-                <li>
-                  <b>Check</b>
-                  the time to ensure that there is no timetable clash.
-                </li>
-                <li>
-                  <b>Check your email</b>
-                  (UTS email address) for the booking confirmation.
-                  <br />
-                </li>
-                <li>
-                  <b>Cancel,</b>
-                  if no longer available,
-                  <b>24 hours before</b>
-                  the scheduled session by clicking on
-                  <b>'My Booking'</b>
-                  tab and then the
-                  <b>'detail'</b>
-                  link.
-                </li>
-                <li>
-                  Please know that failing to turn up for your registered
-                  workshop is not fair to those on the waiting list. Repeat
-                  offenders (2 no-shows) may be barred from registering for
-                  workshop.
-                </li>
-              </ul>
-              <br />
-              <p>
-                <b>Registration is now open for 2019 Autumn workshops!</b>
-                <br />
-                <b>
-                  At this stage, we only open registration for March and April
-                  workshops. For the remaining workshops, registration will be
-                  open in week 5.
-                </b>
-              </p>
+              <div v-if="!!message" v-html="message.publishedTemplate"></div>
             </div>
             <div class="step-buttons">
               <v-btn color="primary" depressed @click="validateStep">
@@ -281,12 +240,13 @@ import {
 import { programsModule, PROGRAMS } from '../../store/programs/methods'
 import { workshopsModule, WORKSHOPS } from '../../store/workshops/methods'
 import { authModule, USER } from '../../store/auth/methods'
-import { BookingApi } from '../../core/Api'
+import { BookingApi, MessagesApi } from '../../core/Api'
 
 export default {
   components: { SelectableList },
   data() {
     return {
+      message: null,
       user: this.$store.getters[authModule(USER)],
       stepCount: 1,
       dialog: false,
@@ -331,6 +291,10 @@ export default {
     workshops() {
       return this.$store.getters[workshopsModule(WORKSHOPS)]
     }
+  },
+  async mounted() {
+    const response = await MessagesApi.getMessage(1)
+    this.message = response.data
   },
   methods: {
     validateStep() {
@@ -413,7 +377,7 @@ export default {
       const bookingDetailsId = null
 
       const promises = this.selectedSessions.map(async session => {
-        return await BookingApi.createBooking({
+        return await BookingApi.addBooking({
           studentId,
           booked,
           attended,
