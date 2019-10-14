@@ -747,6 +747,7 @@ export default {
             }
           }
           case 'all': {
+            // console.log('hello this is dog')
             return true
           }
         }
