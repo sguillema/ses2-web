@@ -701,14 +701,14 @@ export default {
       },
       search: '',
       headers: [
-        { text: 'Date', value: 'date' },
-        { text: 'ID', value: 'id' },
-        { text: 'Type', value: 'type' },
-        { text: 'Time', value: 'time' },
-        { text: 'Room', value: 'room' },
+        { text: 'Date', value: 'date', sortable: false },
+        { text: 'ID', value: 'id', sortable: true },
+        { text: 'Type', value: 'type', sortable: true },
+        { text: 'Time', value: 'time', sortable: false },
+        { text: 'Room', value: 'room', sortable: true },
         // { text: 'Topic', value: 'topic' },
-        { text: 'Status', value: 'bookings[0].studentID' },
-        { text: '', value: '' }
+        { text: 'Status', value: 'status', sortable: false },
+        { text: '', value: '', sortable: false }
       ],
       items: [
         {
