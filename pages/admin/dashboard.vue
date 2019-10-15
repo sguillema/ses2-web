@@ -849,7 +849,7 @@ export default {
   methods: {
     async getSessions() {
       this.sessionsLoading = true
-      let sessions = (await SessionApi.getSession({ startTime: 'session' }))
+      let sessions = (await SessionApi.getSessions({ startTime: 'session' }))
         .data
       // let sessions = await this.$axios.$get(
       //   'http://localhost:4000/sessions?startTime=session'
