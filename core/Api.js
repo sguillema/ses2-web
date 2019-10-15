@@ -471,21 +471,26 @@ export class MessagesApi {
 }
 
 export class CodesApi {
-  static async getCodes() {
+  static async getCodeWithQuery(query) {
+    const queryString = querystring.stringify(query)
     return await axios({
       method: 'get',
-      url: `${MESSAGES_ENDPOINT}`
+      url: `${CODES_ENDPOINT}?${queryString}`
     })
   }
 
   static async getCodeBySessionId(sessionId) {
-    const query = querystring.stringify({
+    return await CodesApi.getCodeWithQuery({
       sessionId,
       action: 'get'
     })
-    return await axios({
-      method: 'get',
-      url: `${CODES_ENDPOINT}?${query}`
+  }
+
+  static async verifyCode(bookingId, code) {
+    return await CodesApi.getCodeWithQuery({
+      bookingId,
+      code,
+      action: 'verify'
     })
   }
 
