@@ -342,6 +342,7 @@ export default {
       }
     },
     async updateBookingDetails() {
+      // TODO: get bookingDetails checkboxes properly
       await BookingDetailsApi.updateBookingDetailByBookingId(
         this.bookingDetails.id,
         this.bookingDetails
