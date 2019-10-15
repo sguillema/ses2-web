@@ -336,9 +336,11 @@ export default {
           this.bookedBooking.id
         )
         this.bookingDetails = res.data
-        this.bookingDetails.helpWith.forEach(help => {
-          this.helpWith[help] = true
-        })
+        if (this.bookingDetails) {
+          this.bookingDetails.helpWith.forEach(help => {
+            this.helpWith[help] = true
+          })
+        }
       }
     },
     async updateBookingDetails() {
