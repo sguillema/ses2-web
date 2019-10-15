@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { CodesApi } from '../../core/Api'
 export default {
   props: {
     dialog: Boolean,
@@ -81,9 +82,10 @@ export default {
       this.loading = true
       try {
         // The code service only needs the bookingId to confirm session as it will perform the session lookup there
-        let result = await this.$axios.$get(
-          `http://localhost:4000/codes?bookingId=${this.bookingId}&action=verify&code=${this.code}`
-        )
+        let result = (await CodesApi.verifyCode(this.bookingId, this.code)).data
+        // let result = await this.$axios.$get(
+        //   `http://localhost:4000/codes?bookingId=${this.bookingId}&action=verify&code=${this.code}`
+        // )
         if (result) {
           this.snackbar.active = true
           this.snackbar.message =

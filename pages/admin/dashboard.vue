@@ -639,6 +639,7 @@
 <script>
 import moment from 'moment'
 import { adminAuthenticated } from '../../middleware/authenticatedRoutes'
+import { SessionApi, BookingApi } from '../../core/Api'
 // import { authModule, LOGOUT } from '~/store/auth/methods'
 // import { authModule, TYPE, LOGOUT } from '~/store/auth/methods'
 
@@ -848,15 +849,19 @@ export default {
   methods: {
     async getSessions() {
       this.sessionsLoading = true
-      let sessions = await this.$axios.$get(
-        'http://localhost:4000/sessions?startTime=session'
-      )
+      let sessions = (await SessionApi.getSession({ startTime: 'session' }))
+        .data
+      // let sessions = await this.$axios.$get(
+      //   'http://localhost:4000/sessions?startTime=session'
+      // )
       let newSessions = []
       sessions.forEach(async session => {
         let newSession = session
-        let bookings = await this.$axios.$get(
-          `http://localhost:4000/bookings?sessionId=${session.id}`
-        )
+        let bookings = (await BookingApi.getBookingsBySessionId(session.id))
+          .data
+        // let bookings = await this.$axios.$get(
+        //   `http://localhost:4000/bookings?sessionId=${session.id}`
+        // )
         newSession.bookings = bookings.bookings
         newSession.waitlist = bookings.waitlist
         newSessions.push(newSession)
@@ -867,15 +872,20 @@ export default {
     },
     async getConsultationSessions() {
       this.sessionsLoading = true
-      let consultationSessions = await this.$axios.$get(
-        'http://localhost:4000/sessions?startTime=consultation'
-      )
+      let consultationSessions = (await SessionApi.getSessions({
+        startTime: 'consultation'
+      })).data
+      // let consultationSessions = await this.$axios.$get(
+      //   'http://localhost:4000/sessions?startTime=consultation'
+      // )
       let newSessions = []
       consultationSessions.forEach(async session => {
         let newSession = session
-        let bookings = await this.$axios.$get(
-          `http://localhost:4000/bookings?sessionId=${session.id}`
-        )
+        let bookings = (await BookingApi.getBookingsBySessionId(session.id))
+          .data
+        // let bookings = await this.$axios.$get(
+        //   `http://localhost:4000/bookings?sessionId=${session.id}`
+        // )
         newSession.bookings = bookings.bookings
         newSession.waitlist = bookings.waitlist
         newSessions.push(newSession)
@@ -885,15 +895,20 @@ export default {
     },
     async getWorkshopSessions() {
       this.sessionsLoading = true
-      let workshopSessions = await this.$axios.$get(
-        'http://localhost:4000/sessions?startTime=workshop'
-      )
+      let workshopSessions = (await SessionApi.getSessions({
+        startTime: 'workshop'
+      })).data
+      // let workshopSessions = await this.$axios.$get(
+      //   'http://localhost:4000/sessions?startTime=workshop'
+      // )
       let newSessions = []
       workshopSessions.forEach(async session => {
         let newSession = session
-        let bookings = await this.$axios.$get(
-          `http://localhost:4000/bookings?sessionId=${session.id}`
-        )
+        let bookings = (await BookingApi.getBookingsBySessionId(session.id))
+          .data
+        // let bookings = await this.$axios.$get(
+        //   `http://localhost:4000/bookings?sessionId=${session.id}`
+        // )
         newSession.bookings = bookings.bookings
         newSession.waitlist = bookings.waitlist
         newSessions.push(newSession)

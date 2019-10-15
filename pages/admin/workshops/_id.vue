@@ -317,14 +317,16 @@ export default {
       }
     },
     async submitEditedWorkshop() {
-      await this.$axios.$patch(
-        `http://localhost:4000/workshops/${this.workshop.id}`,
-        this.workshop
-      )
-      await this.$axios.$patch(
-        `http://localhost:4000/sessions/${this.session.id}`,
-        this.session
-      )
+      await WorkshopApi.updateWorkshop(this.workshop)
+      // await this.$axios.$patch(
+      //   `http://localhost:4000/workshops/${this.workshop.id}`,
+      //   this.workshop
+      // )
+      await SessionApi.updateSessionBySessionId(this.session.id, this.session)
+      // await this.$axios.$patch(
+      //   `http://localhost:4000/sessions/${this.session.id}`,
+      //   this.session
+      // )
       this.cancelRegistration()
       this.fetchAndSetData()
     },

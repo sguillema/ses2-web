@@ -18,6 +18,7 @@ import { studentAuthenticated } from '../../middleware/authenticatedRoutes'
 import WorkshopRegisterDialog from '../../components/WorkshopRegisterDialog/WorkshopRegisterDialog'
 import ViewFutureBookings from '../../components/ViewBookings/ViewFutureBookings'
 import ViewPastBookings from '../../components/ViewBookings/ViewPastBookings'
+import { BookingApi } from '../../core/Api'
 import { authModule, TYPE } from '~/store/auth/methods'
 
 export default {
@@ -46,7 +47,8 @@ export default {
     }
   },
   async mounted() {
-    this.bookings = await this.$axios.$get('http://localhost:4000/bookings')
+    this.bookings = (await BookingApi.getBookings()).data
+    // this.bookings = await this.$axios.$get('http://localhost:4000/bookings')
   },
   methods: {}
 }
