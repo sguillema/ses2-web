@@ -701,7 +701,7 @@ export default {
         { text: '', value: '', sortable: false }
       ],
       rooms: ['cb11.05.400', 'cb11.09.104'],
-      advisors: ['John Smith', 'Jane Doe'],
+      advisors: ['John Smith', 'Jane Doe', 'Carlos Cortes'],
       sessions: [],
       sessionsLoading: true,
       dialogCreateSession: {

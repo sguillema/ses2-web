@@ -72,7 +72,7 @@ export default {
             { title: 'Rooms', icon: 'meeting_rooms', to: '/admin/rooms' },
             { title: 'Emails', icon: 'email', to: '/admin/emails' },
             // { title: 'Reports', icon: 'book', to: '/admin/reports' },
-            { title: 'Annoucements', icon: 'chat', to: '/admin/messages' }
+            { title: 'Announcement', icon: 'chat', to: '/admin/messages' }
           ]
         }
       ]
