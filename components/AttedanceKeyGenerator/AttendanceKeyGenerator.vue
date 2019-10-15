@@ -33,6 +33,7 @@
 
 <script>
 import Sheet from '../Sheet/Sheet'
+import { CodesApi } from '../../core/Api'
 
 export default {
   components: { Sheet },
@@ -53,9 +54,10 @@ export default {
   },
   async mounted() {
     try {
-      let result = await this.$axios.$get(
-        `http://localhost:4000/codes?sessionId=${this.sessionId}&action=get`
-      )
+      let result = (await CodesApi.getCodeBySessionId(this.sessionId)).data
+      // let result = await this.$axios.$get(
+      //   `http://localhost:4000/codes?sessionId=${this.sessionId}&action=get`
+      // )
       if (result) {
         this.code = result
         this.codeExists = true
@@ -71,9 +73,10 @@ export default {
     async generateKey() {
       this.loading = true
       try {
-        const result = await this.$axios.$post(`http://localhost:4000/codes`, {
-          sessionId: this.sessionId
-        })
+        const result = (await CodesApi.generateKey(this.sessionId)).data
+        // const result = await this.$axios.$post(`http://localhost:4000/codes`, {
+        //   sessionId: this.sessionId
+        // })
         this.code = result.code
         this.codeExists = true
         this.snackbar.active = true

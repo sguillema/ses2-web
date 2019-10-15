@@ -17,6 +17,7 @@ const ROOMS_ENDPOINT = `${ENDPOINT}/rooms`
 const EMAILS_ENDPOINT = `${ENDPOINT}/emails`
 const EMAILPLACEHOLDERS_ENDPOINT = `${ENDPOINT}/email-placeholders`
 const MESSAGES_ENDPOINT = `${ENDPOINT}/messages`
+const CODES_ENDPOINT = `${ENDPOINT}/codes`
 
 export class AuthApi {
   static setAuthorizationHeader(token) {
@@ -465,6 +466,34 @@ export class MessagesApi {
     return await axios({
       method: 'post',
       url: `${MESSAGES_ENDPOINT}/${id}/publish`
+    })
+  }
+}
+
+export class CodesApi {
+  static async getCodes() {
+    return await axios({
+      method: 'get',
+      url: `${MESSAGES_ENDPOINT}`
+    })
+  }
+
+  static async getCodeBySessionId(sessionId) {
+    const query = querystring.stringify({
+      sessionId,
+      action: 'get'
+    })
+    return await axios({
+      method: 'get',
+      url: `${CODES_ENDPOINT}?${query}`
+    })
+  }
+
+  static async generateKey(sessionId) {
+    return await axios({
+      method: 'post',
+      url: `${CODES_ENDPOINT}`,
+      data: { sessionId }
     })
   }
 }
