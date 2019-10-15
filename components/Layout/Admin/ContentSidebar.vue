@@ -33,6 +33,13 @@ export default {
     return {
       listSections: [
         {
+          title: 'Edit Content',
+          links: [
+            { title: 'Skill Sets', icon: 'extension', to: '/admin/skillsets' },
+            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' }
+          ]
+        },
+        {
           title: 'Create Session & Booking',
           links: [
             { title: 'Workshops', icon: 'school', to: '/admin/workshops' },
@@ -41,13 +48,6 @@ export default {
               icon: 'forum',
               to: '/admin/consultations'
             }
-          ]
-        },
-        {
-          title: 'Edit Content',
-          links: [
-            { title: 'Skill Sets', icon: 'extension', to: '/admin/skillsets' },
-            { title: 'Programs', icon: 'insert_chart', to: '/admin/programs' }
           ]
         },
         {
