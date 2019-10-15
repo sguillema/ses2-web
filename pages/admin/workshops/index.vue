@@ -231,7 +231,7 @@ import {
   CREATE
 } from '../../../store/workshops/methods'
 import Sheet from '../../../components/Sheet/Sheet'
-import { SessionApi } from '../../../core/Api'
+import { SessionApi, ProgramApi, AdvisorApi } from '../../../core/Api'
 
 const emptyWorkshopForm = () => ({
   title: '',
@@ -294,8 +294,10 @@ export default {
   },
   async mounted() {
     this.$store.dispatch(workshopsModule(REQUEST))
-    this.programs = await this.$axios.$get('http://localhost:4000/programs')
-    this.staff = await this.$axios.$get('http://localhost:4000/staff')
+    this.programs = (await ProgramApi.getPrograms()).data
+    // this.programs = await this.$axios.$get('http://localhost:4000/programs')
+    this.staff = (await AdvisorApi.getAdvisors()).data
+    // this.staff = await this.$axios.$get('http://localhost:4000/staff')
   },
   methods: {
     required(value) {
